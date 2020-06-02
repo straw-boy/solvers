@@ -1,37 +1,40 @@
-## code to prepare `DATASET` dataset goes here
+# code to prepare `DATASET` dataset goes here
 
-# # bodyfat (gaussian) ------------------------------------------------------
+# bodyfat (gaussian) ------------------------------------------------------
+library(Matrix)
 
-# temp_file <- tempfile()
+temp_file <- tempfile()
 
-# download.file(
-#   "https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/regression/bodyfat",
-#   temp_file
-# )
+download.file(
+  "https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/regression/bodyfat",
+  temp_file
+)
 
-# tmp <- e1071::read.matrix.csr(temp_file, fac = FALSE)
-# unlink(temp_file)
-# print(tmp$x)
-# # tmp_x <- as.data.frame(tmp$x)
-# colnames(tmp$x) <- c("siri_1956",
-#                      "age",
-#                      "weight",
-#                      "height",
-#                      "neck",
-#                      "chest",
-#                      "abdomen",
-#                      "hip",
-#                      "thigh",
-#                      "knee",
-#                      "ankle",
-#                      "biceps",
-#                      "foream",
-#                      "wrist")
+tmp <- e1071::read.matrix.csr(temp_file, fac = FALSE)
+unlink(temp_file)
+
+data <- as(tmp$x,"sparseMatrix")
+data2 <- as.matrix(data)
+
+colnames(data2) <- c("siri_1956",
+                     "age",
+                     "weight",
+                     "height",
+                     "neck",
+                     "chest",
+                     "abdomen",
+                     "hip",
+                     "thigh",
+                     "knee",
+                     "ankle",
+                     "biceps",
+                     "foream",
+                     "wrist")
 
 # use the Siri 1956 equation as response
-# bodyfat <- list(x = tmp_x[, -1], y = tmp_x[, 1])
+bodyfat <- list(x = data2[, -1], y = data2[, 1])
 
-# usethis::use_data(bodyfat, overwrite = TRUE)
+usethis::use_data(bodyfat, overwrite = TRUE)
 
 # abalone (poisson) -------------------------------------------------------
 
@@ -243,3 +246,33 @@ student <- list(x = x2, y = y)
 usethis::use_data(student, overwrite = TRUE)
 
 unlink(tmp_file)
+
+
+# # Covtype (binary) ----------------------------------------------------
+
+library(Matrix)
+tmp_file <- tempfile()
+
+download.file(
+  "https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary/covtype.libsvm.binary.bz2",
+  tmp_file
+)
+
+tmp <- e1071::read.matrix.csr(tmp_file, fac = FALSE)
+
+unlink(tmp_file)
+
+x <- as(tmp$x,"sparseMatrix")
+x2 <- as.matrix(x)
+
+y <- as.matrix(tmp$y)
+binary_covtype <- list(x = x2, y = y)
+
+usethis::use_data(binary_covtype, overwrite = TRUE)
+
+
+
+
+
+
+
