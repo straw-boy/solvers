@@ -196,3 +196,44 @@
 #' @section Preprocessing:
 #' Data has been preprocesses so as to have a binary response variable
 "binary_covtype"
+
+#' golub
+#'
+#' Gene expression data set. Binary response.
+#'
+#' @source https://statweb.stanford.edu/~tibs/strong/
+"golub"
+
+#' dorothea
+#'
+#' Binary response data set.
+#'
+#' @section UCI abstract: DOROTHEA is a drug discovery dataset. Chemical
+#' compounds represented
+#' by structural molecular features must be classified as active (binding
+#' to thrombin) or inactive. This is one of 5 datasets of the NIPS 2003
+#' feature selection challenge.
+#'
+#' @source https://archive.ics.uci.edu/ml/datasets/Dorothea
+#' @source https://statweb.stanford.edu/~tibs/strong/
+"dorothea"
+
+#' gisette
+#'
+#' Binary response data set.
+#'
+#' @section UCI abstract: GISETTE is a handwritten digit recognition problem.
+#' The problem is to separate the highly confusable digits '4' and '9'. This
+#' dataset is one of five datasets of the NIPS 2003 feature selection challenge.
+#'
+#' @source https://statweb.stanford.edu/~tibs/strong/
+#' @source https://archive.ics.uci.edu/ml/datasets/Gisette
+"gisette"
+
+#' cpusmall
+#'
+#' Regression data set from the LIBSVM database
+#'
+#' @source http://www.cs.toronto.edu/~delve/data/datasets.html
+#' @source https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/regression.html
+"cpusmall"
