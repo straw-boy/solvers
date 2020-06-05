@@ -1,4 +1,5 @@
 .Rhistory
 .RData
 .Rproj.user
-Read-and-delete-me  
+Read-and-delete-me
+*.o  
