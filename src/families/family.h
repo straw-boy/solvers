@@ -56,6 +56,10 @@ public:
   virtual std::string name() = 0;
 
   template <typename T>
+  Results fitFISTA(const T& x, const mat& y, mat beta, vec lambda);
+
+
+  template <typename T>
   Results fit(const T& x,
               const mat& y,
               mat beta,

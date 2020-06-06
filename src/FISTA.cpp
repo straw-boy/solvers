@@ -2,6 +2,7 @@
 #include <memory>
 #include "results.h"
 #include "families/families.h"
+#include "algorithms/fista.cpp"
 #include "standardize.h"
 #include "rescale.h"
 #include "regularizationPath.h"
@@ -12,6 +13,11 @@ using namespace arma;
 template <typename T>
 List cppFISTA(T& x, mat& y, const List control)
 {
+  Rcout << "Wrapper of new FISTA" << endl;
+
+  wall_clock outer_timer;
+  outer_timer.tic();
+
   using std::endl;
   using std::setw;
   using std::showpoint;
@@ -35,9 +41,7 @@ List cppFISTA(T& x, mat& y, const List control)
   auto tol_rel     = as<double>(control["tol_rel"]);
 
   auto family_choice = as<std::string>(control["family"]);
-  auto intercept     = as<bool>(control["fit_intercept"]);
-  auto screen        = as<bool>(control["screen"]);
-  auto screen_alg    = as<std::string>(control["screen_alg"]);
+  auto intercept     = as<bool>(control["fit_intercept"]);\
 
   auto n = x.n_rows;
   auto p = x.n_cols;
@@ -105,37 +109,24 @@ List cppFISTA(T& x, mat& y, const List control)
   uvec passes(path_length);
   std::vector<std::vector<double>> primals;
   std::vector<std::vector<double>> duals;
-  std::vector<std::vector<double>> timings;
-  std::vector<unsigned> violations;
-  std::vector<std::vector<unsigned>> violation_list;
-
-  mat linear_predictor_prev(n, m);
-  mat gradient_prev(p, m);
-  mat pseudo_gradient_prev(n, m);
-  mat L(n,m);
-  mat U(n,m);
-  bool factorized = false;
+  std::vector<std::vector<double>> iteration_timings;
+  std::vector<double> execution_timings(path_length);
+  
 
   Results res;
-
   uword k = 0;
 
-  vec z(p,fill::zeros);
-  vec u(p,fill::zeros);
-  vec xTy(p,fill::zeros);
-  double rho=1.0;
-  while (k < path_length) {
+  wall_clock inner_timer;
 
-    res = family->fit(x, y, beta, z, u, L, U, xTy, lambda*alpha(k), rho, solver);
+  while (k < path_length) {
+    inner_timer.tic();
+    res = family->fitFISTA(x, y, beta,lambda*alpha(k));
     passes(k) = res.passes;
     beta = res.beta;
 
-    if (diagnostics) {
-      primals.push_back(res.primals);
-      duals.push_back(res.duals);
-      timings.push_back(res.time);
-      violation_list.push_back(violations);
-    }
+    primals.push_back(res.primals);
+    duals.push_back(res.duals);
+    iteration_timings.push_back(res.time);
 
     // store coefficients and intercept
     double deviance = res.deviance;
@@ -153,16 +144,6 @@ List cppFISTA(T& x, mat& y, const List control)
     n_variables = n_coefs;
     n_unique(k) = unique(abs(nonzeros(beta))).eval().n_elem;
 
-    if (verbosity >= 1)
-      Rcout << showpoint
-            << "penalty: "      << setw(2) << k
-            << ", dev: "        << setw(7) << deviance
-            << ", dev ratio: "  << setw(7) << deviance_ratio
-            << ", dev change: " << setw(7) << deviance_change
-            << ", n var: "      << setw(5) << n_variables
-            << ", n unique: "   << setw(5) << n_unique(k)
-            << endl;
-
     if (n_coefs > 0 && k > 0) {
       // stop path if fractional deviance change is small
       if (deviance_change < tol_dev_change || deviance_ratio > tol_dev_ratio) {
@@ -177,6 +158,7 @@ List cppFISTA(T& x, mat& y, const List control)
     k++;
 
     checkUserInterrupt();
+    execution_timings.push_back(inner_timer.toc());
   }
 
   betas.resize(p, m, k);
@@ -205,7 +187,9 @@ List cppFISTA(T& x, mat& y, const List control)
     Named("passes")              = wrap(passes),
     Named("primals")             = wrap(primals),
     Named("duals")               = wrap(duals),
-    Named("time")                = wrap(timings),
+    Named("iteration_timings")   = wrap(iteration_timings),
+    Named("execution_timings")   = wrap(execution_timings),
+    Named("total_time")           = wrap(outer_timer.toc()),
     Named("n_unique")            = wrap(n_unique),
     Named("deviance_ratio")      = wrap(deviance_ratios),
     Named("null_deviance")       = wrap(null_deviance),
