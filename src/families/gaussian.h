@@ -28,12 +28,17 @@ public:
     using namespace std;
     return 0.5*pow(norm(y, 2), 2) - 0.5*pow(norm(lin_pred, 2), 2);
   }
-
+  
   mat pseudoGradient(const mat& y, const mat& lin_pred)
   {
     return lin_pred - y;
   }
 
+  mat pseudoHessian(const mat& y, const mat& lin_pred){
+    mat I(y.n_cols,y.n_cols,fill::eye);
+    return I;
+  }
+  
   rowvec fitNullModel(const mat& y, const uword n_classes)
   {
     return mean(y);

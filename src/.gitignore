@@ -1,4 +1,4 @@
 *.o
 *.so
 *.dll
-src/run.r
+run.r

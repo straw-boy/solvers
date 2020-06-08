@@ -28,6 +28,13 @@ public:
     return -y / (1.0 + trunc_exp(y % lin_pred));
   }
 
+  mat pseudoHessian(const mat&y, const mat& lin_pred)
+  {
+    vec activation = 1/(1+exp(-y % lin_pred));
+    return diagmat(activation%(1-activation));
+  }
+
+
   rowvec fitNullModel(const mat& y, const uword n_classes)
   {
     double pmin = 1e-9;

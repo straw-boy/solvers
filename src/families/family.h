@@ -45,10 +45,22 @@ public:
   // this is not really the true gradient; it needs to multiplied by X^T
   virtual mat pseudoGradient(const mat& y, const mat& lin_pred) = 0;
 
+  // this is not really the true hessian; it needs to left multiplied by X^T and right multiplies by X
+  virtual mat pseudoHessian(const mat& y, const mat& lin_pred) = 0;
+
   template <typename T>
   mat gradient(const T& x, const mat&y, const mat& lin_pred)
   {
     return x.t() * pseudoGradient(y, lin_pred);
+  }
+
+  template <typename T>
+  mat hessian(const T& x, const mat&y, const mat& lin_pred)
+  {
+    if(name() == "gaussian")
+      return x.t()*x;
+
+    return x.t() * pseudoHessian(y, lin_pred) * x;
   }
 
   virtual rowvec fitNullModel(const mat& y, const uword n_classes) = 0;
