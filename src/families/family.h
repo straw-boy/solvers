@@ -49,7 +49,7 @@ public:
   virtual mat pseudoHessian(const mat& y, const mat& lin_pred) = 0;
 
   template <typename T>
-  mat gradient(const T& x, const mat&y, const mat& lin_pred)
+  mat gradient(T& x, const mat&y, const mat& lin_pred)
   {
     return x.t() * pseudoGradient(y, lin_pred);
   }
@@ -57,19 +57,26 @@ public:
   template <typename T>
   mat hessian(const T& x, const mat&y, const mat& lin_pred)
   {
-    if(name() == "gaussian")
-      return x.t()*x;
-
+    if(name() == "gaussian"){
+      mat xTx;
+      xTx =  x.t() * x;
+      return xTx;
+    }
     return x.t() * pseudoHessian(y, lin_pred) * x;
   }
+
+  template <typename T>
+  mat newton_raphson(const T& x, const mat&y, const double rho, const mat& u, bool quasi = true);
 
   virtual rowvec fitNullModel(const mat& y, const uword n_classes) = 0;
 
   virtual std::string name() = 0;
 
   template <typename T>
-  Results fitFISTA(const T& x, const mat& y, mat beta, vec lambda);
+  Results fitFISTA(const T& x, const mat& y, vec lambda);
 
+  template <typename T>
+  Results fitADMM(const T& x, const mat& y, vec lambda, double rho = 1.0);
 
   template <typename T>
   Results fit(const T& x,
@@ -130,6 +137,11 @@ public:
       time.reserve(max_passes);
       timer.tic();
     }
+
+
+    x.t().print();
+    y.t().print();
+    lambda.t().print();
 
     // main loop
     uword passes = 0;

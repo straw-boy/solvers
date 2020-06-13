@@ -8,6 +8,7 @@
 #include "regularizationPath.h"
 #include "kktCheck.h"
 
+
 using namespace Rcpp;
 using namespace arma;
 
@@ -145,7 +146,7 @@ List cppSLOPE(T& x, mat& y, const List control)
   Results res;
 
   uword k = 0;
-
+  
   while (k < path_length) {
 
     violations.clear();

@@ -11,14 +11,15 @@ using namespace arma;
 
 // FISTA implementation
 template <typename T>
-Results Family::fitFISTA(const T& x, const mat& y, mat beta, vec lambda){
-  Rcout << "This is the new FISTA" << endl;
+Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
+  Rcout << "New FISTA begins" << endl;
   uword n = y.n_rows;
   uword p = x.n_cols;
-  uword m = beta.n_cols;
+  uword m = y.n_cols;
   uword pmi = lambda.n_elem;
   uword p_rows = pmi/m;
 
+  mat beta(p, m, fill::zeros);
   mat beta_tilde(beta);
   mat beta_tilde_old(beta);
 
@@ -82,6 +83,7 @@ Results Family::fitFISTA(const T& x, const mat& y, mat beta, vec lambda){
 
     // Backtracking line search
     while (true) {
+      Rcout << "Fista backtracking" << endl;
       // Update coefficients
       beta_tilde = beta - learning_rate*grad;
 
@@ -103,7 +105,6 @@ Results Family::fitFISTA(const T& x, const mat& y, mat beta, vec lambda){
         } else {
           learning_rate *= eta;
         }
-
         checkUserInterrupt();
     }
 

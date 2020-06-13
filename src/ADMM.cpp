@@ -2,7 +2,8 @@
 #include <memory>
 #include "results.h"
 #include "families/families.h"
-#include "algorithms/fista.h"
+#include "algorithms/admm.h"
+#include "algorithms/newton_raphson.h"
 #include "standardize.h"
 #include "rescale.h"
 #include "regularizationPath.h"
@@ -11,9 +12,9 @@ using namespace Rcpp;
 using namespace arma;
 
 template <typename T>
-List cppFISTA(T& x, mat& y, const List control)
+List cppADMM(T& x, mat& y, const List control)
 {
-  Rcout << "Wrapper of new FISTA" << endl;
+  Rcout << "Wrapper of new ADMM" << endl;
 
   wall_clock outer_timer;
   outer_timer.tic();
@@ -41,7 +42,7 @@ List cppFISTA(T& x, mat& y, const List control)
   auto tol_rel     = as<double>(control["tol_rel"]);
 
   auto family_choice = as<std::string>(control["family"]);
-  auto intercept     = as<bool>(control["fit_intercept"]);\
+  auto intercept     = as<bool>(control["fit_intercept"]);
 
   auto n = x.n_rows;
   auto p = x.n_cols;
@@ -117,9 +118,17 @@ List cppFISTA(T& x, mat& y, const List control)
 
   wall_clock inner_timer;
 
+  Rcout << "All set" << endl;
+  x.t().print();
+  Rcout << "-------" << endl;
+  y.t().print();
+  Rcout << "-------" << endl;
+  alpha.t().print();
+  Rcout << "-------" << endl;
+  
   while (k < path_length) {
     inner_timer.tic();
-    res = family->fitFISTA(x, y,lambda*alpha(k));
+    res = family->fitADMM(x, y,lambda*alpha(k),1.0);
     passes(k) = res.passes;
     beta = res.beta;
 
@@ -140,6 +149,7 @@ List cppFISTA(T& x, mat& y, const List control)
     beta_prev = beta;
 
     uword n_coefs = accu(any(beta != 0, 1));
+    
     n_unique(k) = unique(abs(nonzeros(beta))).eval().n_elem;
 
     if (n_coefs > 0 && k > 0) {
@@ -197,17 +207,17 @@ List cppFISTA(T& x, mat& y, const List control)
 }
 
 // [[Rcpp::export]]
-Rcpp::List sparseFISTA(arma::sp_mat x,
+Rcpp::List sparseADMM(arma::sp_mat x,
                        arma::mat y,
                        const Rcpp::List control)
 {
-  return cppFISTA(x, y, control);
+  return cppADMM(x, y, control);
 }
 
 // [[Rcpp::export]]
-Rcpp::List denseFISTA(arma::mat x,
+Rcpp::List denseADMM(arma::mat x,
                       arma::mat y,
                       const Rcpp::List control)
 {
-  return cppFISTA(x, y, control);
+  return cppADMM(x, y, control);
 }
