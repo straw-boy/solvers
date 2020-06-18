@@ -13,7 +13,6 @@ using namespace arma;
 template <typename T>
 List cppFISTA(T& x, mat& y, const List control)
 {
-  Rcout << "Wrapper of new FISTA" << endl;
 
   wall_clock outer_timer;
   outer_timer.tic();
@@ -109,7 +108,7 @@ List cppFISTA(T& x, mat& y, const List control)
   std::vector<std::vector<double>> primals;
   std::vector<std::vector<double>> duals;
   std::vector<std::vector<double>> iteration_timings;
-  std::vector<double> execution_timings(path_length);
+  std::vector<double> execution_timings;
   
 
   Results res;
@@ -153,10 +152,11 @@ List cppFISTA(T& x, mat& y, const List control)
     if (n_unique(k) > max_variables)
       break;
 
+
+    execution_timings.push_back(inner_timer.toc());
     k++;
 
     checkUserInterrupt();
-    execution_timings.push_back(inner_timer.toc());
   }
 
   betas.resize(p, m, k);

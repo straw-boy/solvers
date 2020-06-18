@@ -12,7 +12,7 @@ using namespace arma;
 // FISTA implementation
 template <typename T>
 Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
-  Rcout << "New FISTA begins" << endl;
+  
   uword n = y.n_rows;
   uword p = x.n_cols;
   uword m = y.n_cols;
@@ -20,6 +20,7 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
   uword p_rows = pmi/m;
 
   mat beta(p, m, fill::zeros);
+  beta += 0.1;
   mat beta_tilde(beta);
   mat beta_tilde_old(beta);
 
@@ -40,15 +41,18 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
   std::vector<double> duals;
   std::vector<double> time;
 
-  primals.reserve(max_passes);
-  duals.reserve(max_passes);
-  time.reserve(max_passes);
+  if(diagnostics){
+    primals.reserve(max_passes);
+    duals.reserve(max_passes);
+    time.reserve(max_passes);
+    timer.tic();
+  }
   
 
   // main loop
   uword passes = 0;
-  while (passes < max_passes) {
-    timer.tic();
+  while (true) {
+    
     lin_pred = x*beta;
 
     double g = primal(y, lin_pred);
@@ -58,23 +62,33 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
     double G = dual(y, lin_pred);
 
     grad = gradient(x, y, lin_pred);
-    double infeas =
-      lambda.n_elem > 0 ? infeasibility(grad.tail_rows(p_rows), lambda) : 0.0;
+    double infeas = lambda.n_elem > 0 ? infeasibility(grad.tail_rows(p_rows), lambda) : 0.0;
 
     double small = std::sqrt(datum::eps);
 
     bool optimal =
       (std::abs(f - G)/std::max(small, std::abs(f)) < tol_rel_gap);
 
-    bool feasible =
-      lambda.n_elem > 0 ? infeas <= std::max(small, tol_infeas*lambda(0))
-                        : true;
+    bool feasible = lambda.n_elem > 0 ? infeas <= std::max(small, tol_infeas*lambda(0)) : true;
 
-    primals.push_back(f);
-    duals.push_back(G);
+    
+    if (verbosity >= 3) {
+      Rcout << "pass: "            << passes
+            << ", duality-gap: "   << std::abs(f - G)/std::abs(f)
+            << ", infeasibility: " << infeas
+            << std::endl;
+    }
 
-    if (optimal && feasible)
+    if (diagnostics) {
+        primals.push_back(f);
+        duals.push_back(G);
+        time.push_back(timer.toc());
+        timer.tic();
+    }
+
+    if (optimal && feasible){
       break;
+    }
 
     beta_tilde_old = beta_tilde;
 
@@ -83,7 +97,6 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
 
     // Backtracking line search
     while (true) {
-      Rcout << "Fista backtracking" << endl;
       // Update coefficients
       beta_tilde = beta - learning_rate*grad;
 
@@ -116,7 +129,7 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
       checkUserInterrupt();
 
     ++passes;
-    time.push_back(timer.toc());
+    
   }
 
   double deviance = 2*primal(y, lin_pred);

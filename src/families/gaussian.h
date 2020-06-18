@@ -35,8 +35,7 @@ public:
   }
 
   mat pseudoHessian(const mat& y, const mat& lin_pred){
-    vec I(y.n_rows,fill::eye);
-    return diagmat(I);
+    return ones<vec>(y.n_rows);
   }
   
   rowvec fitNullModel(const mat& y, const uword n_classes)

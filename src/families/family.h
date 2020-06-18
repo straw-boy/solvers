@@ -57,16 +57,30 @@ public:
   template <typename T>
   mat hessian(const T& x, const mat&y, const mat& lin_pred)
   {
-    if(name() == "gaussian"){
-      mat xTx;
-      xTx =  x.t() * x;
-      return xTx;
-    }
-    return x.t() * pseudoHessian(y, lin_pred) * x;
+    // if(name() == "gaussian"){
+    //   mat xTx;
+    //   xTx =  x.t() * x;
+    //   return xTx;
+    // }
+    vec activation = pseudoHessian(y, lin_pred);
+    // mat pH;
+    // pH = repmat(activation,1,x.n_cols) % x;
+    // return x.t() * (pH);
+
+    mat xTx;
+    // xTx = x;
+
+    // xTx.each_col() %= activation;
+    // return x.t()*xTx;
+    xTx = x.t() * diagmat(activation) * x;
+    return xTx;
   }
 
   template <typename T>
   mat newton_raphson(const T& x, const mat&y, const double rho, const mat& u, bool quasi = true);
+
+  template <typename T>
+  mat newton_raphsonq(const T& x, const mat&y, const double rho, const mat& u, bool quasi = true);
 
   virtual rowvec fitNullModel(const mat& y, const uword n_classes) = 0;
 
@@ -137,11 +151,6 @@ public:
       time.reserve(max_passes);
       timer.tic();
     }
-
-
-    x.t().print();
-    y.t().print();
-    lambda.t().print();
 
     // main loop
     uword passes = 0;

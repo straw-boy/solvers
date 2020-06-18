@@ -14,8 +14,6 @@ using namespace arma;
 template <typename T>
 List cppADMM(T& x, mat& y, const List control)
 {
-  Rcout << "Wrapper of new ADMM" << endl;
-
   wall_clock outer_timer;
   outer_timer.tic();
 
@@ -117,14 +115,6 @@ List cppADMM(T& x, mat& y, const List control)
   uword k = 0;
 
   wall_clock inner_timer;
-
-  Rcout << "All set" << endl;
-  x.t().print();
-  Rcout << "-------" << endl;
-  y.t().print();
-  Rcout << "-------" << endl;
-  alpha.t().print();
-  Rcout << "-------" << endl;
   
   while (k < path_length) {
     inner_timer.tic();

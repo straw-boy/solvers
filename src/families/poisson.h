@@ -29,7 +29,7 @@ public:
 
   mat pseudoHessian(const mat&y, const mat& lin_pred)
   {
-    return diagmat(trunc_exp(lin_pred));
+    return trunc_exp(lin_pred);
   }
 
   rowvec fitNullModel(const mat& y, const uword n_classes)

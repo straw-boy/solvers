@@ -30,8 +30,8 @@ public:
 
   mat pseudoHessian(const mat&y, const mat& lin_pred)
   {
-    vec activation = 1/(1+exp(-y % lin_pred));
-    return diagmat(activation%(1-activation));
+    vec activation = 1/(1+trunc_exp(-y % lin_pred));
+    return activation % (1-activation);
   }
 
 

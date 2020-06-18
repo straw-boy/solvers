@@ -47,7 +47,9 @@ public:
       trunc_log(exp(-lp_max) + sum(trunc_exp(lin_pred.each_col() - lp_max), 1)) + lp_max;
 
     vec activation = trunc_exp(lin_pred.each_col() - lse);
-    return diagmat(activation)-activation*activation.t();
+
+    return diagmat(lp_max);
+    // return diagmat(activation)-activation*activation.t();
   }
 
   rowvec fitNullModel(const mat& y, const uword n_classes)

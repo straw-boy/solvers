@@ -7,7 +7,7 @@
 #'
 #' @keywords internal
 setupDiagnostics <- function(res) {
-  time <- res$time
+  time <- res$iteration_timings
   primals <- res$primals
   duals <- res$duals
 

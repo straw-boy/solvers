@@ -8,7 +8,6 @@
 #include "regularizationPath.h"
 #include "kktCheck.h"
 
-
 using namespace Rcpp;
 using namespace arma;
 
@@ -146,7 +145,7 @@ List cppSLOPE(T& x, mat& y, const List control)
   Results res;
 
   uword k = 0;
-  
+
   while (k < path_length) {
 
     violations.clear();
@@ -279,7 +278,7 @@ List cppSLOPE(T& x, mat& y, const List control)
 
           uword n_active =
             (active_set.n_elem - static_cast<uword>(intercept))*m;
-
+          
           res = family->fit(x_subset,
                             y,
                             beta.rows(active_set),
