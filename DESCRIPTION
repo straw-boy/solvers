@@ -19,4 +19,5 @@ RoxygenNote: 7.1.0
 Encoding: UTF-8
 Suggests: 
     testthat (>= 2.1.0),
-    SLOPE (>= 0.2.1)
+    SLOPE
+Remotes: jolars/SLOPE
