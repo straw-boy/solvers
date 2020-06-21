@@ -32,7 +32,6 @@ List cppFISTA(T& x, mat& y, const List control)
   auto verbosity = as<uword>(control["verbosity"]);
 
   // solver arguments
-  auto solver      = as<std::string>(control["solver"]);
   auto max_passes  = as<uword>(control["max_passes"]);
   auto tol_rel_gap = as<double>(control["tol_rel_gap"]);
   auto tol_infeas  = as<double>(control["tol_infeas"]);

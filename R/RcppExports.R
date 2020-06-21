@@ -17,28 +17,3 @@ denseFISTA <- function(x, y, control) {
     .Call(`_solvers_denseFISTA`, x, y, control)
 }
 
-sparseSLOPE <- function(x, y, control) {
-    .Call(`_solvers_sparseSLOPE`, x, y, control)
-}
-
-denseSLOPE <- function(x, y, control) {
-    .Call(`_solvers_denseSLOPE`, x, y, control)
-}
-
-#' Logistic regression with ADMM
-#'
-#' @param x predictors
-#' @param y response in {-1, 1}
-#' @param lambda regularization sequence
-#' @param max_passes maximum number of passes
-#' @param opt optimal value
-#' @param opt_tol relative suboptimality tolerance
-#' @export
-admm_binom <- function(x, y, lambda, max_passes) {
-    .Call(`_solvers_admm_binom`, x, y, lambda, max_passes)
-}
-
-sorted_l1_prox <- function(x, lambda) {
-    .Call(`_solvers_sorted_l1_prox`, x, lambda)
-}
-

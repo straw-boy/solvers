@@ -19,13 +19,13 @@ mat Family::newton_raphson(const T& x, const mat&y, const double rho, const mat&
   mat h(p,p);
 
   uword max_iter = 50;
-  double tolerance = 1e-16;
+  double tolerance = 1e-8;
   double alpha = 0.1;
   double gamma = 0.5;
 
   uword i;
 
-  for(i=0;i<max_iter;i++){
+  for(i = 0; i < max_iter; i++){
     
     mat lin_pred = x*z;
     
@@ -36,9 +36,9 @@ mat Family::newton_raphson(const T& x, const mat&y, const double rho, const mat&
     h.diag() += rho;
 
     mat step = -solve(h,g);
-    double decrement = dot(g,step);
+    double decrement = -dot(g,step);
 
-    if( decrement*decrement < tolerance){
+    if( 0.5*decrement < tolerance){
       break; 
     }
 
@@ -57,6 +57,6 @@ mat Family::newton_raphson(const T& x, const mat&y, const double rho, const mat&
 
     Rcpp::checkUserInterrupt();
   }
-
+  
   return z;
 }

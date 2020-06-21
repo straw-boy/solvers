@@ -2,7 +2,6 @@
 
 #include <RcppArmadillo.h>
 #include "../results.h"
-#include "../utils.h"
 #include "../prox.h"
 #include "../families/family.h"
 #include "newton_raphson.h"
@@ -32,14 +31,7 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, double rho){
 
   uword passes=0;
   double alpha = 1.5;
-
-  // x.print();
-  // y.print();
-  // z.t().print();
-  // u.t().print();
-  // beta.t().print();
-  // lambda.t().print();
-
+  
   while(passes<max_passes){
     passes++;
 
@@ -62,30 +54,14 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, double rho){
     double eps_primal = std::sqrt(n)*tol_abs + tol_rel*std::max(norm(beta), norm(z));
     double eps_dual = std::sqrt(n)*tol_abs + tol_rel*norm(rho*u);
 
-    // Rcout << "pass: "              << passes
-    //           << ", primal residual: " << r_norm
-    //           << ", dual residual: "   << s_norm
-    //           << std::endl;
-
-
     if (r_norm < eps_primal && s_norm < eps_dual)
         break;
 
-    // if( (beta-beta_prev).is_zero(1e-5)){
-    //   Rcout << "ADMM Passes = " << passes << endl;
-    //   break;
-    // }
-
-    // if(passes%200 == 0){
-    //   Rcout << "    Passes: " << passes << endl;
-    //   (newton_raphson(x,y,rho,z-u,false)-newton_raphsonq(x,y,rho,z-u,false)).t().print();
-    // }
     
     Rcpp::checkUserInterrupt();
   }
 
   double deviance = 2*primal(y, x*beta);
-  // double deviance = 0.0;
 
   Results res{beta,
             passes,

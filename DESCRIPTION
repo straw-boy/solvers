@@ -4,12 +4,13 @@ Title: Various solvers for SLOPE
 Version: 1.0
 Date: 2020-06-01
 Author: Akarsh Goyal
-Maintainer: Akarsh Goyal <your@email.com>
+Maintainer: Akarsh Goyal <akarshg14@gmail.com>
 Description: Various solvers for SLOPE.
 License: MIT + file LICENSE
 Depends: R (>= 2.10)
 Imports: Matrix,
-         Rcpp (>= 1.0.4)
+         Rcpp (>= 1.0.4),
+         methods,
 LinkingTo: 
     Rcpp,
     RcppArmadillo
@@ -17,4 +18,5 @@ LazyData: true
 RoxygenNote: 7.1.0
 Encoding: UTF-8
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    SLOPE (>= 0.2.1)

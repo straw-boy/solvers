@@ -2,8 +2,8 @@
 
 #include <RcppArmadillo.h>
 #include "../results.h"
-#include "../utils.h"
 #include "../prox.h"
+#include "../infeasibility.h"
 #include "../families/family.h"
 
 using namespace Rcpp;
@@ -69,10 +69,12 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
     bool optimal =
       (std::abs(f - G)/std::max(small, std::abs(f)) < tol_rel_gap);
 
-    bool feasible = lambda.n_elem > 0 ? infeas <= std::max(small, tol_infeas*lambda(0)) : true;
+    bool feasible = 
+      lambda.n_elem > 0 ? infeas <= std::max(small, tol_infeas*lambda(0)) : true;
 
     
     if (verbosity >= 3) {
+      Rcout << "objective " << f << " ";
       Rcout << "pass: "            << passes
             << ", duality-gap: "   << std::abs(f - G)/std::abs(f)
             << ", infeasibility: " << infeas
@@ -85,6 +87,13 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
         time.push_back(timer.toc());
         timer.tic();
     }
+
+    // Rcout << "--------" << endl;
+    // beta.print();
+    // Rcout << "--------" << endl;
+    // grad.print();
+    // Rcout << "--------" << endl;
+
 
     if (optimal && feasible){
       break;

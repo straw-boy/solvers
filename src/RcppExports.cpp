@@ -58,68 +58,12 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sparseSLOPE
-Rcpp::List sparseSLOPE(arma::sp_mat x, arma::mat y, const Rcpp::List control);
-RcppExport SEXP _solvers_sparseSLOPE(SEXP xSEXP, SEXP ySEXP, SEXP controlSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const Rcpp::List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(sparseSLOPE(x, y, control));
-    return rcpp_result_gen;
-END_RCPP
-}
-// denseSLOPE
-Rcpp::List denseSLOPE(arma::mat x, arma::mat y, const Rcpp::List control);
-RcppExport SEXP _solvers_denseSLOPE(SEXP xSEXP, SEXP ySEXP, SEXP controlSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const Rcpp::List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(denseSLOPE(x, y, control));
-    return rcpp_result_gen;
-END_RCPP
-}
-// admm_binom
-List admm_binom(arma::mat x, arma::vec y, arma::vec lambda, arma::uword max_passes);
-RcppExport SEXP _solvers_admm_binom(SEXP xSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP max_passesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< arma::uword >::type max_passes(max_passesSEXP);
-    rcpp_result_gen = Rcpp::wrap(admm_binom(x, y, lambda, max_passes));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sorted_l1_prox
-arma::mat sorted_l1_prox(const arma::mat& x, const arma::vec& lambda);
-RcppExport SEXP _solvers_sorted_l1_prox(SEXP xSEXP, SEXP lambdaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type lambda(lambdaSEXP);
-    rcpp_result_gen = Rcpp::wrap(sorted_l1_prox(x, lambda));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_solvers_sparseADMM", (DL_FUNC) &_solvers_sparseADMM, 3},
     {"_solvers_denseADMM", (DL_FUNC) &_solvers_denseADMM, 3},
     {"_solvers_sparseFISTA", (DL_FUNC) &_solvers_sparseFISTA, 3},
     {"_solvers_denseFISTA", (DL_FUNC) &_solvers_denseFISTA, 3},
-    {"_solvers_sparseSLOPE", (DL_FUNC) &_solvers_sparseSLOPE, 3},
-    {"_solvers_denseSLOPE", (DL_FUNC) &_solvers_denseSLOPE, 3},
-    {"_solvers_admm_binom", (DL_FUNC) &_solvers_admm_binom, 4},
-    {"_solvers_sorted_l1_prox", (DL_FUNC) &_solvers_sorted_l1_prox, 2},
     {NULL, NULL, 0}
 };
 
