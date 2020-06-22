@@ -6,47 +6,47 @@
 \title{Student performance}
 \format{
 382 observations from 13 variables represented as a list consisting
-of a binary factor response matrix `y` with two responses: `portugese` and
-`math` for the final scores in period three for the respective subjects.
-The list also contains `x`: a sparse feature matrix of class
+of a binary factor response matrix \code{y} with two responses: \code{portugese} and
+\code{math} for the final scores in period three for the respective subjects.
+The list also contains \code{x}: a sparse feature matrix of class
 'dgCMatrix' with the following variables:
 \describe{
-  \item{school_ms}{student's primary school, 1 for Mousinho da Silveira and 0
-        for Gabriel Pereira}
-  \item{sex}{sex of student, 1 for male}
-  \item{age}{age of student}
-  \item{urban}{urban (1) or rural (0) home address}
-  \item{large_family}{whether the family size is larger than 3}
-  \item{cohabitation}{whether parents live together}
-  \item{Medu}{mother's level of education (ordered)}
-  \item{Fedu}{fathers's level of education (ordered)}
-  \item{Mjob_health}{whether the mother was employed in health care}
-  \item{Mjob_other}{whether the mother was employed as something other than
-        the specified job roles}
-  \item{Mjob_services}{whether the mother was employed in the service sector}
-  \item{Mjob_teacher}{whether the mother was employed as a teacher}
-  \item{Fjob_health}{whether the father was employed in health care}
-  \item{Fjob_other}{whether the father was employed as something other than
-        the specified job roles}
-  \item{Fjob_services}{whether the father was employed in the service sector}
-  \item{Fjob_teacher}{whether the father was employed as a teacher}
-  \item{reason_home}{school chosen for being close to home}
-  \item{reason_other}{school chosen for another reason}
-  \item{reason_rep}{school chosen for its reputation}
-  \item{nursery}{whether the student attended nursery school}
-  \item{internet}{Pwhether the student has internet access at home}
+\item{school_ms}{student's primary school, 1 for Mousinho da Silveira and 0
+for Gabriel Pereira}
+\item{sex}{sex of student, 1 for male}
+\item{age}{age of student}
+\item{urban}{urban (1) or rural (0) home address}
+\item{large_family}{whether the family size is larger than 3}
+\item{cohabitation}{whether parents live together}
+\item{Medu}{mother's level of education (ordered)}
+\item{Fedu}{fathers's level of education (ordered)}
+\item{Mjob_health}{whether the mother was employed in health care}
+\item{Mjob_other}{whether the mother was employed as something other than
+the specified job roles}
+\item{Mjob_services}{whether the mother was employed in the service sector}
+\item{Mjob_teacher}{whether the mother was employed as a teacher}
+\item{Fjob_health}{whether the father was employed in health care}
+\item{Fjob_other}{whether the father was employed as something other than
+the specified job roles}
+\item{Fjob_services}{whether the father was employed in the service sector}
+\item{Fjob_teacher}{whether the father was employed as a teacher}
+\item{reason_home}{school chosen for being close to home}
+\item{reason_other}{school chosen for another reason}
+\item{reason_rep}{school chosen for its reputation}
+\item{nursery}{whether the student attended nursery school}
+\item{internet}{Pwhether the student has internet access at home}
 }
 }
 \source{
 P. Cortez and A. Silva. Using Data Mining to Predict Secondary School
-  Student Performance. In A. Brito and J. Teixeira Eds., Proceedings of 5th
-  FUture BUsiness TEChnology Conference (FUBUTEC 2008) pp. 5-12, Porto,
-  Portugal, April, 2008, EUROSIS, ISBN 978-9077381-39-7.
-  <http://www3.dsi.uminho.pt/pcortez/student.pdf>
+Student Performance. In A. Brito and J. Teixeira Eds., Proceedings of 5th
+FUture BUsiness TEChnology Conference (FUBUTEC 2008) pp. 5-12, Porto,
+Portugal, April, 2008, EUROSIS, ISBN 978-9077381-39-7.
+\url{http://www3.dsi.uminho.pt/pcortez/student.pdf}
 
 Dua, D. and Karra Taniskidou, E. (2017). UCI Machine Learning Repository
- <http://archive.ics.uci.edu/ml>. Irvine, CA: University of California,
- School of Information and Computer Science.
+\url{http://archive.ics.uci.edu/ml}. Irvine, CA: University of California,
+School of Information and Computer Science.
 }
 \usage{
 student

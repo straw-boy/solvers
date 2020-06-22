@@ -6,34 +6,34 @@
 \title{Wine cultivars}
 \format{
 178 observations from 13 variables represented as a list consisting
-of a categorical response vector `y`
-with three levels: *A*, *B*, and *C* representing different
-cultivars of wine as well as `x`: a sparse feature matrix of class
+of a categorical response vector \code{y}
+with three levels: \emph{A}, \emph{B}, and \emph{C} representing different
+cultivars of wine as well as \code{x}: a sparse feature matrix of class
 'dgCMatrix' with the following variables:
 \describe{
-  \item{alcohol}{alcoholic content}
-  \item{malic}{malic acid}
-  \item{ash}{ash}
-  \item{alcalinity}{alcalinity of ash}
-  \item{magnesium}{magnemium}
-  \item{phenols}{total phenols}
-  \item{flavanoids}{flavanoids}
-  \item{nonflavanoids}{nonflavanoid phenols}
-  \item{proanthocyanins}{proanthocyanins}
-  \item{color}{color intensity}
-  \item{hue}{hue}
-  \item{dilution}{OD280/OD315 of diluted wines}
-  \item{proline}{proline}
+\item{alcohol}{alcoholic content}
+\item{malic}{malic acid}
+\item{ash}{ash}
+\item{alcalinity}{alcalinity of ash}
+\item{magnesium}{magnemium}
+\item{phenols}{total phenols}
+\item{flavanoids}{flavanoids}
+\item{nonflavanoids}{nonflavanoid phenols}
+\item{proanthocyanins}{proanthocyanins}
+\item{color}{color intensity}
+\item{hue}{hue}
+\item{dilution}{OD280/OD315 of diluted wines}
+\item{proline}{proline}
 }
 }
 \source{
 Dua, D. and Karra Taniskidou, E. (2017). UCI Machine Learning Repository
-  <http://archive.ics.uci.edu/ml>. Irvine, CA: University of California,
-  School of Information and Computer Science.
+\url{http://archive.ics.uci.edu/ml}. Irvine, CA: University of California,
+School of Information and Computer Science.
 
-<https://raw.githubusercontent.com/hadley/rminds/master/1-data/wine.csv>
+\url{https://raw.githubusercontent.com/hadley/rminds/master/1-data/wine.csv}
 
-<https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/multiclass.html#wine>
+\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/multiclass.html#wine}
 }
 \usage{
 wine

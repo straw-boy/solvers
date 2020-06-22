@@ -21,3 +21,4 @@ Suggests:
     testthat (>= 2.1.0),
     SLOPE
 Remotes: jolars/SLOPE
+Roxygen: list(markdown = TRUE)
