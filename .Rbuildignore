@@ -3,3 +3,5 @@
 ^\.github$
 src/run.r
 .Rbuildproj
+^.*\.Rproj$
+^\.Rproj\.user$
