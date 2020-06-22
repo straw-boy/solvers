@@ -1,5 +1,5 @@
 
-ADMM <- function(x,
+ADMM <- function( x,
                   y,
                   family = c("gaussian", "binomial", "multinomial", "poisson"),
                   intercept = TRUE,
