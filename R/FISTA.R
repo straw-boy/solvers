@@ -1,5 +1,35 @@
 #' FISTA
-
+#' @param x the design matrix, which can be either a dense
+#'   matrix of the standard *matrix* class, or a sparse matrix
+#'   inheriting from [Matrix::sparseMatrix]. Data frames will
+#'   be converted to matrices internally.
+#' @param y the response, which for `family = "gaussian"` must be numeric; for
+#'   `family = "binomial"` or `family = "multinomial"`, it can be a factor.
+#' @param family model family 
+#' @param intercept whether to fit an intercept
+#' @param alpha scale for regularization path: either a decreasing numeric
+#'   vector (possibly of length 1) or a character vector; in the latter case,
+#'   the choices are:
+#'   - `"path"`, which computes a regularization sequence
+#'     where the first value corresponds to the intercept-only (null) model and
+#'     the last to the almost-saturated model, and
+#'   - `"estimate"`, which estimates a *single* `alpha`
+#'     using Algorithm 5 in Bogdan et al. (2015).
+#' @param lambda either a character vector indicating the method used
+#'   to construct the lambda path or a numeric non-decreasing
+#'   vector with length equal to the number
+#'   of coefficients in the model; see section **Regularization sequences**
+#'   for details.
+#' @param max_passes maximum number of passes (outer iterations) for solver
+#' @param diagnostics whether to save diagnostics from the solver
+#'   (timings and other values depending on type of solver)
+#' @param verbosity level of verbosity for displaying output from the
+#'   program. Not completely developed. Use 3 just for now.
+#' @param tol_rel_gap stopping criterion for the duality gap; used only with
+#'   FISTA solver.
+#' @param tol_infeas stopping criterion for the level of infeasibility; used
+#'   with FISTA solver.
+#' @export
 FISTA <- function(x,
                   y,
                   family = c("gaussian", "binomial", "multinomial", "poisson"),

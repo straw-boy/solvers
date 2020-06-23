@@ -20,7 +20,6 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
   uword p_rows = pmi/m;
 
   mat beta(p, m, fill::zeros);
-  beta += 0.1;
   mat beta_tilde(beta);
   mat beta_tilde_old(beta);
 
@@ -88,15 +87,11 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
         timer.tic();
     }
 
-    // Rcout << "--------" << endl;
-    // beta.print();
-    // Rcout << "--------" << endl;
-    // grad.print();
-    // Rcout << "--------" << endl;
-
-
     if (optimal && feasible){
-      break;
+      // Either intercept term is absent or
+      // gradient with respect to intercept is low
+      if(!intercept || std::abs(grad(0,0))<1e-2)
+        break;
     }
 
     beta_tilde_old = beta_tilde;
