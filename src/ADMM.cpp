@@ -4,6 +4,7 @@
 #include "families/families.h"
 #include "algorithms/admm.h"
 #include "algorithms/newton_raphson.h"
+#include "algorithms/bfgs.h"
 #include "standardize.h"
 #include "rescale.h"
 #include "regularizationPath.h"
@@ -33,6 +34,7 @@ List cppADMM(T& x, mat& y, const List control)
 
   // solver arguments
   auto max_passes  = as<uword>(control["max_passes"]);
+  auto opt_algo = as<std::string>(control["opt_algo"]);
   auto tol_rel_gap = as<double>(control["tol_rel_gap"]);
   auto tol_infeas  = as<double>(control["tol_infeas"]);
   auto tol_abs     = as<double>(control["tol_abs"]);
@@ -117,7 +119,7 @@ List cppADMM(T& x, mat& y, const List control)
   
   while (k < path_length) {
     inner_timer.tic();
-    res = family->fitADMM(x, y,lambda*alpha(k),1.0);
+    res = family->fitADMM(x, y,lambda*alpha(k),opt_algo,1.0);
     passes(k) = res.passes;
     beta = res.beta;
 

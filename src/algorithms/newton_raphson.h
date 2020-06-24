@@ -9,7 +9,7 @@ using namespace arma;
 // // Newton-Raphson's method for optimization
 // // Solves argmin_z { f(z) + rho/2*||z-u||^2 }
 template <typename T>
-mat Family::newton_raphson(const T& x, const mat&y, const double rho, const mat& u, bool quasi){
+mat Family::newton_raphson(const T& x, const mat&y, const double rho, const mat& u){
 
   Rcout.precision(4);
   uword p = x.n_cols;
@@ -19,17 +19,17 @@ mat Family::newton_raphson(const T& x, const mat&y, const double rho, const mat&
   mat h(p,p);
 
   uword max_iter = 50;
-  double tolerance = 1e-8;
+  double tolerance = 1e-12;
   double alpha = 0.1;
   double gamma = 0.5;
 
-  uword i;
+  uword iter;
 
-  for(i = 0; i < max_iter; i++){
+  for(iter = 0; iter < max_iter; iter++){
     
     mat lin_pred = x*z;
     
-    g = gradient(x,y,lin_pred)+rho*(z-u);
+    g = gradient(x,y,lin_pred) + rho*(z-u);
     h = hessian(x,y,lin_pred);
 
 
@@ -57,6 +57,10 @@ mat Family::newton_raphson(const T& x, const mat&y, const double rho, const mat&
 
     Rcpp::checkUserInterrupt();
   }
-  
+
+  if(verbosity>=3){
+    Rcout << "Newton-Raphson iterations " << iter << " ";
+  }
+
   return z;
 }
