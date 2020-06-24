@@ -1,2 +1,7 @@
 ^LICENSE\.md$
 ^data-raw$
+^\.github$
+src/run.r
+.Rbuildproj
+^.*\.Rproj$
+^\.Rproj\.user$

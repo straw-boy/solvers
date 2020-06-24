@@ -6,23 +6,23 @@
 \title{Abalone}
 \format{
 A list with two items representing 211 observations from
-  9 variables
+9 variables
 \describe{
-  \item{sex}{sex of abalone, 1 for female}
-  \item{infant}{indicates that the person is an infant}
-  \item{length}{longest shell measurement in mm}
-  \item{diameter}{perpendicular to length in mm}
-  \item{height}{height in mm including meat in shell}
-  \item{weight_whole}{weight of entire abalone}
-  \item{weight_shucked}{weight of meat}
-  \item{weight_viscera}{weight of viscera}
-  \item{weight_shell}{weight of shell}
-  \item{rings}{rings. +1.5 gives the age in years}
+\item{sex}{sex of abalone, 1 for female}
+\item{infant}{indicates that the person is an infant}
+\item{length}{longest shell measurement in mm}
+\item{diameter}{perpendicular to length in mm}
+\item{height}{height in mm including meat in shell}
+\item{weight_whole}{weight of entire abalone}
+\item{weight_shucked}{weight of meat}
+\item{weight_viscera}{weight of viscera}
+\item{weight_shell}{weight of shell}
+\item{rings}{rings. +1.5 gives the age in years}
 }
 }
 \source{
 Pace, R. Kelley and Ronald Barry, Sparse Spatial Autoregressions,
-  Statistics and Probability Letters, 33 (1997) 291-297.
+Statistics and Probability Letters, 33 (1997) 291-297.
 }
 \usage{
 abalone
