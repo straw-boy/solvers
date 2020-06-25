@@ -52,7 +52,7 @@ double Family::zoom(const T& x, const mat&y, const double rho, const mat&u,
     }
     iter++;
     if(iter>max_iter){
-      // Rcout << "Max iter of zoom ";
+      // Rcout << "Max iter of zoom reached" << endl;
       return t_mid;
     }
   }
@@ -81,7 +81,7 @@ double Family::wolfe_line_search(const T& x, const mat&y, const double rho,
   const double c1 = 1e-4;
   const double c2 = 0.9;
 
-  const double f = f0;
+  double f = f0;
 
   uword max_iter=30;
   uword iter=1;
@@ -109,14 +109,16 @@ double Family::wolfe_line_search(const T& x, const mat&y, const double rho,
       // Rcout << "wolfe case 3" << endl;
       return zoom(x,y,rho,u,z,d,t,t_prev);
     }
-    t_prev = t;
     
     if(iter > max_iter){
       // Rcout << "Max iter of wolfe" << endl;
       return t;
     }
+
+    t_prev = t;
+    f = f_new;
     t = t + (t_max-t)*0.8;
-    Rcout << "t is now " << t << endl;
+    // Rcout << "t is now " << t << endl;
 
     iter++;
 
