@@ -39,20 +39,23 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     passes++;
     
     // Rcout << "----------" << endl;
-    // Rcout << "QNR : " << endl;
-    // mat bfgs_est = optimize_approximation(x,y,rho,z-u,"bfgs");
+    // Rcout << "BFGS : " << endl;
+    mat bfgs_est = optimize_approximation(x,y,rho,z-u,"nr");
     // bfgs_est.print();
     // Rcout << "----------" << endl;
-    // Rcout << "NR : " << endl;
-    beta = optimize_approximation(x,y,rho,z-u,opt_algo);
+    // Rcout << "LBFGS : " << endl;
+    beta = optimize_approximation(x,y,rho,z-u,"lbfgs");
     // beta.print();
     // Rcout << "----------" << endl;
-    // if(!(bfgs_est-beta).is_zero(1e-6)){
-    //   Rcout << "MESSED UP" << endl;
-    //   (bfgs_est-beta).print();
-    //   exit(0);
-    // }
+    beta.print();
+    if(!(bfgs_est-beta).is_zero(1e-4)){
+      Rcout << "pass: " << passes << endl;
+      Rcout << "MESSED UP" << endl;
+      (bfgs_est-beta).print();
+      exit(0);
+    }
 
+    beta = optimize_approximation(x,y,rho,z-u,"lbfgs");
     mat z_old = z;
     mat beta_hat = alpha*beta + (1 - alpha)*z_old;
 

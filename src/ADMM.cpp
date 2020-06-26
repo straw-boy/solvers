@@ -5,6 +5,7 @@
 #include "algorithms/admm.h"
 #include "algorithms/newton_raphson.h"
 #include "algorithms/bfgs.h"
+#include "algorithms/lbfgs.h"
 #include "standardize.h"
 #include "rescale.h"
 #include "regularizationPath.h"

@@ -18,7 +18,6 @@ protected:
   const uword verbosity;
 
 
-
 public:
   Family(const bool intercept,
          const bool diagnostics,
@@ -70,11 +69,16 @@ public:
   mat bfgs(const T& x, const mat&y, const double rho, const mat& u);
 
   template <typename T>
+  mat lbfgs(const T& x, const mat&y, const double rho, const mat& u);
+
+  template <typename T>
   mat optimize_approximation(const T& x, const mat&y, const double rho, const mat& u, const std::string opt_algo){
     if(opt_algo=="bfgs")
         return bfgs(x, y, rho, u);
-    else
+    else if(opt_algo=="nr")
         return newton_raphson(x, y, rho, u);
+    else
+        return lbfgs(x, y, rho, u);
   }
 
   template <typename T>

@@ -11,9 +11,7 @@ using namespace arma;
 // // Solves argmin_z { f(z) + rho/2*||z-u||^2 }
 template <typename T>
 mat Family::bfgs(const T& x, const mat&y, const double rho, const mat& u){
-
   uword p = x.n_cols;
-  Rcout.precision(20);
   mat z(u);
   mat g(u);
   mat I(p,p,fill::eye);
@@ -34,8 +32,12 @@ mat Family::bfgs(const T& x, const mat&y, const double rho, const mat& u){
 
     mat step = -h*g;
 
+    // Rcout << "Iter : " << iter << endl;
+    // step.print();
+
     //Backtracking
     double t = wolfe_line_search(x,y,rho,u,z,step);
+    // Rcout << "t is " << t << endl;
 
     mat dz = t*step;
     mat dgrad = gradient(x,y,x*(z+dz))+rho*(z+dz-u) - g;
@@ -70,6 +72,8 @@ mat Family::bfgs(const T& x, const mat&y, const double rho, const mat& u){
     if(dot(dgrad,dz)==0){
       break;
     }
+
+    // Rcout << "dgrad: " << norm(dgrad) << " dz: " << norm(dz) << " eta: " << eta << endl;  
 
     // Inverse Hessian update
     h = (I-eta*dz*dgrad.t())*h*(I-eta*dgrad*dz.t()) + eta*dz*dz.t();

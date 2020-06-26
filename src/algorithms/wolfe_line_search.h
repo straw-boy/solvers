@@ -20,8 +20,8 @@ double Family::zoom(const T& x, const mat&y, const double rho, const mat&u,
   const double c1 = 1e-4;
   const double c2 = 0.9;
 
-  uword max_iter=30;
-  uword iter=0;
+  uword max_iter = 20;
+  uword iter = 0;
 
   while(true){
 
@@ -83,8 +83,8 @@ double Family::wolfe_line_search(const T& x, const mat&y, const double rho,
 
   double f = f0;
 
-  uword max_iter=30;
-  uword iter=1;
+  uword max_iter = 30;
+  uword iter = 1;
 
   while(true){
     mat z_new = z + t*d;
