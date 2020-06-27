@@ -1,37 +1,67 @@
-test_that("FISTA works same as current SLOPE package implementation (excluding intercept term)", {
-
+test_that("FISTA: gaussian, n>p case", {
   library(SLOPE)
+  set.seed(1)
 
-  fista_solvers <- FISTA(bodyfat$x, bodyfat$y,family="gaussian",intercept=FALSE)
-  fista_slope <- SLOPE(bodyfat$x, bodyfat$y,family="gaussian", solver = "fista", intercept=FALSE)
-  expect_equivalent(coef(fista_slope), coef(fista_solvers), tol = 1e-2)
+  n = 10
+  p = 20
 
-  fista_solvers <- FISTA(heart$x, heart$y,family="binomial",intercept=FALSE)
-  fista_slope <- SLOPE(heart$x, heart$y,family="binomial", solver = "fista",intercept=FALSE)
-  expect_equivalent(coef(fista_slope), coef(fista_solvers), tol = 1e-2)
-
-  fista_solvers <- FISTA(abalone$x, abalone$y,family="poisson",intercept=FALSE)
-  fista_slope <- SLOPE(abalone$x, abalone$y,family="poisson", solver = "fista", intercept=FALSE)
-  expect_equivalent(coef(fista_slope), coef(fista_solvers), tol = 1e-2)
+  d <- randomProblem(n,p,response="gaussian")
+  
+  fista_solvers <- FISTA(d$x, d$y, family="gaussian",path_length=3)
+  fista_slope <- SLOPE(d$x, d$y, family="gaussian",path_length=3)
+  expect_equivalent(coef(fista_solvers), coef(fista_slope), tol = 1e-2)
 
 })
 
-# This test passes when beta is initialized to 0. (Comment line#23 in src/algorithms/fista.h)
-test_that("FISTA works same as current SLOPE package implementation (including intercept term)", {
+test_that("FISTA: gaussian, n<p case", {
+  library(SLOPE)
+  set.seed(1)
+
+
+  n = 10
+  p = 20
+
+  d <- randomProblem(n,p,response="gaussian")
+  
+  fista_solvers <- FISTA(d$x, d$y, family="gaussian",path_length=3)
+  fista_slope <- SLOPE(d$x, d$y, family="gaussian",path_length=3)
+  expect_equivalent(coef(fista_solvers), coef(fista_slope), tol = 1e-2)
+
+})
+
+
+test_that("FISTA: binomial, n>p case", {
+  # skip('Intercept mismatch in this')
+
+  library(SLOPE)
+  set.seed(1)
+
+  n = 100
+  p = 10
+
+  d <- randomProblem(n,p,response="binomial")
+  
+  fista_solvers <- FISTA(d$x, d$y, family="binomial",path_length=3)
+  fista_slope <- SLOPE(d$x, d$y, family="binomial",path_length=3)
+  
+  expect_equivalent(coef(fista_solvers), coef(fista_slope), tol = 1e-2)
+
+})
+
+test_that("FISTA: binomial, n<p case", {
   skip('Intercept mismatch in this')
+
   library(SLOPE)
+  set.seed(1)
+  n = 10
+  p = 20
 
-  fista_slope <- SLOPE(bodyfat$x, bodyfat$y,family="gaussian", solver = "fista")
-  fista_solvers <- FISTA(bodyfat$x, bodyfat$y,family="gaussian")
-  expect_equivalent(coef(fista_slope), coef(fista_solvers), tol = 1e-2)
+  d <- randomProblem(n,p,response="binomial")
+  
+  fista_solvers <- FISTA(d$x, d$y, family="binomial",path_length=3)
+  fista_slope <- SLOPE(d$x, d$y, family="binomial",path_length=3)
 
-  fista_slope <- SLOPE(heart$x, heart$y,family="binomial", solver = "fista")
-  fista_solvers <- FISTA(heart$x, heart$y,family="binomial")
-  expect_equivalent(coef(fista_slope), coef(fista_solvers), tol = 1e-2)
+  expect_equivalent(coef(fista_solvers), coef(fista_slope), tol = 1e-2)
 
-  fista_slope <- SLOPE(abalone$x, abalone$y,family="poisson", solver = "fista")
-  fista_solvers <- FISTA(abalone$x, abalone$y,family="poisson")
-  expect_equivalent(coef(fista_slope), coef(fista_solvers), tol = 1e-2)
 })
-
 

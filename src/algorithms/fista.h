@@ -50,7 +50,7 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
 
   // main loop
   uword passes = 0;
-  while (true) {
+  while (passes < max_passes) {
     
     lin_pred = x*beta;
 
