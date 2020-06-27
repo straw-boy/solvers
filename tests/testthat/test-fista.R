@@ -2,8 +2,8 @@ test_that("FISTA: gaussian, n>p case", {
   library(SLOPE)
   set.seed(1)
 
-  n = 10
-  p = 20
+  n = 100
+  p = 10
 
   d <- randomProblem(n,p,response="gaussian")
   
