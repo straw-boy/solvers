@@ -18,8 +18,8 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
   mat g(u);
   
   const int max_iter = 1000;
-  const double tolerance = 1e-6;
-  const int l = 50;
+  const double tolerance = 1e-5;
+  const int l = 20;
 
   std::deque <mat> dz;
   std::deque <mat> dgrad;

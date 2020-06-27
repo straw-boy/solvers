@@ -77,7 +77,7 @@ double Family::wolfe_line_search(const T& x, const mat&y, const double rho,
 
   double t_prev = 0;
   double t = 1;
-  const double t_max = 20;
+  const double t_max = 2;
   const double c1 = 1e-4;
   const double c2 = 0.9;
 

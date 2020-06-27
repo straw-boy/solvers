@@ -47,7 +47,7 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     beta = optimize_approximation(x,y,rho,z-u,"lbfgs");
     // beta.print();
     // Rcout << "----------" << endl;
-    beta.print();
+    // beta.print();
     if(!(bfgs_est-beta).is_zero(1e-4)){
       Rcout << "pass: " << passes << endl;
       Rcout << "MESSED UP" << endl;
@@ -55,7 +55,7 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
       exit(0);
     }
 
-    beta = optimize_approximation(x,y,rho,z-u,"lbfgs");
+    // beta = optimize_approximation(x,y,rho,z-u,"nr");
     mat z_old = z;
     mat beta_hat = alpha*beta + (1 - alpha)*z_old;
 
