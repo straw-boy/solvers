@@ -40,20 +40,22 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     
     // Rcout << "----------" << endl;
     // Rcout << "BFGS : " << endl;
-    mat bfgs_est = optimize_approximation(x,y,rho,z-u,"nr");
-    // bfgs_est.print();
-    // Rcout << "----------" << endl;
-    // Rcout << "LBFGS : " << endl;
-    beta = optimize_approximation(x,y,rho,z-u,"lbfgs");
-    // beta.print();
-    // Rcout << "----------" << endl;
-    // beta.print();
-    if(!(bfgs_est-beta).is_zero(1e-4)){
-      Rcout << "pass: " << passes << endl;
-      Rcout << "MESSED UP" << endl;
-      (bfgs_est-beta).print();
-      exit(0);
-    }
+    // mat bfgs_est = optimize_approximation(x,y,rho,z-u,"nr");
+    // // bfgs_est.print();
+    // // Rcout << "----------" << endl;
+    // // Rcout << "LBFGS : " << endl;
+    // beta = optimize_approximation(x,y,rho,z-u,"lbfgs");
+    // // beta.print();
+    // // Rcout << "----------" << endl;
+    // // beta.print();
+    // if(!(bfgs_est-beta).is_zero(1e-4)){
+    //   Rcout << "pass: " << passes << endl;
+    //   Rcout << "MESSED UP" << endl;
+    //   (bfgs_est-beta).print();
+    //   exit(0);
+    // }
+
+    beta = optimize_approximation(x,y,rho,z-u,opt_algo);
 
     // beta = optimize_approximation(x,y,rho,z-u,"nr");
     mat z_old = z;

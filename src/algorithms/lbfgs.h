@@ -61,7 +61,7 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
 
     // Backtracking 
     double t = wolfe_line_search(x,y,rho,u,z,step);
-    Rcout << "Iter: " << iter << " t is " << t << " ";
+    // Rcout << "Iter: " << iter << " t is " << t << " ";
     
     dz.push_back(t*step);
     z += dz.back();
@@ -73,10 +73,10 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
       break;
     eta.push_back(1.0/eta_inv);
 
-    gamma = eta_inv / norm(dgrad.back());
+    // gamma = eta_inv / norm(dgrad.back());
     g += dgrad.back();
 
-    Rcout << "norm : " << norm(g) << " dgrad: " << norm(dgrad.back()) << " dz: " << norm(dz.back()) << " eta: " << eta.back() << " eta_inv: " << eta_inv << endl;  
+    // Rcout << "norm : " << norm(g) << " dgrad: " << norm(dgrad.back()) << " dz: " << norm(dz.back()) << " eta: " << eta.back() << " eta_inv: " << eta_inv << " gamma: " << gamma << endl;  
 
     Rcpp::checkUserInterrupt();
   }
