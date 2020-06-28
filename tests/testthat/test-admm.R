@@ -7,14 +7,14 @@ test_that("ADMM: gaussian, n>p case", {
 
   d <- randomProblem(n,p,response="gaussian")
   
-  admm_solvers <- ADMM(d$x, d$y, family="gaussian",alpha=c(1.0,0.005))
-  admm_solvers <- FISTA(d$x, d$y, family="gaussian",alpha=c(1.0,0.005),solver="admm")
-  expect_equivalent(coef(admm_solvers), coef(admm_solvers), tol = 1e-2)
+  admm_solvers <- ADMM(d$x, d$y, family="gaussian",alpha=c(1.0,0.005),opt_algo="nr")
+  fista_solvers <- FISTA(d$x, d$y, family="gaussian",alpha=c(1.0,0.005))
+  expect_equivalent(coef(admm_solvers), coef(fista_solvers), tol = 1e-2)
 
 })
 
 test_that("ADMM: gaussian, n<p case", {
-  skip('This passes if compared with SLOPE::SLOPE(). Absolutely clueless about this.')
+  # skip('This passes if compared with SLOPE::SLOPE(). Absolutely clueless about this.')
 
   library(SLOPE)
   set.seed(1)
@@ -24,10 +24,10 @@ test_that("ADMM: gaussian, n<p case", {
 
   d <- randomProblem(n,p,response="gaussian")
   
-  admm_solvers <- ADMM(d$x, d$y, family="gaussian",alpha=c(1.0,0.005))
-  admm_solvers <- FISTA(d$x, d$y, family="gaussian",alpha=c(1.0,0.005),solver="admm")
+  admm_solvers <- ADMM(d$x, d$y, family="gaussian",alpha=c(1.0,0.005),opt_algo="nr")
+  fista_solvers <- FISTA(d$x, d$y, family="gaussian",alpha=c(1.0,0.005))
   
-  expect_equivalent(coef(admm_solvers), coef(admm_solvers), tol = 1e-2)
+  expect_equivalent(coef(admm_solvers), coef(fista_solvers), tol = 1e-2)
 
 })
 
@@ -40,7 +40,7 @@ test_that("ADMM: binomial, n>p case", {
 
   d <- randomProblem(n,p,response="binomial")
   
-  admm_solvers <- ADMM(d$x, d$y, family="binomial",alpha=c(1.0,0.005))
+  admm_solvers <- ADMM(d$x, d$y, family="binomial",alpha=c(1.0,0.005),opt_algo="nr")
   fista_solvers <- FISTA(d$x, d$y, family="binomial",alpha=c(1.0,0.005))
   expect_equivalent(coef(admm_solvers), coef(fista_solvers), tol = 1e-2)
 
@@ -57,7 +57,7 @@ test_that("ADMM: binomial, n<p case", {
 
   d <- randomProblem(n,p,response="binomial")
   
-  admm_solvers <- ADMM(d$x, d$y, family="binomial",alpha=c(1.0,0.005))
+  admm_solvers <- ADMM(d$x, d$y, family="binomial",alpha=c(1.0,0.005),opt_algo="nr")
   fista_solvers <- FISTA(d$x, d$y, family="binomial",alpha=c(1.0,0.005))
   expect_equivalent(coef(admm_solvers), coef(fista_solvers), tol = 1e-2)
 
@@ -73,7 +73,7 @@ test_that("ADMM: poisson, n>p case", {
 
   d <- randomProblem(n,p,response="poisson")
   
-  admm_solvers <- ADMM(d$x, d$y, family="poisson",alpha=c(1.0,0.005))
+  admm_solvers <- ADMM(d$x, d$y, family="poisson",alpha=c(1.0,0.005),opt_algo="nr")
   fista_solvers <- FISTA(d$x, d$y, family="poisson",alpha=c(1.0,0.005))
   expect_equivalent(coef(admm_solvers), coef(fista_solvers), tol = 1e-2)
 
@@ -89,7 +89,7 @@ test_that("ADMM: poisson, n<p case", {
 
   d <- randomProblem(n,p,response="poisson")
   
-  admm_solvers <- ADMM(d$x, d$y, family="poisson",alpha=c(1.0,0.005))
+  admm_solvers <- ADMM(d$x, d$y, family="poisson",alpha=c(1.0,0.005),opt_algo="nr")
   fista_solvers <- FISTA(d$x, d$y, family="poisson",alpha=c(1.0,0.005))
   expect_equivalent(coef(admm_solvers), coef(fista_solvers), tol = 1e-2)
 
