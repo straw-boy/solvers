@@ -12,12 +12,10 @@ using namespace arma;
 template <typename T>
 mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
 
-  // Rcout << "LBFGS starts " << endl;
-  uword p = x.n_cols;
   mat z(u);
   mat g(u);
   
-  const int max_iter = 1000;
+  const int max_iter = 2000;
   const double tolerance = 1e-5;
   const int l = 20;
 
@@ -52,7 +50,8 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
     }
 
     mat step = -q;
-    
+
+    // Getting rid of too old change in gradient and change in z
     if(iter > l){
       dz.pop_front();
       dgrad.pop_front();
@@ -61,7 +60,6 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
 
     // Backtracking 
     double t = wolfe_line_search(x,y,rho,u,z,step);
-    // Rcout << "Iter: " << iter << " t is " << t << " ";
     
     dz.push_back(t*step);
     z += dz.back();
@@ -73,10 +71,9 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
       break;
     eta.push_back(1.0/eta_inv);
 
-    // gamma = eta_inv / norm(dgrad.back());
-    g += dgrad.back();
+    gamma = eta_inv / dot(dgrad.back(),dgrad.back());
 
-    // Rcout << "norm : " << norm(g) << " dgrad: " << norm(dgrad.back()) << " dz: " << norm(dz.back()) << " eta: " << eta.back() << " eta_inv: " << eta_inv << " gamma: " << gamma << endl;  
+    g += dgrad.back();
 
     Rcpp::checkUserInterrupt();
   }
@@ -84,6 +81,6 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
   if(verbosity>=3){
     Rcout << " L-BFGS iterations : " << iter << " ";
   }
-  // Rcout << "LBFGS ends " << endl;
+  
   return z;
 }

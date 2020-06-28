@@ -49,7 +49,7 @@
 #   expect_equivalent(coef(fista_slope), coef(admm_solvers), tol = 1e-2)
 # })
 
-# test_that("ADMM output is same for different optimization algorithm choices ", {
+# test_that("ADMM output is same for different optimization algorithm choices (BFGS) ", {
 
 #   admm_nr <- ADMM(bodyfat$x, bodyfat$y, opt_algo="nr")
 #   admm_bfgs <- ADMM(bodyfat$x, bodyfat$y, opt_algo="bfgs")
@@ -64,18 +64,18 @@
 #   expect_equivalent(coef(admm_nr), coef(admm_bfgs), tol = 1e-2)
 # })
 
-test_that("ADMM output is same for different optimization algorithm choices ", {
+# test_that("ADMM output is same for different optimization algorithm choices (L-BFGS)", {
 
-  # admm_nr <- ADMM(bodyfat$x, bodyfat$y, opt_algo="nr")
-  # admm_lbfgs <- ADMM(bodyfat$x, bodyfat$y, opt_algo="lbfgs")
-  # expect_equivalent(coef(admm_nr), coef(admm_lbfgs), tol = 1e-2)
+#   admm_nr <- ADMM(bodyfat$x, bodyfat$y, opt_algo="nr")
+#   admm_lbfgs <- ADMM(bodyfat$x, bodyfat$y, opt_algo="lbfgs")
+#   expect_equivalent(coef(admm_nr), coef(admm_lbfgs), tol = 1e-2)
 
-  # admm_nr <- ADMM(heart$x, heart$y,family="binomial",opt_algo="nr")
-  # admm_lbfgs <- ADMM(heart$x, heart$y,family="binomial",opt_algo="lbfgs")
-  # expect_equivalent(coef(admm_nr), coef(admm_lbfgs), tol = 1e-2)
+#   admm_nr <- ADMM(heart$x, heart$y,family="binomial",opt_algo="nr")
+#   admm_lbfgs <- ADMM(heart$x, heart$y,family="binomial",opt_algo="lbfgs")
+#   expect_equivalent(coef(admm_nr), coef(admm_lbfgs), tol = 1e-2)
 
-  admm_nr <- ADMM(abalone$x, abalone$y,family="poisson",opt_algo="nr")
-  admm_lbfgs <- ADMM(abalone$x, abalone$y,family="poisson",opt_algo="lbfgs")
-  expect_equivalent(coef(admm_nr), coef(admm_lbfgs), tol = 1e-2)
-})
+#   admm_nr <- ADMM(abalone$x, abalone$y,family="poisson",opt_algo="nr")
+#   admm_lbfgs <- ADMM(abalone$x, abalone$y,family="poisson",opt_algo="lbfgs")
+#   expect_equivalent(coef(admm_nr), coef(admm_lbfgs), tol = 1e-2)
+# })
 
