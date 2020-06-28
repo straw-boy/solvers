@@ -21,7 +21,7 @@ ADMM(
   tol_dev_change = 1e-05,
   tol_dev_ratio = 0.995,
   max_variables = NROW(x),
-  solver = c("fista", "admm"),
+  opt_algo = c("lbfgs", "bfgs", "nr"),
   max_passes = 1e+06,
   tol_abs = 1e-05,
   tol_rel = 1e-04,
@@ -63,6 +63,8 @@ to construct the lambda path or a numeric non-decreasing
 vector with length equal to the number
 of coefficients in the model; see section \strong{Regularization sequences}
 for details.}
+
+\item{opt_algo}{Algorithm to use for optimizing second order approximation for \beta update step.}
 
 \item{max_passes}{maximum number of passes (outer iterations) for solver}
 

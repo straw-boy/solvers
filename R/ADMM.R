@@ -21,7 +21,7 @@
 #'   of coefficients in the model; see section **Regularization sequences**
 #'   for details.
 #' @param max_passes maximum number of passes (outer iterations) for solver
-#' @param opt_algo Algorithm to use for optimizing second order approximation for \beta update step.
+#' @param opt_algo Algorithm to use for optimizing second order approximation for beta update step.
 #' @param diagnostics whether to save diagnostics from the solver
 #'   (timings and other values depending on type of solver)
 #' @param verbosity level of verbosity for displaying output from the
