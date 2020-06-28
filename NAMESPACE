@@ -2,5 +2,6 @@
 
 export(ADMM)
 export(FISTA)
+export(randomProblem)
 importFrom(Rcpp,sourceCpp)
 useDynLib(solvers, .registration = TRUE)
