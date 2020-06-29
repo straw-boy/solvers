@@ -6,8 +6,6 @@
 using namespace Rcpp;
 using namespace arma;
 
-
-
 template <typename T>
 double Family::zoom(const T& x, const mat&y, const double rho, const mat&u, 
                     const mat& z, const mat& d, double t_low, double t_high){
@@ -25,13 +23,13 @@ double Family::zoom(const T& x, const mat&y, const double rho, const mat&u,
 
   while(true){
 
-    // Rcout << t_low << " " << t_high << endl;
-
     double f_low = primal(y,x*(z+t_low*d)) + 
                    0.5*rho*pow(norm(z+t_low*d-u),2);
 
     double t_mid = 0.5*(t_low+t_high);
+
     mat z_mid = z+t_mid*d;
+
     mat lin_pred = x*z_mid;
     double f_mid = primal(y,lin_pred) + 
                    0.5*rho*pow(norm(z_mid-u),2);
@@ -50,18 +48,16 @@ double Family::zoom(const T& x, const mat&y, const double rho, const mat&u,
       }
       t_low = t_mid;
     }
+
     iter++;
+
     if(iter>max_iter){
-      // Rcout << "Max iter of zoom reached" << endl;
       return t_mid;
     }
+
   }
-  
 
 }
-
-
-
 
 
 template <typename T>
@@ -93,7 +89,6 @@ double Family::wolfe_line_search(const T& x, const mat&y, const double rho,
     double f_new = primal(y,lin_pred)+0.5*rho*pow(norm(z_new-u),2);
 
     if((f_new > f0 + c1*t*dec0) || ((f_new >= f) && (iter>1))){
-      // Rcout << "wolfe case 1" << endl;
       return zoom(x,y,rho,u,z,d,t_prev,t);
     }
 
@@ -101,28 +96,23 @@ double Family::wolfe_line_search(const T& x, const mat&y, const double rho,
     double dec_new = dot(g_new,d);
 
     if(std::abs(dec_new) <= -c2*dec0){
-      // Rcout << "wolfe case 2" << endl;
       return t;
     }
 
     if(dec_new>=0){
-      // Rcout << "wolfe case 3" << endl;
       return zoom(x,y,rho,u,z,d,t,t_prev);
     }
     
     if(iter > max_iter){
-      // Rcout << "Max iter of wolfe" << endl;
       return t;
     }
 
     t_prev = t;
     f = f_new;
     t = t + (t_max-t)*0.8;
-    // Rcout << "t is now " << t << endl;
 
     iter++;
 
   }
-
 
 }

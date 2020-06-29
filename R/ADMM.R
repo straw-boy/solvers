@@ -23,7 +23,6 @@
 #' @param max_passes maximum number of passes (outer iterations) for solver
 #' @param opt_algo Algorithm to use for optimizing second order approximation for beta update step.
 #' @param diagnostics whether to save diagnostics from the solver
-#'   (timings and other values depending on type of solver)
 #' @param verbosity level of verbosity for displaying output from the
 #'   program. Not completely developed. Use 3 just for now.
 #' @param tol_abs absolute tolerance criterion for ADMM solver

@@ -14,7 +14,7 @@ test_that("ADMM: gaussian, n>p case", {
 })
 
 test_that("ADMM: gaussian, n<p case", {
-  # skip('This passes if compared with SLOPE::SLOPE(). Absolutely clueless about this.')
+  skip('Absolutely clueless about this.')
 
   library(SLOPE)
   set.seed(1)

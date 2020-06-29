@@ -7,9 +7,6 @@ using namespace Rcpp;
 using namespace arma;
 
 class Gaussian : public Family {
-private:
-  double alpha = 1.5;
-
 public:
   template <typename... Ts>
   Gaussian(Ts... args) : Family(std::forward<Ts>(args)...) {}

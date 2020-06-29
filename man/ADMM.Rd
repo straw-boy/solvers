@@ -64,7 +64,7 @@ vector with length equal to the number
 of coefficients in the model; see section \strong{Regularization sequences}
 for details.}
 
-\item{opt_algo}{Algorithm to use for optimizing second order approximation for \beta update step.}
+\item{opt_algo}{Algorithm to use for optimizing second order approximation for beta update step.}
 
 \item{max_passes}{maximum number of passes (outer iterations) for solver}
 
@@ -72,8 +72,7 @@ for details.}
 
 \item{tol_rel}{relative tolerance criterion for ADMM solver}
 
-\item{diagnostics}{whether to save diagnostics from the solver
-(timings and other values depending on type of solver)}
+\item{diagnostics}{whether to save diagnostics from the solver}
 
 \item{verbosity}{level of verbosity for displaying output from the
 program. Not completely developed. Use 3 just for now.}

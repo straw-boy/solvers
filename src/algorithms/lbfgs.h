@@ -25,6 +25,7 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
 
   std::vector <double> alpha(l);
 
+  // Scaling parameter
   double gamma = 1.0;
 
   mat lin_pred = x*z;
@@ -61,6 +62,7 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
     // Backtracking 
     double t = wolfe_line_search(x,y,rho,u,z,step);
     
+    // Store change in z and gradient
     dz.push_back(t*step);
     z += dz.back();
 
@@ -71,6 +73,7 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
       break;
     eta.push_back(1.0/eta_inv);
 
+    // Updating scaling parameter for next iteration
     gamma = eta_inv / dot(dgrad.back(),dgrad.back());
 
     g += dgrad.back();
