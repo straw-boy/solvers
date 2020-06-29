@@ -37,7 +37,7 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
   while(passes < max_passes){
     passes++;
 
-    beta = optimize_approximation(x,y,rho,z-u,opt_algo);
+    beta = optimize_approximation(x,y,rho,z-u,opt_algo,rho);
 
     mat z_old = z;
     mat beta_hat = alpha*beta + (1 - alpha)*z_old;
