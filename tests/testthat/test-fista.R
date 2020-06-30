@@ -31,7 +31,6 @@ test_that("FISTA: gaussian, n<p case", {
 
 
 test_that("FISTA: binomial, n>p case", {
-  skip('Intercept mismatch in this')
 
   library(SLOPE)
   set.seed(1)
@@ -49,7 +48,6 @@ test_that("FISTA: binomial, n>p case", {
 })
 
 test_that("FISTA: binomial, n<p case", {
-  skip('Intercept mismatch in this')
 
   library(SLOPE)
   set.seed(1)
@@ -66,7 +64,6 @@ test_that("FISTA: binomial, n<p case", {
 })
 
 test_that("FISTA: poisson, n>p case", {
-  skip('Intercept mismatch in this')
 
   library(SLOPE)
   set.seed(1)
@@ -84,7 +81,6 @@ test_that("FISTA: poisson, n>p case", {
 })
 
 test_that("FISTA: poisson, n<p case", {
-  skip('Intercept mismatch in this')
 
   library(SLOPE)
   set.seed(1)

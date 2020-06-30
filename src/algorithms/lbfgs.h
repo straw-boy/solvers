@@ -10,7 +10,8 @@ using namespace arma;
 // // LBFGS Algorithm.
 // // Solves argmin_z { f(z) + rho/2*||z-u||^2 }
 template <typename T>
-mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
+mat Family::lBfgs(const T& x, const mat&y, const double rho, const mat& u)
+{
 
   mat z(u);
   mat g(u);
@@ -19,69 +20,72 @@ mat Family::lbfgs(const T& x, const mat&y, const double rho, const mat& u){
   const double tolerance = 1e-5;
   const int l = 20;
 
-  std::deque <mat> dz;
-  std::deque <mat> dgrad;
-  std::deque <double> eta;
+  std::deque<mat> dz;
+  std::deque<mat> dgrad;
+  std::deque<double> eta;
 
-  std::vector <double> alpha(l);
+  std::vector<double> alpha(l);
 
   // Scaling parameter
   double gamma = 1.0;
 
   mat lin_pred = x*z;
-  g = gradient(x,y,lin_pred) + rho*(z-u);
+  g = gradient(x, y, lin_pred) + rho*(z-u);
 
-  int iter;
+  int iter = 0;
 
-  for(iter = 0; iter < max_iter; iter++){
+  while (iter < max_iter) {
 
-    if(norm(g) < tolerance) break;
+    if (norm(g) < tolerance)
+      break;
 
-    // Two Loop recursion
+    // Two Loop recursion begins
     mat q = g;
     for(int j = std::min(iter,l)-1; j >= 0; j--){
-      alpha[j] = eta[j]*dot(dz[j],q);
+      alpha[j] = eta[j]*dot(dz[j], q);
       q = q - alpha[j]*dgrad[j];
     }
 
     q = gamma*q;
 
     for(int j = 0; j < std::min(iter,l); j++){
-      q += dz[j]*(alpha[j]-eta[j]*dot(dgrad[j],q));
+      q += dz[j]*(alpha[j]-eta[j]*dot(dgrad[j], q));
     }
+    // Two Loop recursion ends
 
     mat step = -q;
 
-    // Getting rid of too old change in gradient and change in z
-    if(iter > l){
+    // Getting rid of older changes in gradient and change in z
+    if (iter > l) {
       dz.pop_front();
       dgrad.pop_front();
       eta.pop_front();
     }
 
-    // Backtracking 
-    double t = wolfe_line_search(x,y,rho,u,z,step);
+    // Line Search for step length
+    double t = wolfeLineSearch(x, y, rho, u, z, step);
     
     // Store change in z and gradient
     dz.push_back(t*step);
     z += dz.back();
+    dgrad.push_back(gradient(x, y, x*z) + rho*(z-u) - g);
 
-    dgrad.push_back(gradient(x,y,x*z) + rho*(z-u) - g);
-
-    double eta_inv = dot(dgrad.back(),dz.back());
-    if(eta_inv == 0)
+    double eta_inv = dot(dgrad.back(), dz.back());
+    if (eta_inv == 0)
       break;
     eta.push_back(1.0/eta_inv);
 
     // Updating scaling parameter for next iteration
-    gamma = eta_inv / dot(dgrad.back(),dgrad.back());
+    gamma = eta_inv / dot(dgrad.back(), dgrad.back());
 
     g += dgrad.back();
 
     Rcpp::checkUserInterrupt();
+    
+    iter++;
   }
 
-  if(verbosity>=3){
+  if (verbosity >= 3) {
     Rcout << " L-BFGS iterations : " << iter << " ";
   }
   

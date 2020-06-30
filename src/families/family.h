@@ -63,30 +63,42 @@ public:
 
 
   template <typename T>
-  mat newton_raphson(const T& x, const mat&y, const double rho, const mat& u);
+  mat newtonRaphson(const T& x, const mat&y, const double rho, const mat& u);
 
   template <typename T>
   mat bfgs(const T& x, const mat&y, const double rho, const mat& u);
 
   template <typename T>
-  mat lbfgs(const T& x, const mat&y, const double rho, const mat& u);
+  mat lBfgs(const T& x, const mat&y, const double rho, const mat& u);
 
   template <typename T>
-  mat optimize_approximation(const T& x, const mat&y, const double rho, const mat& u, const std::string opt_algo){
-    if(opt_algo=="bfgs")
+  mat optimizeApproximation(const T& x, const mat&y, const double rho, const mat& u, const std::string opt_algo)
+  {
+    if (opt_algo == "bfgs")
         return bfgs(x, y, rho, u);
-    else if(opt_algo=="nr")
-        return newton_raphson(x, y, rho, u);
+    else if (opt_algo == "nr")
+        return newtonRaphson(x, y, rho, u);
     else
-        return lbfgs(x, y, rho, u);
+        return lBfgs(x, y, rho, u);
   }
 
   template <typename T>
-  double zoom(const T& x, const mat&y, const double rho, const mat&u, const mat& z, const mat& d, double t_low, double t_high);
-
+  double zoom(const T& x,
+              const mat&y,
+              const double rho,
+              const mat&u, 
+              const mat& z,
+              const mat& d,
+              double t_low,
+              double t_high);
 
   template <typename T>
-  double wolfe_line_search(const T& x, const mat&y, const double rho, const mat&u, const mat& z, const mat& d);
+  double wolfeLineSearch(const T& x,
+                         const mat&y,
+                         const double rho,
+                         const mat&u,
+                         const mat& z,
+                         const mat& d);
 
 
   virtual rowvec fitNullModel(const mat& y, const uword n_classes) = 0;

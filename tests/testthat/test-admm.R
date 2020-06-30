@@ -14,7 +14,6 @@ test_that("ADMM: gaussian, n>p case", {
 })
 
 test_that("ADMM: gaussian, n<p case", {
-  skip('Absolutely clueless about this.')
 
   library(SLOPE)
   set.seed(1)
@@ -32,6 +31,7 @@ test_that("ADMM: gaussian, n<p case", {
 })
 
 test_that("ADMM: binomial, n>p case", {
+  
   library(SLOPE)
   set.seed(1)
 

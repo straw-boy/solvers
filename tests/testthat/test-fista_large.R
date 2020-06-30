@@ -1,5 +1,5 @@
 test_that("FISTA works same as current SLOPE package implementation", {
-  skip('Intercept mismatch in this; takes too much time')
+  skip('Takes too much time')
   library(SLOPE)
 
   fista_slope <- SLOPE(bodyfat$x, bodyfat$y,family="gaussian", solver = "fista")

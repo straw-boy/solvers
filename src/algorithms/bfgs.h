@@ -8,43 +8,44 @@ using namespace Rcpp;
 using namespace arma;
 
 // // BFGS Algorithm.
-// // Solves argmin_z { f(z) + rho/2*||z-u||^2 }
+// // Solves argmin_z { f(z) + (rho/2)*||z-u||^2 }
 template <typename T>
-mat Family::bfgs(const T& x, const mat&y, const double rho, const mat& u){
+mat Family::bfgs(const T& x, const mat&y, const double rho, const mat& u)
+{
+  
   uword p = x.n_cols;
   mat z(u);
   mat g(u);
-  mat I(p,p,fill::eye);
+  mat I(p, p, fill::eye);
 
   mat h(I);
 
   uword max_iter = 1000;
   double tolerance = 1e-6;
 
-  uword iter;
+  uword iter = 0;
 
-  for(iter = 0; iter < max_iter; iter++){
+  while (iter < max_iter) {
 
     mat lin_pred = x*z;
-    g = gradient(x,y,lin_pred) + rho*(z-u);
+    g = gradient(x, y, lin_pred) + rho*(z-u);
 
-    if(norm(g)<tolerance) break;
+    if (norm(g) < tolerance)
+      break;
 
     mat step = -h*g;
 
-    //Backtracking
-    double t = wolfe_line_search(x,y,rho,u,z,step);
-    // Rcout << "t is " << t << endl;
+    // Line Search for step length
+    double t = wolfeLineSearch(x, y, rho, u, z, step);
 
     mat dz = t*step;
-    mat dgrad = gradient(x,y,x*(z+dz))+rho*(z+dz-u) - g;
-    
-    double eta = 1.0/dot(dgrad,dz);
+    mat dgrad = gradient(x, y, x*(z+dz)) + rho*(z+dz-u) - g;
 
     // Change is too small so terminate
-    if(dot(dgrad,dz)==0){
+    if (dot(dgrad, dz) == 0)
       break;
-    }
+
+    double eta = 1.0/dot(dgrad, dz);
 
     // Inverse Hessian update
     h = (I-eta*dz*dgrad.t())*h*(I-eta*dgrad*dz.t()) + eta*dz*dz.t();
@@ -52,9 +53,11 @@ mat Family::bfgs(const T& x, const mat&y, const double rho, const mat& u){
     z = z + t*step;
 
     Rcpp::checkUserInterrupt();
+
+    iter++;
   }
 
-  if(verbosity>=3){
+  if (verbosity >= 3) {
     Rcout << " BFGS iterations : " << iter << " ";
   }
 
