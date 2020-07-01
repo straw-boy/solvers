@@ -11,7 +11,8 @@ using namespace arma;
 
 // FISTA implementation
 template <typename T>
-Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
+Results Family::fitFISTA(const T& x, const mat& y, vec lambda)
+{
   
   uword n = y.n_rows;
   uword p = x.n_cols;
@@ -50,7 +51,7 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
 
   // main loop
   uword passes = 0;
-  while (true) {
+  while (passes < max_passes) {
     
     lin_pred = x*beta;
 
@@ -138,7 +139,7 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda){
 
   double deviance = 2*primal(y, lin_pred);
 
-  Results res{beta,
+  Results res{beta_tilde,
               passes,
               primals,
               duals,

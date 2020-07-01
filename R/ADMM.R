@@ -21,8 +21,8 @@
 #'   of coefficients in the model; see section **Regularization sequences**
 #'   for details.
 #' @param max_passes maximum number of passes (outer iterations) for solver
+#' @param opt_algo Algorithm to use for optimizing second order approximation for beta update step.
 #' @param diagnostics whether to save diagnostics from the solver
-#'   (timings and other values depending on type of solver)
 #' @param verbosity level of verbosity for displaying output from the
 #'   program. Not completely developed. Use 3 just for now.
 #' @param tol_abs absolute tolerance criterion for ADMM solver
@@ -45,7 +45,7 @@ ADMM <- function( x,
                   tol_dev_change = 1e-5,
                   tol_dev_ratio = 0.995,
                   max_variables = NROW(x),
-                  solver = c("fista", "admm"),
+                  opt_algo = c("lbfgs", "bfgs", "nr"),
                   max_passes = 1e6,
                   tol_abs = 1e-5,
                   tol_rel = 1e-4,
@@ -76,7 +76,7 @@ ADMM <- function( x,
   ocall <- match.call()
 
   family <- match.arg(family)
-  solver <- match.arg(solver)
+  opt_algo <- match.arg(opt_algo)
   screen_alg <- match.arg(screen_alg)
 
   if (is.character(scale)) {
@@ -136,6 +136,7 @@ ADMM <- function( x,
     stop("centering would destroy sparsity in `x` (predictor matrix)")
 
   res <- preprocessResponse(family, y)
+
   y <- as.matrix(res$y)
   y_center <- res$y_center
   y_scale <- res$y_scale
@@ -241,7 +242,7 @@ ADMM <- function( x,
                   diagnostics = diagnostics,
                   verbosity = verbosity,
                   max_variables = max_variables,
-                  solver = solver,
+                  opt_algo = opt_algo,
                   tol_dev_change = tol_dev_change,
                   tol_dev_ratio = tol_dev_ratio,
                   tol_rel_gap = tol_rel_gap,

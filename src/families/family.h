@@ -17,6 +17,7 @@ protected:
   const double tol_rel;
   const uword verbosity;
 
+
 public:
   Family(const bool intercept,
          const bool diagnostics,
@@ -46,13 +47,13 @@ public:
   virtual mat pseudoHessian(const mat& y, const mat& lin_pred) = 0;
 
   template <typename T>
-  mat gradient(T& x, const mat&y, const mat& lin_pred)
+  mat gradient(T& x, const mat& y, const mat& lin_pred)
   {
     return x.t() * pseudoGradient(y, lin_pred);
   }
 
   template <typename T>
-  mat hessian(const T& x, const mat&y, const mat& lin_pred)
+  mat hessian(const T& x, const mat& y, const mat& lin_pred)
   {
     vec activation = pseudoHessian(y, lin_pred);
     mat xTx;
@@ -60,11 +61,45 @@ public:
     return xTx;
   }
 
-  template <typename T>
-  mat newton_raphson(const T& x, const mat&y, const double rho, const mat& u, bool quasi = true);
 
   template <typename T>
-  mat newton_raphsonq(const T& x, const mat&y, const double rho, const mat& u, bool quasi = true);
+  mat newtonRaphson(const T& x, const mat& y, const double rho, const mat& u);
+
+  template <typename T>
+  mat bfgs(const T& x, const mat& y, const double rho, const mat& u);
+
+  template <typename T>
+  mat lbfgs(const T& x, const mat& y, const double rho, const mat& u);
+
+  template <typename T>
+  mat optimizeApproximation(const T& x, const mat& y, const double rho, const mat& u, const std::string opt_algo)
+  {
+    if (opt_algo == "bfgs")
+        return bfgs(x, y, rho, u);
+    else if (opt_algo == "nr")
+        return newtonRaphson(x, y, rho, u);
+    else
+        return lBfgs(x, y, rho, u);
+  }
+
+  template <typename T>
+  double zoom(const T& x,
+              const mat& y,
+              const double rho,
+              const mat& u, 
+              const mat& z,
+              const mat& d,
+              double t_low,
+              double t_high);
+
+  template <typename T>
+  double wolfeLineSearch(const T& x,
+                         const mat& y,
+                         const double rho,
+                         const mat& u,
+                         const mat& z,
+                         const mat& d);
+
 
   virtual rowvec fitNullModel(const mat& y, const uword n_classes) = 0;
 
@@ -74,6 +109,6 @@ public:
   Results fitFISTA(const T& x, const mat& y, vec lambda);
 
   template <typename T>
-  Results fitADMM(const T& x, const mat& y, vec lambda, double rho = 1.0);
+  Results fitADMM(const T& x, const mat& y, vec lambda, const std::string opt_algo, const double rho = 1.0);
   
 };
