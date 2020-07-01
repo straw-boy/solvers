@@ -2,3 +2,4 @@
 .RData
 .Rproj.user
 *.o  
+inst/doc

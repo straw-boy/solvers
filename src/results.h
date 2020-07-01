@@ -10,6 +10,7 @@ struct Results {
   uword passes;
   std::vector<double> primals;
   std::vector<double> duals;
+  std::vector<double> loss;
   std::vector<double> time;
   double deviance;
 
@@ -19,12 +20,14 @@ struct Results {
           uword passes,
           std::vector<double> primals,
           std::vector<double> duals,
+          std::vector<double> loss,
           std::vector<double> time,
           double deviance)
     : beta(beta),
       passes(passes),
       primals(primals),
       duals(duals),
+      loss(loss),
       time(time),
       deviance(deviance) {}
 };

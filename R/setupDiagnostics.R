@@ -7,19 +7,21 @@
 #'
 #' @keywords internal
 setupDiagnostics <- function(res) {
-  time <- res$iteration_timings
+  iteration_timings <- res$iteration_timings
   primals <- res$primals
   duals <- res$duals
+  loss <- res$loss
 
-  nl <- length(time)
-  nn <- lengths(time)
-  time <- unlist(time)
+  nl <- length(iteration_timings)
+  nn <- lengths(iteration_timings)
+  iteration_timings <- unlist(iteration_timings)
   primal <- unlist(primals)
   dual <- unlist(duals)
-
+  loss <- unlist(loss)
+  
   data.frame(iteration = unlist(lapply(nn, seq_len)),
-             time = time,
+             time_taken = iteration_timings,
              primal = primal,
              dual = dual,
-             penalty = rep(seq_len(nl), nn))
+             loss = loss)
 }

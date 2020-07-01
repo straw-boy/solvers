@@ -27,11 +27,18 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
 
   std::vector<double> primals;
   std::vector<double> duals;
+  std::vector<double> loss;
   std::vector<double> time;
 
   wall_clock timer;
-  if (diagnostics)
-      timer.tic();
+
+  if (diagnostics) {
+    primals.reserve(max_passes);
+    duals.reserve(max_passes);
+    loss.reserve(max_passes);
+    time.reserve(max_passes);
+    timer.tic();
+  }
 
   double alpha = 1.5;
   uword passes = 0;
@@ -59,6 +66,8 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     if (diagnostics) {
       primals.push_back(r_norm);
       duals.push_back(s_norm);
+      loss.push_back(primal(y, x*beta) + 
+                     dot(sort(abs(vectorise(beta.tail_rows(p_rows))),"descending"), lambda));
       time.push_back(timer.toc());
       timer.tic();
     }
@@ -77,12 +86,20 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
 
   }
 
+  if (diagnostics) {
+    primals.resize(passes);
+    duals.resize(passes);
+    loss.resize(passes);
+    time.resize(passes);
+  }
+
   double deviance = 2*primal(y, x*beta);
   
   Results res{beta,
               passes,
               primals,
               duals,
+              loss,
               time,
               deviance};
 

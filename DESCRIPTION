@@ -19,6 +19,9 @@ RoxygenNote: 7.1.0
 Encoding: UTF-8
 Suggests: 
     testthat (>= 2.1.0),
-    SLOPE
+    SLOPE,
+    knitr,
+    rmarkdown
 Remotes: jolars/SLOPE
 Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr

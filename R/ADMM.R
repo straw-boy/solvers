@@ -299,13 +299,10 @@ ADMM <- function( x,
   lambda <- fit$lambda
   alpha <- fit$alpha
   path_length <- length(alpha)
-  active_sets <- lapply(drop(fit$active_sets), function(x) drop(x) + 1)
   beta <- fit$betas
-  nonzeros <- apply(beta, c(2, 3), function(x) abs(x) > 0)
   coefficients <- beta
 
   if (fit_intercept) {
-    nonzeros <- nonzeros[-1, , , drop = FALSE]
     dimnames(coefficients) <- list(c("(Intercept)", variable_names),
                                    response_names[1:n_targets],
                                    paste0("p", seq_len(path_length)))
@@ -324,19 +321,10 @@ ADMM <- function( x,
                         multinomial = "MultinomialSLOPE")
 
   structure(list(coefficients = coefficients,
-                 nonzeros = nonzeros,
                  lambda = lambda,
                  alpha = alpha,
                  class_names = class_names,
-                 passes = fit$passes,
-                 primals = fit$primals,
-                 duals = fit$duals,
-                 iteration_times = fit$iteration_timings,
-                 execution_times = fit$execution_timings,
                  total_time = fit$total_time,
-                 unique = drop(fit$n_unique),
-                 deviance_ratio = drop(fit$deviance_ratio),
-                 null_deviance = fit$null_deviance,
                  family = family,
                  diagnostics = diagnostics,
                  call = ocall),
