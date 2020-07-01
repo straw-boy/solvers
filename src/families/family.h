@@ -79,7 +79,7 @@ public:
     else if (opt_algo == "nr")
         return newtonRaphson(x, y, rho, u);
     else
-        return lBfgs(x, y, rho, u);
+        return lbfgs(x, y, rho, u);
   }
 
   template <typename T>
