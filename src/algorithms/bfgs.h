@@ -10,7 +10,7 @@ using namespace arma;
 // // BFGS Algorithm.
 // // Solves argmin_z { f(z) + (rho/2)*||z-u||^2 }
 template <typename T>
-mat Family::bfgs(const T& x, const mat&y, const double rho, const mat& u)
+mat Family::bfgs(const T& x, const mat& y, const double rho, const mat& u)
 {
   
   uword p = x.n_cols;

@@ -9,7 +9,7 @@ using namespace arma;
 // // Newton-Raphson's method for optimization
 // // Solves argmin_z { f(z) + (rho/2)*||z-u||^2 }
 template <typename T>
-mat Family::newtonRaphson(const T& x, const mat&y, const double rho, const mat& u)
+mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat& u)
 {
 
   Rcout.precision(4);

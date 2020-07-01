@@ -12,9 +12,9 @@ using namespace arma;
 // Reference - Pg.60 of Numerical Optimization, Nocedal & Wright.
 template <typename T>
 double Family::zoom(const T& x,
-                    const mat&y,
+                    const mat& y,
                     const double rho,
-                    const mat&u, 
+                    const mat& u, 
                     const mat& z,
                     const mat& d,
                     double t_low,

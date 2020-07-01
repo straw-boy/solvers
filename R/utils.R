@@ -6,7 +6,7 @@ randomProblem <-
            q = 0.2,
            n_groups = NULL,
            n_targets = if (match.arg(response) == "multinomial") 3 else 1,
-           density = 1,
+           density = 0,
            amplitude = if (match.arg(response) == "poisson") 1 else 3,
            alpha = 1,
            response = c("gaussian", "binomial", "poisson", "multinomial"),
@@ -20,7 +20,7 @@ randomProblem <-
   }
 
   if (rho > 0)
-    x <- x + sqrt(rho/(1 - rho)) * matrix(stats::rnorm(n), n, p)
+    x <- sqrt(1-rho) * x + sqrt(rho) * matrix(stats::rnorm(n), n, p)
 
   if (!is.null(n_groups)) {
     groups <- rep(seq_len(n_groups), each = ceiling(m*p/n_groups),
