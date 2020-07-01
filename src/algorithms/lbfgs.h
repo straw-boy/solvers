@@ -10,7 +10,7 @@ using namespace arma;
 // // LBFGS Algorithm.
 // // Solves argmin_z { f(z) + rho/2*||z-u||^2 }
 template <typename T>
-mat Family::lBfgs(const T& x, const mat&y, const double rho, const mat& u)
+mat Family::lbfgs(const T& x, const mat& y, const double rho, const mat& u)
 {
 
   mat z(u);
@@ -41,14 +41,14 @@ mat Family::lBfgs(const T& x, const mat&y, const double rho, const mat& u)
 
     // Two Loop recursion begins
     mat q = g;
-    for(int j = std::min(iter,l)-1; j >= 0; j--){
+    for (int j = std::min(iter, l)-1; j >= 0; j--) {
       alpha[j] = eta[j]*dot(dz[j], q);
       q = q - alpha[j]*dgrad[j];
     }
 
     q = gamma*q;
 
-    for(int j = 0; j < std::min(iter,l); j++){
+    for (int j = 0; j < std::min(iter, l); j++) {
       q += dz[j]*(alpha[j]-eta[j]*dot(dgrad[j], q));
     }
     // Two Loop recursion ends

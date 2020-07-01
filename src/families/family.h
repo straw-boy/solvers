@@ -47,13 +47,13 @@ public:
   virtual mat pseudoHessian(const mat& y, const mat& lin_pred) = 0;
 
   template <typename T>
-  mat gradient(T& x, const mat&y, const mat& lin_pred)
+  mat gradient(T& x, const mat& y, const mat& lin_pred)
   {
     return x.t() * pseudoGradient(y, lin_pred);
   }
 
   template <typename T>
-  mat hessian(const T& x, const mat&y, const mat& lin_pred)
+  mat hessian(const T& x, const mat& y, const mat& lin_pred)
   {
     vec activation = pseudoHessian(y, lin_pred);
     mat xTx;
@@ -63,16 +63,16 @@ public:
 
 
   template <typename T>
-  mat newtonRaphson(const T& x, const mat&y, const double rho, const mat& u);
+  mat newtonRaphson(const T& x, const mat& y, const double rho, const mat& u);
 
   template <typename T>
-  mat bfgs(const T& x, const mat&y, const double rho, const mat& u);
+  mat bfgs(const T& x, const mat& y, const double rho, const mat& u);
 
   template <typename T>
-  mat lBfgs(const T& x, const mat&y, const double rho, const mat& u);
+  mat lbfgs(const T& x, const mat& y, const double rho, const mat& u);
 
   template <typename T>
-  mat optimizeApproximation(const T& x, const mat&y, const double rho, const mat& u, const std::string opt_algo)
+  mat optimizeApproximation(const T& x, const mat& y, const double rho, const mat& u, const std::string opt_algo)
   {
     if (opt_algo == "bfgs")
         return bfgs(x, y, rho, u);
@@ -84,9 +84,9 @@ public:
 
   template <typename T>
   double zoom(const T& x,
-              const mat&y,
+              const mat& y,
               const double rho,
-              const mat&u, 
+              const mat& u, 
               const mat& z,
               const mat& d,
               double t_low,
@@ -94,9 +94,9 @@ public:
 
   template <typename T>
   double wolfeLineSearch(const T& x,
-                         const mat&y,
+                         const mat& y,
                          const double rho,
-                         const mat&u,
+                         const mat& u,
                          const mat& z,
                          const mat& d);
 
