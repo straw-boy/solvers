@@ -2,7 +2,7 @@
 #include <memory>
 #include "results.h"
 #include "families/families.h"
-#include "algorithms/fista.h"
+#include "algorithms/proximal_newton.h"
 #include "standardize.h"
 #include "rescale.h"
 #include "regularizationPath.h"
@@ -11,7 +11,7 @@ using namespace Rcpp;
 using namespace arma;
 
 template <typename T>
-List cppFISTA(T& x, mat& y, const List control)
+List cppPN(T& x, mat& y, const List control)
 {
 
   wall_clock outer_timer;
@@ -104,8 +104,7 @@ List cppFISTA(T& x, mat& y, const List control)
   mat beta_prev(p, m, fill::zeros);
 
   uvec passes(path_length);
-  std::vector<std::vector<double>> primals;
-  std::vector<std::vector<double>> duals;
+  std::vector<std::vector<double>> loss;
   std::vector<std::vector<double>> iteration_timings;
   std::vector<double> execution_timings;
   
@@ -117,14 +116,15 @@ List cppFISTA(T& x, mat& y, const List control)
 
   while (k < path_length) {
     inner_timer.tic();
-    res = family->fitFISTA(x, y, lambda*alpha(k));
+    res = family->fitProximalNewton(x, y, lambda*alpha(k));
     passes(k) = res.passes;
     beta = res.beta;
 
-    primals.push_back(res.primals);
-    duals.push_back(res.duals);
-    iteration_timings.push_back(res.time);
-
+    if (diagnostics) {
+      loss.push_back(res.primals);
+      iteration_timings.push_back(res.time);
+    }
+    
     // store coefficients and intercept
     double deviance = res.deviance;
     double deviance_ratio = 1.0 - deviance/null_deviance;
@@ -150,7 +150,6 @@ List cppFISTA(T& x, mat& y, const List control)
 
     if (n_unique(k) > max_variables)
       break;
-
 
     execution_timings.push_back(inner_timer.toc());
     k++;
@@ -182,8 +181,7 @@ List cppFISTA(T& x, mat& y, const List control)
   return List::create(
     Named("betas")               = wrap(betas),
     Named("passes")              = wrap(passes),
-    Named("primals")             = wrap(primals),
-    Named("duals")               = wrap(duals),
+    Named("loss")                = wrap(loss),
     Named("iteration_timings")   = wrap(iteration_timings),
     Named("execution_timings")   = wrap(execution_timings),
     Named("total_time")          = wrap(outer_timer.toc()),
@@ -196,17 +194,17 @@ List cppFISTA(T& x, mat& y, const List control)
 }
 
 // [[Rcpp::export]]
-Rcpp::List sparseFISTA(arma::sp_mat x,
+Rcpp::List sparsePN(arma::sp_mat x,
                        arma::mat y,
                        const Rcpp::List control)
 {
-  return cppFISTA(x, y, control);
+  return cppPN(x, y, control);
 }
 
 // [[Rcpp::export]]
-Rcpp::List denseFISTA(arma::mat x,
+Rcpp::List densePN(arma::mat x,
                       arma::mat y,
                       const Rcpp::List control)
 {
-  return cppFISTA(x, y, control);
+  return cppPN(x, y, control);
 }

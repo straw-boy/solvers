@@ -189,7 +189,7 @@ List cppADMM(T& x, mat& y, const List control)
     Named("duals")               = wrap(duals),
     Named("iteration_timings")   = wrap(iteration_timings),
     Named("execution_timings")   = wrap(execution_timings),
-    Named("total_time")           = wrap(outer_timer.toc()),
+    Named("total_time")          = wrap(outer_timer.toc()),
     Named("n_unique")            = wrap(n_unique),
     Named("deviance_ratio")      = wrap(deviance_ratios),
     Named("null_deviance")       = wrap(null_deviance),

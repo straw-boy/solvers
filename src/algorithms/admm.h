@@ -15,7 +15,6 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
 {
   
   uword p = x.n_cols;
-  uword n = x.n_rows;
   uword m = y.n_cols;
   uword pmi = lambda.n_elem;
   uword p_rows = pmi/m;
@@ -23,7 +22,6 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
   mat z(p, m, fill::zeros);
   mat u(z);
   mat beta(z);
-  mat beta_prev(z);
 
   std::vector<double> primals;
   std::vector<double> duals;
@@ -39,6 +37,9 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
   while (passes < max_passes) {
     passes++;
 
+    Rcout << " obj: " << primal(y, x*beta) + dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
+                                  "descending"), lambda) << endl; 
+
     beta = optimizeApproximation(x, y, rho, z-u, opt_algo);
 
     mat z_old = z;
@@ -53,8 +54,8 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     double r_norm = norm(beta - z);
     double s_norm = norm(rho*(z - z_old));
 
-    double eps_primal = std::sqrt(n)*tol_abs + tol_rel*std::max(norm(beta), norm(z));
-    double eps_dual = std::sqrt(n)*tol_abs + tol_rel*norm(rho*u);
+    double eps_primal = std::sqrt(p)*tol_abs + tol_rel*std::max(norm(beta), norm(z));
+    double eps_dual = std::sqrt(p)*tol_abs + tol_rel*norm(rho*u);
 
     if (diagnostics) {
       primals.push_back(r_norm);

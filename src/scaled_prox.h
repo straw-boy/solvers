@@ -1,0 +1,64 @@
+#pragma once
+
+#include <RcppArmadillo.h>
+#include "prox.h"
+
+using namespace Rcpp;
+using namespace arma;
+
+inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
+{
+  uword p = beta.n_rows;
+  uword m = beta.n_cols;
+  uword pmi = lambda.n_elem;
+  uword p_rows = pmi/m;
+
+  mat x(beta);
+  mat z(x);
+  mat u(x);
+
+  mat I(p, p, fill::eye);
+
+  const double alpha = 1.5;
+  const double rho = 1.0;
+  const double tol_abs = 1e-5;
+  const double tol_rel = 1e-4;
+  uword iter = 0;
+  uword max_iter = 10000;
+
+  while (iter < max_iter) {
+    iter++;
+
+    Rcout << "    prox obj: " << 0.5*dot((x-beta), H*(x-beta))
+                      + dot(sort(abs(vectorise(x.tail_rows(p_rows))),
+                                  "descending"), lambda) << endl; 
+
+    x = solve(H+rho*I, H*beta + rho*(z-u));
+    
+    mat z_old = z;
+    mat x_hat = alpha*x + (1 - alpha)*z_old;
+
+    z = x_hat + u;
+
+    z.tail_rows(p_rows) = prox(z.tail_rows(p_rows), lambda/rho);
+
+    u += (x_hat-z);
+
+    double r_norm = norm(x - z);
+    double s_norm = norm(rho*(z - z_old));
+
+    double eps_primal = std::sqrt(p)*tol_abs + tol_rel*std::max(norm(x), norm(z));
+    double eps_dual = std::sqrt(p)*tol_abs + tol_rel*norm(rho*u);
+
+    if (r_norm < eps_primal && s_norm < eps_dual)
+        break;
+
+    Rcpp::checkUserInterrupt();
+
+  }
+
+  Rcout << " scaled prox iter: " <<  iter << endl;
+  
+  return x;
+}
+
