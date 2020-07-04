@@ -6,6 +6,10 @@
 using namespace Rcpp;
 using namespace arma;
 
+
+// Solvers argmin_x { 0.5*(x-beta).t()*H*(x-beta) + J(beta,lambda)  }
+// where J(beta,lambda) is the slope penalty.
+// ADMM is used to solve this.
 inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
 {
   uword p = beta.n_rows;
@@ -29,11 +33,7 @@ inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
   while (iter < max_iter) {
     iter++;
 
-    Rcout << "    prox obj: " << 0.5*dot((x-beta), H*(x-beta))
-                      + dot(sort(abs(vectorise(x.tail_rows(p_rows))),
-                                  "descending"), lambda) << endl; 
-
-    x = solve(H+rho*I, H*beta + rho*(z-u));
+    x = solve(H + rho*I, H*beta + rho*(z-u));
     
     mat z_old = z;
     mat x_hat = alpha*x + (1 - alpha)*z_old;
@@ -57,8 +57,6 @@ inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
 
   }
 
-  Rcout << " scaled prox iter: " <<  iter << endl;
-  
   return x;
 }
 

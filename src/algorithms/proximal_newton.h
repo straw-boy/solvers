@@ -9,7 +9,7 @@
 using namespace Rcpp;
 using namespace arma;
 
-// Proximal Newton
+// Proximal Newton algorithm
 template <typename T>
 Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 {
@@ -27,11 +27,11 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
   mat grad(p, m, fill::zeros);
   mat hess(p, p, fill::zeros);
 
-  mat I(p, p, fill::eye);
-
   // line search parameters
-  double alpha = 0.5;
-  double eta = 0.5;
+  const double alpha = 0.5;
+  const double eta = 0.5;
+
+  const double tol = 1e-10;
 
   // diagnostics
   wall_clock timer;
@@ -57,7 +57,7 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
     grad = gradient(x, y, lin_pred);
     hess = hessian(x, y, lin_pred);
-    
+
     if (verbosity >= 3) {
       Rcout << "pass: "         << passes
             << ", objective: "  << f + g
@@ -74,23 +74,15 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
     beta_tilde = scaled_prox(beta_tilde, hess, lambda);
 
-    ///experiment
-    mat a = scaled_prox(beta_tilde, I, lambda);
-    mat b = prox(beta_tilde, lambda);
-
-    if (!(a-b).is_zero(1e-3)) {
-      Rcout << "Messed up scaled prox" << endl;
-      (a-b).print();
-    }
-    ///
-
     mat d = beta_tilde - beta;
-    
+
+    if (norm(d) < tol)
+      break;
     // Backtracking line search
     double t = 1.0;
-    double dTgrad = dot(d,grad);
+    double dTgrad = dot(d, grad);
     while (true) {
-      vec beta_new = beta + t*d;
+      mat beta_new = beta + t*d;
       double f_new = primal(y, x*(beta_new));
       double g_new = dot(sort(abs(vectorise(beta_new.tail_rows(p_rows))),
                               "descending"), lambda);
@@ -102,20 +94,10 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
       }
       checkUserInterrupt();
     }
-    Rcout << " t : " << t << endl;
-
     beta += t*d;
 
     ++passes;
     
-    double df = primal(y, x*beta) + 
-                dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
-                         "descending"), lambda);
-
-    df = df - f - g;
-    // Rcout << "df: " << df << endl;
-    if (std::abs(df) < 1e-10)
-      break; 
 
     
     if (passes % 100 == 0)
@@ -123,8 +105,8 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     
   }
 
-  Rcout << "Final obj: " << primal(y, x*beta) + dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
-                                                          "descending"), lambda) << endl;
+  // Rcout << "Final obj: " << primal(y, x*beta) + dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
+  //                                                         "descending"), lambda) << endl;
 
   loss.reserve(max_passes);
   time.reserve(max_passes);
