@@ -5,3 +5,5 @@ src/run.r
 .Rbuildproj
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^doc$
+^Meta$

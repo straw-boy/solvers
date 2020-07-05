@@ -85,7 +85,6 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda)
       primals.push_back(f);
       duals.push_back(G);
       time.push_back(timer.toc());
-      timer.tic();
     }
 
     if (optimal && feasible){
@@ -136,14 +135,14 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda)
     ++passes;
     
   }
-
+  
   double deviance = 2*primal(y, lin_pred);
 
+  // res.diagnosticsLoss contains 
+  // 'primals' and 'duals' at indices 0 and 1 respectively
   Results res{beta_tilde,
               passes,
-              primals,
-              duals,
-              primals,
+              {primals, duals},
               time,
               deviance};
 

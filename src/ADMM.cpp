@@ -108,11 +108,12 @@ List cppADMM(T& x, mat& y, const List control)
 
   uvec passes(path_length);
 
-  std::vector<std::vector<double>> primals;
-  std::vector<std::vector<double>> duals;
+
   std::vector<std::vector<double>> loss;
+  std::vector<std::vector<double>> eps_primals;
+  std::vector<std::vector<double>> eps_duals;
   std::vector<std::vector<double>> iteration_timings;
-  std::vector<double> execution_timings(path_length);
+  std::vector<double> execution_times(path_length);
 
 
   Results res;
@@ -122,18 +123,14 @@ List cppADMM(T& x, mat& y, const List control)
 
   while (k < path_length) {
     inner_timer.tic();
-
     res = family->fitADMM(x, y, lambda*alpha(k), opt_algo, 1.0);
-
-    inner_timer.tic();
-
     passes(k) = res.passes;
     beta = res.beta;
 
     if (diagnostics) {
-      primals.push_back(res.primals);
-      duals.push_back(res.duals);
-      loss.push_back(res.loss);
+      loss.push_back(res.diagnosticsLoss[0]);
+      eps_primals.push_back(res.diagnosticsLoss[1]);
+      eps_duals.push_back(res.diagnosticsLoss[2]);
       iteration_timings.push_back(res.time);
     }
 
@@ -154,7 +151,7 @@ List cppADMM(T& x, mat& y, const List control)
     n_unique(k) = unique(abs(nonzeros(beta))).eval().n_elem;
 
 
-    execution_timings.push_back(inner_timer.toc());
+    execution_times[k] = inner_timer.toc();
     if (n_coefs > 0 && k > 0) {
       // stop path if fractional deviance change is small
       if (deviance_change < tol_dev_change || deviance_ratio > tol_dev_ratio) {
@@ -175,15 +172,15 @@ List cppADMM(T& x, mat& y, const List control)
   betas.resize(p, m, k);
   passes.resize(k);
   alpha.resize(k);
-  execution_timings.resize(k);
+  execution_times.resize(k);
   n_unique.resize(k);
   deviances.resize(k);
   deviance_ratios.resize(k);
 
   if (diagnostics) {
-    primals.resize(k);
-    duals.resize(k);
     loss.resize(k);
+    eps_primals.resize(k);
+    eps_duals.resize(k);
     iteration_timings.resize(k);
   }
 
@@ -204,11 +201,11 @@ List cppADMM(T& x, mat& y, const List control)
   return List::create(
     Named("betas")               = wrap(betas),
     Named("passes")              = wrap(passes),
-    Named("primals")             = wrap(primals),
-    Named("duals")               = wrap(duals),
     Named("loss")                = wrap(loss),
+    Named("eps_primals")         = wrap(eps_primals),
+    Named("eps_duals")           = wrap(eps_duals),
     Named("iteration_timings")   = wrap(iteration_timings),
-    Named("execution_timings")   = wrap(execution_timings),
+    Named("execution_times")     = wrap(execution_times),
     Named("total_time")          = wrap(outer_timer.toc()),
     Named("n_unique")            = wrap(n_unique),
     Named("deviance_ratio")      = wrap(deviance_ratios),
