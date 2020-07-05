@@ -21,7 +21,9 @@ Suggests:
     testthat (>= 2.1.0),
     SLOPE,
     knitr,
-    rmarkdown
+    rmarkdown,
+    lattice,
+    directlabels
 Remotes: jolars/SLOPE
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
