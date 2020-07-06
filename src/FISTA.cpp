@@ -123,8 +123,8 @@ List cppFISTA(T& x, mat& y, const List control)
     beta = res.beta;
 
     if (diagnostics) {
-      primals.push_back(res.diagnosticsLoss[0]);
-      duals.push_back(res.diagnosticsLoss[1]);
+      primals.push_back(res.diagnostics_loss[0]);
+      duals.push_back(res.diagnostics_loss[1]);
       iteration_timings.push_back(res.time);
     }
     

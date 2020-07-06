@@ -1,4 +1,14 @@
 #' Code borrowed from SLOPE package for generating datasets
+#' @param n Number of data points
+#' @param p Number of features
+#' @param q <TODO>
+#' @param n_groups <TODO>
+#' @param n_targets <TODO>
+#' @param density Determine sparsity of the data generated. Default set to 0.
+#' @param amplitude <TODO>
+#' @param alpha <TODO>
+#' @param response Choice of likelohood function
+#' @param rho <TODO>
 #' @export
 randomProblem <-
   function(n = 1000,
@@ -62,4 +72,36 @@ randomProblem <-
        nonzero = nonzero,
        q = q)
 }
+
+getLabel <- function(fit) {
+  if (fit$solver == "ADMM")
+    paste("ADMM(",toupper(fit$opt_algo),")",sep='')
+  else fit$solver
+} 
+
+getLoss <- function(fit) {
+  if (fit$solver == "FISTA")
+    fit$primal[[1]]
+  else fit$loss[[1]]
+} 
+
+#' FISTA
+#' @param fit1 Output of any of the algorithms (FISTA, ADMM etc)
+#'        that you want to compare
+#' @param fit2 Output of any of the algorithms (FISTA, ADMM etc)
+#'        that you want to compare with.
+#' @export 
+mergeFits <- function(fit1,
+                      fit2
+) {
+
+  f <- data.frame(
+  solver = rep(c(getLabel(fit1), getLabel(fit2)), 
+               times = c(length(fit1$iteration_timings[[1]]),
+                       length(fit2$iteration_timings[[1]]))),
+  loss = c(getLoss(fit1), getLoss(fit2)),
+  time = c(fit1$iteration_timings[[1]], fit2$iteration_timings[[1]]))
+}
+
+
 

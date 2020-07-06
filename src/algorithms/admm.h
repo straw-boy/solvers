@@ -23,7 +23,6 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
   mat z(p, m, fill::zeros);
   mat u(z);
   mat beta(z);
-  mat beta_prev(z);
 
   std::vector<double> loss;
   std::vector<double> eps_primals;
@@ -46,6 +45,12 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
   while (passes < max_passes) {
     passes++;
 
+    if (diagnostics) {
+      loss.push_back(primal(y, x*beta) + 
+                     dot(sort(abs(vectorise(beta.tail_rows(p_rows))),"descending"), lambda));
+      time.push_back(timer.toc());
+    }
+
     beta = optimizeApproximation(x, y, rho, z-u, opt_algo);
 
     mat z_old = z;
@@ -64,11 +69,8 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     double eps_dual = std::sqrt(n)*tol_abs + tol_rel*norm(rho*u);
 
     if (diagnostics) {
-      loss.push_back(primal(y, x*beta) + 
-                     dot(sort(abs(vectorise(beta.tail_rows(p_rows))),"descending"), lambda));
       eps_primals.push_back(r_norm);
       eps_duals.push_back(s_norm);
-      time.push_back(timer.toc());
     }
 
     if (verbosity >= 3) {

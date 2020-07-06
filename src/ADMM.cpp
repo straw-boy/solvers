@@ -128,9 +128,9 @@ List cppADMM(T& x, mat& y, const List control)
     beta = res.beta;
 
     if (diagnostics) {
-      loss.push_back(res.diagnosticsLoss[0]);
-      eps_primals.push_back(res.diagnosticsLoss[1]);
-      eps_duals.push_back(res.diagnosticsLoss[2]);
+      loss.push_back(res.diagnostics_loss[0]);
+      eps_primals.push_back(res.diagnostics_loss[1]);
+      eps_duals.push_back(res.diagnostics_loss[2]);
       iteration_timings.push_back(res.time);
     }
 
