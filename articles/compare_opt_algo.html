@@ -87,7 +87,7 @@
 
     
     
-<p>This tutorial shows how to compare perfomance of ADDM solver for different optimization algorithm choices. In this example, we will compare Newton-Raphson method and BFGS method.</p>
+<p>This tutorial shows how to compare perfomance of ADDM solver for different optimization algorithm choices. In this example, we will compare Newton-Raphson method, BFGS method and L-BFGS method.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">solvers</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://lattice.r-forge.r-project.org">lattice</a></span>)
@@ -100,24 +100,27 @@
 <span class="kw">x</span> <span class="op">&lt;-</span> <span class="kw">d</span><span class="op">$</span><span class="kw">x</span>
 <span class="kw">y</span> <span class="op">&lt;-</span> <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>
 </pre></div>
-<p>Now that we have out training data-set, we will use ADMM to obtain the fit twice - once with Newton-Raphson as optimization algorithm and again with BFGS as optimization algorithm. Note that <code>diagnostics=TRUE</code> flag is necessary so that solver records the metrics at each iteration.</p>
+<p>Now that we have out training data-set, we will use ADMM to obtain the fit thrice - once with Newton-Raphson as optimization algorithm, once with BFGS as optimization algorithm and finally once with L-BFGS as optimization algorithm. Note that <code>diagnostics=TRUE</code> flag is necessary so that solver records the metrics at each iteration.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="co"># Obtaining the fit for the solvers we want to compare</span>
 <span class="kw">admm_nr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ADMM.html">ADMM</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, family=<span class="st">"binomial"</span>, opt_algo=<span class="st">"nr"</span>, alpha=(<span class="fl">0.01</span>),diagnostics=<span class="fl">TRUE</span>)
 <span class="kw">admm_bfgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ADMM.html">ADMM</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, family=<span class="st">"binomial"</span>, opt_algo=<span class="st">"bfgs"</span>, alpha=(<span class="fl">0.01</span>),diagnostics=<span class="fl">TRUE</span>)
+<span class="kw">admm_lbfgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ADMM.html">ADMM</a></span>(<span class="kw">x</span>, <span class="kw">y</span>, family=<span class="st">"binomial"</span>, opt_algo=<span class="st">"lbfgs"</span>, alpha=(<span class="fl">0.01</span>),diagnostics=<span class="fl">TRUE</span>)
 </pre></div>
 <p>To compare total execution time, we can use <code>total_time</code> attribute of the fit.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># Comparing total execution time</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">admm_nr</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 0.7330373</span>
+<span class="co">#&gt; [1] 0.8445297</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">admm_bfgs</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 2.936133</span>
+<span class="co">#&gt; [1] 3.24005</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">admm_lbfgs</span><span class="op">$</span><span class="kw">total_time</span>)
+<span class="co">#&gt; [1] 3.49391</span>
 </pre></div>
 <p>Now, these fits cannot be directly used to plot as they contain a lot of parameter so we’ll call a utility function that merges the relevant parameter and returns a dataframe.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="co"># Merging the metrics into one dataframe</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeFits.html">mergeFits</a></span>(<span class="kw">admm_nr</span>, <span class="kw">admm_bfgs</span>)
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeFits.html">mergeFits</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">admm_nr</span>, <span class="kw">admm_bfgs</span>, <span class="kw">admm_lbfgs</span>))
 </pre></div>
 <p>Finally, now we can generate the loss vs time plot.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
