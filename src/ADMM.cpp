@@ -107,26 +107,32 @@ List cppADMM(T& x, mat& y, const List control)
   mat beta_prev(p, m, fill::zeros);
 
   uvec passes(path_length);
-  std::vector<std::vector<double>> primals;
-  std::vector<std::vector<double>> duals;
+
+
+  std::vector<std::vector<double>> loss;
+  std::vector<std::vector<double>> eps_primals;
+  std::vector<std::vector<double>> eps_duals;
   std::vector<std::vector<double>> iteration_timings;
-  std::vector<double> execution_timings(path_length);
-  
+  std::vector<double> execution_times(path_length);
+
 
   Results res;
   uword k = 0;
 
   wall_clock inner_timer;
-  
+
   while (k < path_length) {
     inner_timer.tic();
     res = family->fitADMM(x, y, lambda*alpha(k), opt_algo, 1.0);
     passes(k) = res.passes;
     beta = res.beta;
 
-    primals.push_back(res.primals);
-    duals.push_back(res.duals);
-    iteration_timings.push_back(res.time);
+    if (diagnostics) {
+      loss.push_back(res.diagnostics_loss[0]);
+      eps_primals.push_back(res.diagnostics_loss[1]);
+      eps_duals.push_back(res.diagnostics_loss[2]);
+      iteration_timings.push_back(res.time);
+    }
 
     // store coefficients and intercept
     double deviance = res.deviance;
@@ -144,6 +150,8 @@ List cppADMM(T& x, mat& y, const List control)
     
     n_unique(k) = unique(abs(nonzeros(beta))).eval().n_elem;
 
+
+    execution_times[k] = inner_timer.toc();
     if (n_coefs > 0 && k > 0) {
       // stop path if fractional deviance change is small
       if (deviance_change < tol_dev_change || deviance_ratio > tol_dev_ratio) {
@@ -152,21 +160,29 @@ List cppADMM(T& x, mat& y, const List control)
       }
     }
 
-    if (n_unique(k) > max_variables)
+    if (n_unique(k) > max_variables) {
+      k++;
       break;
-
+    }
     k++;
 
     checkUserInterrupt();
-    execution_timings.push_back(inner_timer.toc());
   }
 
   betas.resize(p, m, k);
   passes.resize(k);
   alpha.resize(k);
+  execution_times.resize(k);
   n_unique.resize(k);
   deviances.resize(k);
   deviance_ratios.resize(k);
+
+  if (diagnostics) {
+    loss.resize(k);
+    eps_primals.resize(k);
+    eps_duals.resize(k);
+    iteration_timings.resize(k);
+  }
 
   rescale(betas,
           x_center,
@@ -185,11 +201,12 @@ List cppADMM(T& x, mat& y, const List control)
   return List::create(
     Named("betas")               = wrap(betas),
     Named("passes")              = wrap(passes),
-    Named("primals")             = wrap(primals),
-    Named("duals")               = wrap(duals),
+    Named("loss")                = wrap(loss),
+    Named("eps_primals")         = wrap(eps_primals),
+    Named("eps_duals")           = wrap(eps_duals),
     Named("iteration_timings")   = wrap(iteration_timings),
-    Named("execution_timings")   = wrap(execution_timings),
-    Named("total_time")           = wrap(outer_timer.toc()),
+    Named("execution_times")     = wrap(execution_times),
+    Named("total_time")          = wrap(outer_timer.toc()),
     Named("n_unique")            = wrap(n_unique),
     Named("deviance_ratio")      = wrap(deviance_ratios),
     Named("null_deviance")       = wrap(null_deviance),

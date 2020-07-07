@@ -2,3 +2,8 @@
 .RData
 .Rproj.user
 *.o  
+inst/doc
+doc
+Meta
+*.pdf
+docs

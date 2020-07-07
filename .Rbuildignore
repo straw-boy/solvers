@@ -5,3 +5,8 @@ src/run.r
 .Rbuildproj
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^doc$
+^Meta$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

@@ -25,13 +25,8 @@ ADMM(
   max_passes = 1e+06,
   tol_abs = 1e-05,
   tol_rel = 1e-04,
-  tol_rel_gap = 1e-05,
-  tol_infeas = 0.001,
   diagnostics = FALSE,
-  verbosity = 0,
-  sigma,
-  n_sigma,
-  lambda_min_ratio
+  verbosity = 0
 )
 }
 \arguments{
@@ -46,6 +41,17 @@ be converted to matrices internally.}
 \item{family}{model family}
 
 \item{intercept}{whether to fit an intercept}
+
+\item{center}{whether to center predictors or not by their mean. Defaults
+to \code{TRUE} if \code{x} is dense and \code{FALSE} otherwise.}
+
+\item{scale}{type of scaling to apply to predictors.
+\itemize{
+\item \code{"l1"} scales predictors to have L1 norms of one.
+\item \code{"l2"} scales predictors to have L2 norms of one.#'
+\item \code{"sd"} scales predictors to have a population standard deviation one.
+\item \code{"none"} applies no scaling.
+}}
 
 \item{alpha}{scale for regularization path: either a decreasing numeric
 vector (possibly of length 1) or a character vector; in the latter case,
@@ -63,6 +69,45 @@ to construct the lambda path or a numeric non-decreasing
 vector with length equal to the number
 of coefficients in the model; see section \strong{Regularization sequences}
 for details.}
+
+\item{alpha_min_ratio}{smallest value for \code{lambda} as a fraction of
+\code{lambda_max}; used in the selection of \code{alpha} when \code{alpha = "path"}}
+
+\item{path_length}{length of regularization path; note that the path
+returned may still be shorter due to the early termination criteria
+given by \code{tol_dev_change}, \code{tol_dev_ratio}, and \code{max_variables}.}
+
+\item{q}{parameter controlling the shape of the lambda sequence, with
+usage varying depending on the type of path used and has no effect
+is a custom \code{lambda} sequence is used.}
+
+\item{screen}{(currently inactive) whether to use predictor screening rules
+(rules that allow some predictors to be discarded prior to fitting),
+which improve speed greatly when the number of predictors is larger than
+the number of observations.}
+
+\item{screen_alg}{(currently inactive) what type of screening algorithm to use.
+\itemize{
+\item \code{"strong"} uses the set from the strong screening rule and check
+against the full set
+\item \code{"previous"} first fits with the previous active set, then checks
+against the strong set, and finally against the full set if there are
+no violations in the strong set
+}}
+
+\item{tol_dev_change}{the regularization path is stopped if the
+fractional change in deviance falls below this value; note that this is
+automatically set to 0 if a alpha is manually entered}
+
+\item{tol_dev_ratio}{the regularization path is stopped if the
+deviance ratio
+\eqn{1 - \mathrm{deviance}/\mathrm{(null-deviance)}}{1 - deviance/(null deviance)}
+is above this threshold}
+
+\item{max_variables}{criterion for stopping the path in terms of the
+maximum number of unique, nonzero coefficients in absolute value in model.
+For the multinomial family, this value will be multiplied internally with
+the number of levels of the response minus one.}
 
 \item{opt_algo}{Algorithm to use for optimizing second order approximation for beta update step.}
 
