@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://straw-boy.github.io/solvers//index.html</loc>
+  </url>
+  <url>
+    <loc>https://straw-boy.github.io/solvers//reference/ADMM.html</loc>
+  </url>
+  <url>
+    <loc>https://straw-boy.github.io/solvers//reference/FISTA.html</loc>
+  </url>
+  <url>
+    <loc>https://straw-boy.github.io/solvers//reference/mergeFits.html</loc>
+  </url>
+  <url>
+    <loc>https://straw-boy.github.io/solvers//reference/randomProblem.html</loc>
+  </url>
+  <url>
+    <loc>https://straw-boy.github.io/solvers//articles/compare-fista-admm.html</loc>
+  </url>
+  <url>
+    <loc>https://straw-boy.github.io/solvers//articles/compare_opt_algo.html</loc>
+  </url>
+</urlset>
