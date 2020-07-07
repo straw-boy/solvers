@@ -85,7 +85,7 @@ getLoss <- function(fit) {
   else fit$loss[[1]]
 } 
 
-#' FISTA
+#' Merges all the fits and returns a dataframe containing losses and time
 #' @param fits List of outputs of any of the algorithms (FISTA, ADMM etc)
 #' @export 
 mergeFits <- function(fits) {
