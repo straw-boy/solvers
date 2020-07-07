@@ -47,7 +47,7 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda)
     time.reserve(max_passes);
     timer.tic();
   }
-  
+
 
   // main loop
   uword passes = 0;
@@ -74,18 +74,17 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda)
 
     
     if (verbosity >= 3) {
-      Rcout << "objective " << f << " ";
-      Rcout << "pass: "            << passes
+      Rcout << "objective: "       << f
+            << ", pass: "          << passes
             << ", duality-gap: "   << std::abs(f - G)/std::abs(f)
             << ", infeasibility: " << infeas
             << std::endl;
     }
 
     if (diagnostics) {
-        primals.push_back(f);
-        duals.push_back(G);
-        time.push_back(timer.toc());
-        timer.tic();
+      primals.push_back(f);
+      duals.push_back(G);
+      time.push_back(timer.toc());
     }
 
     if (optimal && feasible){
@@ -136,13 +135,14 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda)
     ++passes;
     
   }
-
+  
   double deviance = 2*primal(y, lin_pred);
 
+  // res.diagnosticsLoss contains 
+  // 'primals' and 'duals' at indices 0 and 1 respectively
   Results res{beta_tilde,
               passes,
-              primals,
-              duals,
+              {primals, duals},
               time,
               deviance};
 

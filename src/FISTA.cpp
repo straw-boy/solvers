@@ -35,6 +35,7 @@ List cppFISTA(T& x, mat& y, const List control)
   auto max_passes  = as<uword>(control["max_passes"]);
   auto tol_rel_gap = as<double>(control["tol_rel_gap"]);
   auto tol_infeas  = as<double>(control["tol_infeas"]);
+
   auto tol_abs     = as<double>(control["tol_abs"]);
   auto tol_rel     = as<double>(control["tol_rel"]);
 
@@ -107,7 +108,7 @@ List cppFISTA(T& x, mat& y, const List control)
   std::vector<std::vector<double>> primals;
   std::vector<std::vector<double>> duals;
   std::vector<std::vector<double>> iteration_timings;
-  std::vector<double> execution_timings;
+  std::vector<double> execution_times(path_length);
   
 
   Results res;
@@ -121,10 +122,12 @@ List cppFISTA(T& x, mat& y, const List control)
     passes(k) = res.passes;
     beta = res.beta;
 
-    primals.push_back(res.primals);
-    duals.push_back(res.duals);
-    iteration_timings.push_back(res.time);
-
+    if (diagnostics) {
+      primals.push_back(res.diagnostics_loss[0]);
+      duals.push_back(res.diagnostics_loss[1]);
+      iteration_timings.push_back(res.time);
+    }
+    
     // store coefficients and intercept
     double deviance = res.deviance;
     double deviance_ratio = 1.0 - deviance/null_deviance;
@@ -140,6 +143,7 @@ List cppFISTA(T& x, mat& y, const List control)
     uword n_coefs = accu(any(beta != 0, 1));
     n_unique(k) = unique(abs(nonzeros(beta))).eval().n_elem;
 
+    execution_times[k] = inner_timer.toc();
     if (n_coefs > 0 && k > 0) {
       // stop path if fractional deviance change is small
       if (deviance_change < tol_dev_change || deviance_ratio > tol_dev_ratio) {
@@ -148,11 +152,11 @@ List cppFISTA(T& x, mat& y, const List control)
       }
     }
 
-    if (n_unique(k) > max_variables)
+    if (n_unique(k) > max_variables) {
+      k++;
       break;
+    }
 
-
-    execution_timings.push_back(inner_timer.toc());
     k++;
 
     checkUserInterrupt();
@@ -161,9 +165,16 @@ List cppFISTA(T& x, mat& y, const List control)
   betas.resize(p, m, k);
   passes.resize(k);
   alpha.resize(k);
+  execution_times.resize(k);
   n_unique.resize(k);
   deviances.resize(k);
   deviance_ratios.resize(k);
+
+  if (diagnostics) {
+    primals.resize(k);
+    duals.resize(k);
+    iteration_timings.resize(k);
+  }
 
   rescale(betas,
           x_center,
@@ -185,7 +196,7 @@ List cppFISTA(T& x, mat& y, const List control)
     Named("primals")             = wrap(primals),
     Named("duals")               = wrap(duals),
     Named("iteration_timings")   = wrap(iteration_timings),
-    Named("execution_timings")   = wrap(execution_timings),
+    Named("execution_times")     = wrap(execution_times),
     Named("total_time")          = wrap(outer_timer.toc()),
     Named("n_unique")            = wrap(n_unique),
     Named("deviance_ratio")      = wrap(deviance_ratios),

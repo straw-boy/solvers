@@ -8,8 +8,7 @@ using namespace arma;
 struct Results {
   mat beta;
   uword passes;
-  std::vector<double> primals;
-  std::vector<double> duals;
+  std::vector<std::vector<double>> diagnostics_loss;
   std::vector<double> time;
   double deviance;
 
@@ -17,14 +16,12 @@ struct Results {
 
   Results(mat beta,
           uword passes,
-          std::vector<double> primals,
-          std::vector<double> duals,
+          std::vector<std::vector<double>> diagnostics_loss,
           std::vector<double> time,
           double deviance)
     : beta(beta),
       passes(passes),
-      primals(primals),
-      duals(duals),
+      diagnostics_loss(diagnostics_loss),
       time(time),
       deviance(deviance) {}
 };

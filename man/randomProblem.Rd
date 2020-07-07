@@ -17,6 +17,27 @@ randomProblem(
   rho = 0
 )
 }
+\arguments{
+\item{n}{Number of data points}
+
+\item{p}{Number of features}
+
+\item{q}{<TODO>}
+
+\item{n_groups}{<TODO>}
+
+\item{n_targets}{<TODO>}
+
+\item{density}{Determine sparsity of the data generated. Default set to 0.}
+
+\item{amplitude}{<TODO>}
+
+\item{alpha}{<TODO>}
+
+\item{response}{Choice of likelohood function}
+
+\item{rho}{<TODO>}
+}
 \description{
 Code borrowed from SLOPE package for generating datasets
 }
