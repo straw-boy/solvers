@@ -9,7 +9,7 @@ using namespace arma;
 
 // Solvers argmin_x { 0.5*(x-beta).t()*H*(x-beta) + J(beta,lambda)  }
 // where J(beta,lambda) is the slope penalty.
-// ADMM is used to solve this.
+// This subproblem is solved using ADMM.
 inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
 {
   uword p = beta.n_rows;

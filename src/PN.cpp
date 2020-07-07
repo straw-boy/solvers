@@ -106,7 +106,7 @@ List cppPN(T& x, mat& y, const List control)
   uvec passes(path_length);
   std::vector<std::vector<double>> loss;
   std::vector<std::vector<double>> iteration_timings;
-  std::vector<double> execution_timings;
+  std::vector<double> execution_times(path_length);
   
 
   Results res;
@@ -121,7 +121,7 @@ List cppPN(T& x, mat& y, const List control)
     beta = res.beta;
 
     if (diagnostics) {
-      loss.push_back(res.primals);
+      loss.push_back(res.diagnostics_loss[0]);
       iteration_timings.push_back(res.time);
     }
     
@@ -140,6 +140,7 @@ List cppPN(T& x, mat& y, const List control)
     uword n_coefs = accu(any(beta != 0, 1));
     n_unique(k) = unique(abs(nonzeros(beta))).eval().n_elem;
 
+    execution_times[k] = inner_timer.toc();
     if (n_coefs > 0 && k > 0) {
       // stop path if fractional deviance change is small
       if (deviance_change < tol_dev_change || deviance_ratio > tol_dev_ratio) {
@@ -148,10 +149,11 @@ List cppPN(T& x, mat& y, const List control)
       }
     }
 
-    if (n_unique(k) > max_variables)
+    if (n_unique(k) > max_variables) {
+      k++;
       break;
+    }
 
-    execution_timings.push_back(inner_timer.toc());
     k++;
 
     checkUserInterrupt();
@@ -160,9 +162,15 @@ List cppPN(T& x, mat& y, const List control)
   betas.resize(p, m, k);
   passes.resize(k);
   alpha.resize(k);
+  execution_times.resize(k);
   n_unique.resize(k);
   deviances.resize(k);
   deviance_ratios.resize(k);
+
+  if (diagnostics) {
+    loss.resize(k);
+    iteration_timings.resize(k);
+  }
 
   rescale(betas,
           x_center,
@@ -183,7 +191,7 @@ List cppPN(T& x, mat& y, const List control)
     Named("passes")              = wrap(passes),
     Named("loss")                = wrap(loss),
     Named("iteration_timings")   = wrap(iteration_timings),
-    Named("execution_timings")   = wrap(execution_timings),
+    Named("execution_times")     = wrap(execution_times),
     Named("total_time")          = wrap(outer_timer.toc()),
     Named("n_unique")            = wrap(n_unique),
     Named("deviance_ratio")      = wrap(deviance_ratios),

@@ -7,6 +7,13 @@
 #'   `family = "binomial"` or `family = "multinomial"`, it can be a factor.
 #' @param family model family 
 #' @param intercept whether to fit an intercept
+#' @param center whether to center predictors or not by their mean. Defaults
+#'   to `TRUE` if `x` is dense and `FALSE` otherwise.
+#' @param scale type of scaling to apply to predictors.
+#'   - `"l1"` scales predictors to have L1 norms of one.
+#'   - `"l2"` scales predictors to have L2 norms of one.#'
+#'   - `"sd"` scales predictors to have a population standard deviation one.
+#'   - `"none"` applies no scaling.
 #' @param alpha scale for regularization path: either a decreasing numeric
 #'   vector (possibly of length 1) or a character vector; in the latter case,
 #'   the choices are:
@@ -15,20 +22,45 @@
 #'     the last to the almost-saturated model, and
 #'   - `"estimate"`, which estimates a *single* `alpha`
 #'     using Algorithm 5 in Bogdan et al. (2015).
+#' @param path_length length of regularization path; note that the path
+#'   returned may still be shorter due to the early termination criteria
+#'   given by `tol_dev_change`, `tol_dev_ratio`, and `max_variables`.
 #' @param lambda either a character vector indicating the method used
 #'   to construct the lambda path or a numeric non-decreasing
 #'   vector with length equal to the number
 #'   of coefficients in the model; see section **Regularization sequences**
 #'   for details.
+#' @param alpha_min_ratio smallest value for `lambda` as a fraction of
+#'   `lambda_max`; used in the selection of `alpha` when `alpha = "path"`
+#' @param q parameter controlling the shape of the lambda sequence, with
+#'   usage varying depending on the type of path used and has no effect
+#'   is a custom `lambda` sequence is used.
 #' @param max_passes maximum number of passes (outer iterations) for solver
 #' @param diagnostics whether to save diagnostics from the solver
 #'   (timings and other values depending on type of solver)
+#' @param screen (currently inactive) whether to use predictor screening rules 
+#'   (rules that allow some predictors to be discarded prior to fitting),
+#'   which improve speed greatly when the number of predictors is larger than 
+#'   the number of observations.
+#' @param screen_alg (currently inactive) what type of screening algorithm to use.
+#'   - `"strong"` uses the set from the strong screening rule and check
+#'     against the full set
+#'   - `"previous"` first fits with the previous active set, then checks
+#'     against the strong set, and finally against the full set if there are
+#'     no violations in the strong set
 #' @param verbosity level of verbosity for displaying output from the
 #'   program. Not completely developed. Use 3 just for now.
-#' @param tol_rel_gap stopping criterion for the duality gap; used only with
-#'   FISTA solver.
-#' @param tol_infeas stopping criterion for the level of infeasibility; used
-#'   with FISTA solver.
+#' @param tol_dev_change the regularization path is stopped if the
+#'   fractional change in deviance falls below this value; note that this is
+#'   automatically set to 0 if a alpha is manually entered
+#' @param tol_dev_ratio the regularization path is stopped if the
+#'   deviance ratio
+#'   \eqn{1 - \mathrm{deviance}/\mathrm{(null-deviance)}}{1 - deviance/(null deviance)}
+#'   is above this threshold
+#' @param max_variables criterion for stopping the path in terms of the
+#'   maximum number of unique, nonzero coefficients in absolute value in model.
+#'   For the multinomial family, this value will be multiplied internally with
+#'   the number of levels of the response minus one.
 #' @export
 PN <- function(x,
                y,
@@ -46,38 +78,14 @@ PN <- function(x,
                tol_dev_change = 1e-5,
                tol_dev_ratio = 0.995,
                max_variables = NROW(x),
-               solver = c("fista", "admm"),
-               max_passes = 1000,
-               tol_abs = 1e-5,
-               tol_rel = 1e-4,
-               tol_rel_gap = 1e-5,
-               tol_infeas = 1e-3,
-               diagnostics = FALSE,
-               verbosity = 0,
-               sigma,
-               n_sigma,
-               lambda_min_ratio
+               max_passes = 100,
+               diagnostics =  FALSE,
+               verbosity = 0
 ) {
-
-  if (!missing(sigma)) {
-    warning("`sigma` argument is deprecated; please use `alpha` instead")
-    alpha <- sigma
-  }
-
-  if (!missing(n_sigma)) {
-    warning("`n_sigma` argument is deprecated; please use `path_length` instead")
-    path_length <- n_sigma
-  }
-
-  if (!missing(lambda_min_ratio)) {
-    warning("`lambda_min_ratio` is deprecated; please use `alpha_min_ratio` instead")
-    alpha_min_ratio <- lambda_min_ratio
-  }
 
   ocall <- match.call()
 
   family <- match.arg(family)
-  solver <- match.arg(solver)
   screen_alg <- match.arg(screen_alg)
 
   if (is.character(scale)) {
@@ -105,8 +113,6 @@ PN <- function(x,
     is.logical(intercept),
     tol_rel_gap >= 0,
     tol_infeas >= 0,
-    tol_abs >= 0,
-    tol_rel >= 0,
     is.logical(center)
   )
 
@@ -242,13 +248,12 @@ PN <- function(x,
                   diagnostics = diagnostics,
                   verbosity = verbosity,
                   max_variables = max_variables,
-                  solver = solver,
                   tol_dev_change = tol_dev_change,
                   tol_dev_ratio = tol_dev_ratio,
-                  tol_rel_gap = tol_rel_gap,
-                  tol_infeas = tol_infeas,
-                  tol_abs = tol_abs,
-                  tol_rel = tol_rel)
+                  tol_rel_gap = 1e-5,
+                  tol_infeas = 1e-3,
+                  tol_abs = 1e-5,
+                  tol_rel = 1e-4)
 
   fitPN <- if (is_sparse) sparsePN else densePN
 
@@ -314,27 +319,28 @@ PN <- function(x,
                                    paste0("p", seq_len(path_length)))
   }
 
-  diagnostics <- if (diagnostics) setupDiagnostics(fit) else NULL
-
   slope_class <- switch(family,
                         gaussian = "GaussianSLOPE",
                         binomial = "BinomialSLOPE",
                         poisson = "PoissonSLOPE",
                         multinomial = "MultinomialSLOPE")
 
-  structure(list(coefficients = coefficients,
+  structure(list(solver = "PN",
+                 coefficients = coefficients,
                  nonzeros = nonzeros,
                  lambda = lambda,
                  alpha = alpha,
                  class_names = class_names,
+                 primal = fit$primals,
+                 dual = fit$duals,
+                 iteration_timings = fit$iteration_timings,
                  passes = fit$passes,
-                 execution_times = fit$execution_timings,
+                 execution_times = fit$execution_times,
                  total_time = fit$total_time,
                  unique = drop(fit$n_unique),
                  deviance_ratio = drop(fit$deviance_ratio),
                  null_deviance = fit$null_deviance,
                  family = family,
-                 diagnostics = diagnostics,
                  call = ocall),
             class = c(slope_class, "SLOPE"))
 }

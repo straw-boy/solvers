@@ -48,7 +48,8 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
   uword passes = 0;
 
   while (passes < max_passes) {
-    
+    ++passes;
+
     lin_pred = x*beta;
 
     double f = primal(y, lin_pred);
@@ -67,7 +68,6 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     if (diagnostics) {
         loss.push_back(f+g);
         time.push_back(timer.toc());
-        timer.tic();
     }
     
     beta_tilde = beta - solve(hess, grad);
@@ -95,28 +95,24 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
       checkUserInterrupt();
     }
     beta += t*d;
-
-    ++passes;
-    
-
     
     if (passes % 100 == 0)
       checkUserInterrupt();
     
   }
+  
+  if (diagnostics) {
+    loss.resize(passes);
+    time.resize(passes);
+  }
 
-  // Rcout << "Final obj: " << primal(y, x*beta) + dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
-  //                                                         "descending"), lambda) << endl;
+  double deviance = 2*primal(y, x*beta);
 
-  loss.reserve(max_passes);
-  time.reserve(max_passes);
-
-  double deviance = 2*primal(y, lin_pred);
-
+  // res.diagnosticsLoss contains 'objective value'
+  // at index 0
   Results res{beta,
               passes,
-              loss,
-              loss,
+              {loss},
               time,
               deviance};
 
