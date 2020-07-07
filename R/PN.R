@@ -111,8 +111,6 @@ PN <- function(x,
     is.finite(max_passes),
     is.logical(diagnostics),
     is.logical(intercept),
-    tol_rel_gap >= 0,
-    tol_infeas >= 0,
     is.logical(center)
   )
 
@@ -331,8 +329,7 @@ PN <- function(x,
                  lambda = lambda,
                  alpha = alpha,
                  class_names = class_names,
-                 primal = fit$primals,
-                 dual = fit$duals,
+                 loss = fit$loss,
                  iteration_timings = fit$iteration_timings,
                  passes = fit$passes,
                  execution_times = fit$execution_times,
