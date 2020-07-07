@@ -1,10 +1,10 @@
 ---
-title: "Comparing Optimization Algorithm Choices in ADMM"
+title: "Comparing FISTA and ADMM solvers"
 author: "Akarsh Goyal"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Comparing Optimization Algorithm Choices in ADMM}
+  %\VignetteIndexEntry{Comparing FISTA and ADMM solvers}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,9 +16,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-This tutorial shows how to compare perfomance of ADDM solver
-for different optimization algorithm choices. In this example,
-we will compare Newton-Raphson method and BFGS method.
+This tutorial shows how to compare perfomance of FISTA solver 
+with ADMM solver.
 
 
 ```{r setup}
@@ -34,24 +33,25 @@ d <- randomProblem(n, p, response = "binomial", density=0.5)
 x <- d$x
 y <- d$y
 ```
-Now that we have out training data-set, we will use ADMM to 
-obtain the fit twice - once with Newton-Raphson as optimization 
-algorithm and again with BFGS as optimization algorithm. Note 
-that `diagnostics=TRUE` flag is necessary so that solver records 
+Now that we have out training data-set, we will use FISTA and 
+ADMM solvers to obtain the corresponding fits. Note that 
+`diagnostics=TRUE` flag is necessary so that solver records 
 the metrics at each iteration.
 
 ```{r}
 # Obtaining the fit for the solvers we want to compare
-admm_nr <- ADMM(x, y, family="binomial", opt_algo="nr", alpha=(0.01),diagnostics=TRUE)
-admm_bfgs <- ADMM(x, y, family="binomial", opt_algo="bfgs", alpha=(0.01),diagnostics=TRUE)
+fista_fit <- FISTA(x, y, family="binomial", alpha=(0.01),diagnostics=TRUE)
+admm_fit <- ADMM(x, y, family="binomial", alpha=(0.01),diagnostics=TRUE)
 ```
-To compare total execution time, we can use `total_time` attribute of the fit.
+We haven't specified optimization algorithm choice in ADMM 
+so default (L-BFGS) will be used.   
 
+To compare total execution time, we can use `total_time` attribute of the fit.
 
 ```{r}
 # Comparing total execution time
-print(admm_nr$total_time)
-print(admm_bfgs$total_time)
+print(fista_fit$total_time)
+print(admm_fit$total_time)
 ```
 
 Now, these fits cannot be directly used to plot as 
@@ -61,7 +61,7 @@ a dataframe.
 
 ```{r}
 # Merging the metrics into one dataframe
-f <- mergeFits(admm_nr, admm_bfgs)
+f <- mergeFits(fista_fit, admm_fit)
 ```
 Finally, now we can generate the loss vs time plot.
 
