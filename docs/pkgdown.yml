@@ -1,8 +1,0 @@
-pandoc: 2.7.3
-pkgdown: 1.5.1
-pkgdown_sha: ~
-articles:
-  compare-fista-admm: compare-fista-admm.html
-  compare_opt_algo: compare_opt_algo.html
-last_built: 2020-07-07T18:48Z
-
