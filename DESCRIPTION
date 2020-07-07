@@ -23,7 +23,6 @@ Suggests:
     knitr,
     rmarkdown,
     lattice,
-    directlabels.
     pkgdown
 Remotes: jolars/SLOPE
 Roxygen: list(markdown = TRUE)
