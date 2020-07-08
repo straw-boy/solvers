@@ -48,6 +48,7 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda)
     timer.tic();
   }
 
+  beta += 20;
 
   // main loop
   uword passes = 0;

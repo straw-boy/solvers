@@ -43,9 +43,13 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     time.reserve(max_passes);
     timer.tic();
   }
+
+  beta += 20;
   
   // main loop
   uword passes = 0;
+
+  lambda.print();
 
   while (passes < max_passes) {
     ++passes;
@@ -61,8 +65,8 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
     if (verbosity >= 3) {
       Rcout << "pass: "         << passes
-            << ", objective: "  << f + g
-            << std::endl;
+            << ", objective: "  << f + g;
+            // << std::endl;
     }
 
     if (diagnostics) {
@@ -76,6 +80,9 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
     mat d = beta_tilde - beta;
 
+    if (verbosity >= 3) {
+      Rcout << " , normd: " << norm(d);
+    }
     if (norm(d) < tol)
       break;
     // Backtracking line search
@@ -95,6 +102,9 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
       checkUserInterrupt();
     }
     beta += t*d;
+
+      Rcout << " , normtd: " << norm(t*d) << endl;
+
     
     if (passes % 100 == 0)
       checkUserInterrupt();
