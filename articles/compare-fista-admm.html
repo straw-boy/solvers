@@ -78,7 +78,7 @@
       <h1 data-toc-skip>Comparing FISTA and ADMM solvers</h1>
                         <h4 class="author">Akarsh Goyal</h4>
             
-            <h4 class="date">2020-07-07</h4>
+            <h4 class="date">2020-07-08</h4>
       
       
       <div class="hidden name"><code>compare-fista-admm.Rmd</code></div>
@@ -111,9 +111,9 @@
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># Comparing total execution time</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">fista_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 1.608081</span>
+<span class="co">#&gt; [1] 1.639154</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">admm_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 4.791804</span>
+<span class="co">#&gt; [1] 2.288129</span>
 </pre></div>
 <p>Now, these fits cannot be directly used to plot as they contain a lot of parameter so we’ll call a utility function that merges the relevant parameter and returns a dataframe.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
