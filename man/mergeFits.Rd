@@ -4,14 +4,10 @@
 \alias{mergeFits}
 \title{FISTA}
 \usage{
-mergeFits(fit1, fit2)
+mergeFits(fits)
 }
 \arguments{
-\item{fit1}{Output of any of the algorithms (FISTA, ADMM etc)
-that you want to compare}
-
-\item{fit2}{Output of any of the algorithms (FISTA, ADMM etc)
-that you want to compare with.}
+\item{fits}{List of outputs of any of the algorithms (FISTA, ADMM etc)}
 }
 \description{
 FISTA
