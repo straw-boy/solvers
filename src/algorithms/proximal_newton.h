@@ -44,10 +44,10 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     timer.tic();
   }
 
-  beta += 20;
-  
   // main loop
   uword passes = 0;
+
+  beta += 100;
 
   lambda.print();
 
@@ -59,18 +59,18 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     double f = primal(y, lin_pred);
     double g = dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
                         "descending"), lambda);
+    double obj = f + g;
 
     grad = gradient(x, y, lin_pred);
     hess = hessian(x, y, lin_pred);
 
     if (verbosity >= 3) {
       Rcout << "pass: "         << passes
-            << ", objective: "  << f + g;
-            // << std::endl;
+            << ", objective: "  << obj;
     }
 
     if (diagnostics) {
-        loss.push_back(f+g);
+        loss.push_back(obj);
         time.push_back(timer.toc());
     }
     
@@ -83,29 +83,39 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     if (verbosity >= 3) {
       Rcout << " , normd: " << norm(d);
     }
-    if (norm(d) < tol)
-      break;
+
     // Backtracking line search
     double t = 1.0;
     double dTgrad = dot(d, grad);
+    double f_new;
+    double g_new;
+    double obj_new;
     while (true) {
       mat beta_new = beta + t*d;
-      double f_new = primal(y, x*(beta_new));
-      double g_new = dot(sort(abs(vectorise(beta_new.tail_rows(p_rows))),
-                              "descending"), lambda);
+      f_new = primal(y, x*(beta_new));
+      g_new = dot(sort(abs(vectorise(beta_new.tail_rows(p_rows))),
+                         "descending"), lambda);
+      obj_new = f_new + g_new;
 
-      if (f + alpha*(t*dTgrad + g_new - g)  >= f_new*(1 - 1e-12)) {
+      if (obj + alpha*(t*dTgrad + g_new - g)  >= obj_new) {
         break;
       } else {
         t *= eta;
       }
       checkUserInterrupt();
     }
+
+    Rcout << ", t: " << t;
+    
     beta += t*d;
 
-      Rcout << " , normtd: " << norm(t*d) << endl;
+    if (verbosity >= 3) {
+      Rcout << " df: " << obj_new-obj << endl;
+    }
 
-    
+    if (obj_new-obj < tol)
+      break;
+
     if (passes % 100 == 0)
       checkUserInterrupt();
     
