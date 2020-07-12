@@ -2,17 +2,13 @@
 % Please edit documentation in R/utils.R
 \name{mergeFits}
 \alias{mergeFits}
-\title{FISTA}
+\title{Merges all the fits and returns a dataframe containing losses and time}
 \usage{
-mergeFits(fit1, fit2)
+mergeFits(fits)
 }
 \arguments{
-\item{fit1}{Output of any of the algorithms (FISTA, ADMM etc)
-that you want to compare}
-
-\item{fit2}{Output of any of the algorithms (FISTA, ADMM etc)
-that you want to compare with.}
+\item{fits}{List of outputs of any of the algorithms (FISTA, ADMM etc)}
 }
 \description{
-FISTA
+Merges all the fits and returns a dataframe containing losses and time
 }

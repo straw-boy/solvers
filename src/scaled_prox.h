@@ -7,8 +7,8 @@ using namespace Rcpp;
 using namespace arma;
 
 
-// Solvers argmin_x { 0.5*(x-beta).t()*H*(x-beta) + J(beta,lambda)  }
-// where J(beta,lambda) is the slope penalty.
+// Solvers argmin_x { 0.5*(x-beta).t()*H*(x-beta) + J(x,lambda) }
+// where J(x,lambda) is the slope penalty.
 // This subproblem is solved using ADMM.
 inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
 {
@@ -25,15 +25,16 @@ inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
 
   const double alpha = 1.5;
   const double rho = 1.0;
-  const double tol_abs = 1e-5;
-  const double tol_rel = 1e-4;
+  const double tol_abs = 1e-6;
+  const double tol_rel = 1e-5;
+
   uword iter = 0;
-  uword max_iter = 10000;
+  uword max_iter = 500000;
 
   while (iter < max_iter) {
     iter++;
-
-    x = solve(H + rho*I, H*beta + rho*(z-u));
+    
+    x = solve(H + rho*I, H*beta + rho*(z - u));
     
     mat z_old = z;
     mat x_hat = alpha*x + (1 - alpha)*z_old;
@@ -53,10 +54,9 @@ inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
     if (r_norm < eps_primal && s_norm < eps_dual)
         break;
 
-    Rcpp::checkUserInterrupt();
-
+    if (iter % 1000 == 0)
+      Rcpp::checkUserInterrupt();
   }
-
+  
   return x;
 }
-

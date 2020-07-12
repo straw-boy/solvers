@@ -85,14 +85,7 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     Rcpp::checkUserInterrupt();
 
   }
-
-  if (diagnostics) {
-    loss.resize(passes);
-    eps_primals.resize(passes);
-    eps_duals.resize(passes);
-    time.resize(passes);
-  }
-
+  
   double deviance = 2*primal(y, x*beta);
   
   // res.diagnosticsLoss contains 'objective value', 'residual primals' 

@@ -78,7 +78,7 @@ PN <- function(x,
                tol_dev_change = 1e-5,
                tol_dev_ratio = 0.995,
                max_variables = NROW(x),
-               max_passes = 1000,
+               max_passes = 150,
                diagnostics =  FALSE,
                verbosity = 0
 ) {

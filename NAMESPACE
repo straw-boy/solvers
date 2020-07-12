@@ -2,6 +2,7 @@
 
 export(ADMM)
 export(FISTA)
+export(PN)
 export(mergeFits)
 export(randomProblem)
 importFrom(Rcpp,sourceCpp)

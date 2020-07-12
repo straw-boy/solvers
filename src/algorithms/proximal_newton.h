@@ -2,7 +2,6 @@
 
 #include <RcppArmadillo.h>
 #include "../results.h"
-#include "../prox.h"
 #include "../scaled_prox.h"
 #include "../families/family.h"
 
@@ -46,55 +45,46 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
   // main loop
   uword passes = 0;
-
-  beta += 100;
-
-  lambda.print();
-
   while (passes < max_passes) {
     ++passes;
 
     lin_pred = x*beta;
-
+  
     double f = primal(y, lin_pred);
     double g = dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
                         "descending"), lambda);
     double obj = f + g;
-
-    grad = gradient(x, y, lin_pred);
-    hess = hessian(x, y, lin_pred);
-
-    if (verbosity >= 3) {
-      Rcout << "pass: "         << passes
-            << ", objective: "  << obj;
-    }
 
     if (diagnostics) {
         loss.push_back(obj);
         time.push_back(timer.toc());
     }
     
+    if (verbosity >= 3) {
+        Rcout << "pass: "         << passes
+              << ", objective: "  << obj 
+              << endl;
+    }
+
+    grad = gradient(x, y, lin_pred);
+    hess = hessian(x, y, lin_pred);
+
     beta_tilde = beta - solve(hess, grad);
 
     beta_tilde = scaled_prox(beta_tilde, hess, lambda);
-
+    
     mat d = beta_tilde - beta;
-
-    if (verbosity >= 3) {
-      Rcout << " , normd: " << norm(d);
-    }
 
     // Backtracking line search
     double t = 1.0;
     double dTgrad = dot(d, grad);
-    double f_new;
-    double g_new;
     double obj_new;
     while (true) {
       mat beta_new = beta + t*d;
-      f_new = primal(y, x*(beta_new));
-      g_new = dot(sort(abs(vectorise(beta_new.tail_rows(p_rows))),
-                         "descending"), lambda);
+
+      double f_new = primal(y, x*(beta_new));
+      double g_new = dot(sort(abs(vectorise(beta_new.tail_rows(p_rows))),
+                              "descending"), lambda);
       obj_new = f_new + g_new;
 
       if (obj + alpha*(t*dTgrad + g_new - g)  >= obj_new) {
@@ -105,25 +95,14 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
       checkUserInterrupt();
     }
 
-    Rcout << ", t: " << t;
-    
     beta += t*d;
 
-    if (verbosity >= 3) {
-      Rcout << " df: " << obj_new-obj << endl;
-    }
-
-    if (obj_new-obj < tol)
+    if (norm(t*d) < tol)
       break;
-
-    if (passes % 100 == 0)
+    
+    if (passes % 10 == 0)
       checkUserInterrupt();
     
-  }
-  
-  if (diagnostics) {
-    loss.resize(passes);
-    time.resize(passes);
   }
 
   double deviance = 2*primal(y, x*beta);
