@@ -25,6 +25,7 @@ private:
   const double tol_abs = 1e-6;
   const double tol_rel = 1e-5;
   uword max_iter = 500000;
+  uword max_passes = 500;
 
 public:
   LBFGS(const vec lambda) : lambda(lambda) {}
@@ -45,9 +46,11 @@ public:
     gamma = dot(s, y)/dot(y, y);
     sigma = dot(s, y)/dot(s, s);
 
+    Rcout << "--------" << endl;
     mat sTy = S.t()*Y;
-    L = trimatl(sTy, -1);
+    // sTy.print();
     R = trimatu(sTy);
+    L = sTy - R;
     D = diagmat(sTy);
 
     return false;
@@ -60,7 +63,7 @@ public:
       return gamma*v;
     }
 
-    Rcout << " Hv main entered" << endl;
+    // Rcout << " Hv main entered" << endl;
 
     mat Rinv = inv(R);
     mat z = vectorise(v);
@@ -84,7 +87,7 @@ public:
     if (S.n_cols == 0) {
       return sigma*v;
     }
-    Rcout << " Bv main entered" << endl;
+    // 3cout << " Bv main entered" << endl;
 
     mat z = vectorise(v);
     mat Q = join_rows(Y, sigma*S);
@@ -108,48 +111,120 @@ public:
     uword pmi = lambda.n_elem;
     uword p_rows = pmi/m;
 
-    mat x(beta);
-    mat z(x);
-    mat u(x);
+    // mat x(beta);
+    // mat z(x);
+    // mat u(x);
 
-    uword iter = 0;
+    // uword iter = 0;
 
-    mat Bbeta = computeBv(beta);
+    // mat Bbeta = computeBv(beta);
 
-    lambda.print();
+    // lambda.print();
 
-    while (iter < max_iter) {
-      iter++;
-      Rcout << "pass: " << iter << " SP obj: "
-            << 0.5*dot(x-beta,computeBv(x-beta)) +
-              dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
-                          "descending"), lambda) << endl; 
+    // while (iter < max_iter) {
+    //   iter++;
+    //   Rcout << "pass: " << iter << " SP obj: "
+    //         << 0.5*dot(x-beta,computeBv(x-beta)) +
+    //           dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
+    //                       "descending"), lambda) << endl; 
 
-      x = beta + z - u + Bbeta/rho + rho*computeHv(z - u);
+    //   x = beta + z - u + Bbeta/rho + rho*computeHv(z - u);
       
-      mat z_old = z;
-      mat x_hat = alpha*x + (1 - alpha)*z_old;
+    //   mat z_old = z;
+    //   mat x_hat = alpha*x + (1 - alpha)*z_old;
 
-      z = x_hat + u;
+    //   z = x_hat + u;
 
-      z.tail_rows(p_rows) = prox(z.tail_rows(p_rows), lambda/rho);
+    //   z.tail_rows(p_rows) = prox(z.tail_rows(p_rows), lambda/rho);
 
-      u += (x_hat-z);
+    //   u += (x_hat-z);
 
-      double r_norm = norm(x - z);
-      double s_norm = norm(rho*(z - z_old));
+    //   double r_norm = norm(x - z);
+    //   double s_norm = norm(rho*(z - z_old));
 
-      double eps_primal = std::sqrt(p)*tol_abs + tol_rel*std::max(norm(x), norm(z));
-      double eps_dual = std::sqrt(p)*tol_abs + tol_rel*norm(rho*u);
+    //   double eps_primal = std::sqrt(p)*tol_abs + tol_rel*std::max(norm(x), norm(z));
+    //   double eps_dual = std::sqrt(p)*tol_abs + tol_rel*norm(rho*u);
 
-      if (r_norm < eps_primal && s_norm < eps_dual)
-          break;
+    //   if (r_norm < eps_primal && s_norm < eps_dual)
+    //       break;
 
-      if (iter % 1000 == 0)
-        Rcpp::checkUserInterrupt();
-    }
+    //   if (iter % 1000 == 0)
+    //     Rcpp::checkUserInterrupt();
+    // }
     
-    return x;
+    // return x;
+
+    // FISTA main loop
+    mat x(beta);
+    mat x_tilde(x);
+    mat x_tilde_old(x);
+
+    double learning_rate = 1.0;
+
+    // line search parameters
+    double alpha = 0.5;
+
+    // FISTA parameters
+    double t = 1;
+
+    // Rcout << "SP begins" << endl;
+    // beta.print();
+    // Rcout << "----" << endl;
+    // x.print();
+    uword passes = 0;
+    while (passes < max_passes) {
+      
+      double g = 0.5*dot(x - beta, computeBv(x - beta));
+      double h = dot(sort(abs(vectorise(x.tail_rows(p_rows))),
+                          "descending"), lambda);
+      double f = g + h;
+
+      if (passes % 100 == 0)
+        Rcout << " SP: pass: " << passes << " obj: " << g << " + " << h << endl;
+
+      mat grad = computeBv(x - beta);
+
+      x_tilde_old = x_tilde;
+
+      double g_old = g;
+      double t_old = t;
+
+      // Backtracking line search
+      while (true) {
+        // Update coefficients
+        x_tilde = x - learning_rate*grad;
+
+        x_tilde.tail_rows(p_rows) =
+          prox(x_tilde.tail_rows(p_rows), lambda*learning_rate);
+
+        vec d = vectorise(x_tilde - x);
+
+        g = 0.5*dot(x_tilde - beta, computeBv(x_tilde - beta));
+
+        double q = g_old
+          + dot(d, vectorise(grad))
+          + (1.0/(2*learning_rate))*accu(square(d));
+
+          if (q >= g*(1 - 1e-12)) {
+            break;
+          } else {
+            learning_rate *= alpha;
+          }
+          checkUserInterrupt();
+      }
+
+      // FISTA step
+      t = 0.5*(1.0 + std::sqrt(1.0 + 4.0*t_old*t_old));
+      x = x_tilde + (t_old - 1.0)/t * (x_tilde - x_tilde_old);
+
+      if (passes % 100 == 0)
+        checkUserInterrupt();
+
+      ++passes;
+      
+    }
+
+    return x_tilde;
   }
 
 

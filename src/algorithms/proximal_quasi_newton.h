@@ -69,13 +69,9 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
               << endl;
     }
 
-    lbfgs.computeHv(grad).print();
-
     beta_tilde = beta - lbfgs.computeHv(grad);
 
-    Rcout << "--------" << endl;
     beta_tilde = lbfgs.scaled_prox(beta_tilde);
-    beta_tilde.print();
     
     vec d = beta_tilde - beta;
 
@@ -98,7 +94,7 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
       }
       checkUserInterrupt();
     }
-
+    Rcout << " t is : " << t << endl;
     beta += t*d;
     lin_pred = x*beta;
 
