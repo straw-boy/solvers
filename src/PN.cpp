@@ -3,6 +3,7 @@
 #include "results.h"
 #include "families/families.h"
 #include "algorithms/proximal_newton.h"
+#include "algorithms/proximal_quasi_newton.h"
 #include "standardize.h"
 #include "rescale.h"
 #include "regularizationPath.h"
@@ -32,11 +33,12 @@ List cppPN(T& x, mat& y, const List control)
   auto verbosity = as<uword>(control["verbosity"]);
 
   // solver arguments
-  auto max_passes  = as<uword>(control["max_passes"]);
-  auto tol_rel_gap = as<double>(control["tol_rel_gap"]);
-  auto tol_infeas  = as<double>(control["tol_infeas"]);
-  auto tol_abs     = as<double>(control["tol_abs"]);
-  auto tol_rel     = as<double>(control["tol_rel"]);
+  auto max_passes   = as<uword>(control["max_passes"]);
+  auto hessian_calc = as<std::string>(control["hessian_calc"]);
+  auto tol_rel_gap  = as<double>(control["tol_rel_gap"]);
+  auto tol_infeas   = as<double>(control["tol_infeas"]);
+  auto tol_abs      = as<double>(control["tol_abs"]);
+  auto tol_rel      = as<double>(control["tol_rel"]);
 
   auto family_choice = as<std::string>(control["family"]);
   auto intercept     = as<bool>(control["fit_intercept"]);
@@ -116,7 +118,7 @@ List cppPN(T& x, mat& y, const List control)
 
   while (k < path_length) {
     inner_timer.tic();
-    res = family->fitProximalNewton(x, y, lambda*alpha(k));
+    res = family->fitPN(x, y, lambda*alpha(k), hessian_calc);
     passes(k) = res.passes;
     beta = res.beta;
 

@@ -78,6 +78,7 @@ PN <- function(x,
                tol_dev_change = 1e-5,
                tol_dev_ratio = 0.995,
                max_variables = NROW(x),
+               hessian_calc = c("lbfgs", "exact"),
                max_passes = 150,
                diagnostics =  FALSE,
                verbosity = 0
@@ -86,6 +87,7 @@ PN <- function(x,
   ocall <- match.call()
 
   family <- match.arg(family)
+  hessian_calc <- match.arg(hessian_calc)
   screen_alg <- match.arg(screen_alg)
 
   if (is.character(scale)) {
@@ -246,6 +248,7 @@ PN <- function(x,
                   diagnostics = diagnostics,
                   verbosity = verbosity,
                   max_variables = max_variables,
+                  hessian_calc = hessian_calc,
                   tol_dev_change = tol_dev_change,
                   tol_dev_ratio = tol_dev_ratio,
                   tol_rel_gap = 1e-5,

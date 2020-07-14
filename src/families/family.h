@@ -113,5 +113,16 @@ public:
 
   template <typename T>
   Results fitProximalNewton(const T& x, const mat& y, vec lambda);
+
+  template <typename T>
+  Results fitProximalQuasiNewton(const T& x, const mat& y, vec lambda);
+
+  template <typename T>
+  Results fitPN(const T& x, const mat& y, vec lambda, const std::string hessian_calc){
+    if (hessian_calc == "exact")
+      return fitProximalNewton(x, y, lambda);
+    else 
+      return fitProximalQuasiNewton(x, y, lambda);
+  }
   
 };
