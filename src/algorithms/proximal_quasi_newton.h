@@ -26,6 +26,12 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
   mat lin_pred(n, m);
   mat grad(p, m, fill::zeros);
 
+  mat hess(p, p, fill::zeros);
+
+  hess.diag() += 1;
+
+  mat I = hess;
+
   // line search parameters
   const double alpha = 0.5;
   const double eta = 0.5;
@@ -68,12 +74,28 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
               << ", objective: "  << obj 
               << endl;
     }
+    // Rcout << "H check" << endl;
+    // (hess-lbfgs.computeH(p)).print();
+    // Rcout << "HV check" << endl;
+    // (lbfgs.computeHv(grad)- hess*grad).print();
+    // Rcout << "----------" << endl;
+    // (lbfgs.computeHv2(grad)-hess*grad).print();
+    // Rcout << "BV check" << endl;
+    // (lbfgs.computeBv(grad)-inv(hess)*grad).print();
+    // Rcout << "----------" << endl;
+    // (lbfgs.computeBv2(grad)-solve(hess,grad)).print();
+    // Rcout << "----------" << endl;
+    
 
     beta_tilde = beta - lbfgs.computeHv(grad);
 
     beta_tilde = lbfgs.scaled_prox(beta_tilde);
     
     vec d = beta_tilde - beta;
+
+    Rcout << "d is ";
+    d.print();
+    Rcout << "-------" << endl;
 
     // Backtracking line search
     double t = 1.0;
@@ -94,11 +116,17 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
       }
       checkUserInterrupt();
     }
-    Rcout << " t is : " << t << endl;
+    Rcout << " QPN t is : " << t << endl;
     beta += t*d;
     lin_pred = x*beta;
 
     mat grad_new = gradient(x, y, lin_pred);
+
+
+    double eta = 1.0/dot(grad_new-grad, t*d);
+    mat dz = t*d;
+    mat dgrad = grad_new - grad;
+    hess = (I-eta*dz*dgrad.t())*hess*(I-eta*dgrad*dz.t()) + eta*dz*dz.t();
 
     if (lbfgs.updateParams(t*d, grad_new - grad))
       break;

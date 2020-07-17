@@ -9,7 +9,7 @@ using namespace arma;
 
 class LBFGS {
 private:
-  const uword k = 10;
+  const uword k = 20;
   const vec lambda;
   double gamma = 1.0;
   double sigma = 1.0;
@@ -24,8 +24,7 @@ private:
   const double rho = 1.0;
   const double tol_abs = 1e-6;
   const double tol_rel = 1e-5;
-  uword max_iter = 500000;
-  uword max_passes = 500;
+  uword max_iter = 500;
 
 public:
   LBFGS(const vec lambda) : lambda(lambda) {}
@@ -43,8 +42,8 @@ public:
       Y.shed_col(0);
     }
 
-    gamma = dot(s, y)/dot(y, y);
-    sigma = dot(s, y)/dot(s, s);
+    // gamma = dot(s, y)/dot(y, y);
+    // sigma = dot(s, y)/dot(s, s);
 
     Rcout << "--------" << endl;
     mat sTy = S.t()*Y;
@@ -82,15 +81,65 @@ public:
     return reshape(ans, size(v));
   }
 
+  mat computeH(int p) {
+    mat I(p, p, fill::zeros);
+    I.diag() += 1;
+
+    if (S.n_cols == 0) {
+      return gamma*I;
+    }
+
+    mat Q = join_rows(S, gamma*Y);
+    mat ans = Q.t();
+
+    mat Rinv = inv(R);
+    mat tmp = Rinv.t()*(D + gamma*Y.t()*Y)*Rinv;
+    tmp = join_rows(tmp, -Rinv.t());
+    tmp = join_cols(tmp, join_rows(-Rinv, zeros(size(R))));
+
+    tmp = tmp*ans;
+    tmp = Q*tmp;
+
+    return gamma*I + tmp;
+    
+  }
+
+  mat computeHv2(const mat& v) {
+
+    int l = k;
+
+    mat q = v;
+
+    double alpha[l];
+    for (int j = std::min((int)S.n_cols, l)-1; j >= 0; j--) {
+      alpha[j] = (1/dot(S.col(j),Y.col(j)))*dot(S.col(j), q);
+      q = q - alpha[j]*Y.col(j);
+    }
+
+    q = gamma*q;
+
+    for (int j = 0; j < std::min((int)S.n_cols, l); j++) {
+      q += S.col(j)*(alpha[j]-(1/dot(S.col(j),Y.col(j)))*dot(Y.col(j), q));
+    }
+    // Two Loop recursion ends
+
+    return q;
+
+    
+  }
+
+
+  //////////  THIS IS CORRECT!!!!!!!!!!!!!
+
   mat computeBv(const mat& v) {
 
     if (S.n_cols == 0) {
       return sigma*v;
     }
-    // 3cout << " Bv main entered" << endl;
+    // Rcout << " Bv main entered" << endl;
 
     mat z = vectorise(v);
-    mat Q = join_rows(Y, sigma*S);
+    mat Q = join_rows(sigma*S, Y);
 
     mat ans = Q.t()*z;
 
@@ -98,11 +147,44 @@ public:
     tmp = join_rows(tmp, L);
     tmp = join_cols(tmp, join_rows(L.t(), -D));
 
-    ans = solve(tmp, ans);
+    // ans = solve(tmp, ans);
+    ans = inv(tmp)*ans;
     ans = Q*ans;
     ans = sigma*z - ans;
     
-    return reshape(ans, size(v));
+    return ans;
+    // return reshape(ans, size(v));
+  }
+
+
+
+  //////////THIS IS INCORRECT
+
+  mat computeBv2(const mat& v) {
+
+    if (S.n_cols == 0) {
+      return sigma*v;
+    }
+    // Rcout << " Bv main entered" << endl;
+
+    // mat z = vectorise(v);
+    // mat Q = join_rows(Y, sigma*S);
+
+    // mat ans = Q.t()*z;
+
+    // mat J = chol(sigma*S.t()*S + L*solve(D,L.t()),"lower");
+    // mat tmp = sqrt(D);
+    // tmp = join_rows(tmp, zeros(size(D)));
+    // tmp = join_cols(tmp, join_rows(-L*inv(sqrt(D)), J));
+
+    // ans = solve(tmp, ans);
+    // ans = solve(tmp.t(),ans);
+    // ans = Q*ans;
+    // ans = sigma*z - ans;
+    
+    // return ans;
+    return v;
+    // return reshape(ans, size(v));
   }
 
   mat scaled_prox(const mat& beta) {
@@ -111,50 +193,6 @@ public:
     uword pmi = lambda.n_elem;
     uword p_rows = pmi/m;
 
-    // mat x(beta);
-    // mat z(x);
-    // mat u(x);
-
-    // uword iter = 0;
-
-    // mat Bbeta = computeBv(beta);
-
-    // lambda.print();
-
-    // while (iter < max_iter) {
-    //   iter++;
-    //   Rcout << "pass: " << iter << " SP obj: "
-    //         << 0.5*dot(x-beta,computeBv(x-beta)) +
-    //           dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
-    //                       "descending"), lambda) << endl; 
-
-    //   x = beta + z - u + Bbeta/rho + rho*computeHv(z - u);
-      
-    //   mat z_old = z;
-    //   mat x_hat = alpha*x + (1 - alpha)*z_old;
-
-    //   z = x_hat + u;
-
-    //   z.tail_rows(p_rows) = prox(z.tail_rows(p_rows), lambda/rho);
-
-    //   u += (x_hat-z);
-
-    //   double r_norm = norm(x - z);
-    //   double s_norm = norm(rho*(z - z_old));
-
-    //   double eps_primal = std::sqrt(p)*tol_abs + tol_rel*std::max(norm(x), norm(z));
-    //   double eps_dual = std::sqrt(p)*tol_abs + tol_rel*norm(rho*u);
-
-    //   if (r_norm < eps_primal && s_norm < eps_dual)
-    //       break;
-
-    //   if (iter % 1000 == 0)
-    //     Rcpp::checkUserInterrupt();
-    // }
-    
-    // return x;
-
-    // FISTA main loop
     mat x(beta);
     mat x_tilde(x);
     mat x_tilde_old(x);
@@ -167,12 +205,10 @@ public:
     // FISTA parameters
     double t = 1;
 
-    // Rcout << "SP begins" << endl;
-    // beta.print();
-    // Rcout << "----" << endl;
-    // x.print();
+    Rcout << "SP begins" << endl;
+
     uword passes = 0;
-    while (passes < max_passes) {
+    while (passes < max_iter) {
       
       double g = 0.5*dot(x - beta, computeBv(x - beta));
       double h = dot(sort(abs(vectorise(x.tail_rows(p_rows))),
@@ -180,9 +216,11 @@ public:
       double f = g + h;
 
       if (passes % 100 == 0)
-        Rcout << " SP: pass: " << passes << " obj: " << g << " + " << h << endl;
+        Rcout << " SP: pass: " << passes << " obj: " << g << " + " << h  << " = " << g+h << endl;
 
       mat grad = computeBv(x - beta);
+
+      // grad = x - beta;
 
       x_tilde_old = x_tilde;
 
@@ -192,7 +230,7 @@ public:
       // Backtracking line search
       while (true) {
         // Update coefficients
-        x_tilde = x - learning_rate*grad;
+        x_tilde = x - learning_rate*(grad);
 
         x_tilde.tail_rows(p_rows) =
           prox(x_tilde.tail_rows(p_rows), lambda*learning_rate);
@@ -213,6 +251,9 @@ public:
           checkUserInterrupt();
       }
 
+      // if(learning_rate < 1e-8)
+      //   break;
+
       // FISTA step
       t = 0.5*(1.0 + std::sqrt(1.0 + 4.0*t_old*t_old));
       x = x_tilde + (t_old - 1.0)/t * (x_tilde - x_tilde_old);
@@ -223,8 +264,17 @@ public:
       ++passes;
       
     }
+    Rcout << "SP ends" << endl;
+
 
     return x_tilde;
+
+
+
+
+
+
+
   }
 
 
