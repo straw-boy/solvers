@@ -58,7 +58,7 @@ test_that("ADMM: binomial, n<p case", {
   d <- randomProblem(n, p, response="binomial", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="binomial",alpha=c(1.0,0.005),opt_algo="nr")
-  fista_solvers <- FISTA(d$x, d$y, family="binomial",alpha=c(1.0,0.005))
+  fista_solvers <- FISTA(d$x, d$y, family="binomial",alpha=c(1.0,0.005),tol_infeas=0,tol_rel_gap=0,max_passes=400)
   expect_equivalent(coef(admm_solvers), coef(fista_solvers), tol = 1e-2)
 
 })
