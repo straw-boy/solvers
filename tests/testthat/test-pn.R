@@ -47,9 +47,6 @@ test_that("Proximal Newton: binomial, n>p case", {
 
 
 test_that("Proximal Newton: binomial, n<p case", {
-  # This test will fail but actually, since Proximal Newton
-  # gives a lower objective value, that is a better estimate
-  # than of ADMM in this case. 
 
   library(SLOPE)
   set.seed(1)
