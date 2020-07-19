@@ -26,11 +26,11 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
   mat lin_pred(n, m);
   mat grad(p, m, fill::zeros);
 
-  mat hess(p, p, fill::zeros);
+  // mat hess(p, p, fill::zeros);
 
-  hess.diag() += 1;
+  // hess.diag() += 1;
 
-  mat I = hess;
+  // mat I = hess;
 
   // line search parameters
   const double alpha = 0.5;
@@ -50,7 +50,7 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
   }
 
   LBFGS lbfgs(lambda);
-
+  // beta(0) = -2.398615e+00;
   lin_pred = x*beta;
   grad = gradient(x, y, lin_pred);
 
@@ -91,11 +91,9 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
 
     beta_tilde = lbfgs.scaled_prox(beta_tilde);
     
-    vec d = beta_tilde - beta;
+    mat d = beta_tilde - beta;
 
-    Rcout << "d is ";
-    d.print();
-    Rcout << "-------" << endl;
+    Rcout << "d is " << d(0) << endl;
 
     // Backtracking line search
     double t = 1.0;
@@ -116,25 +114,26 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
       }
       checkUserInterrupt();
     }
-    Rcout << " QPN t is : " << t << endl;
-    beta += t*d;
-    lin_pred = x*beta;
+    Rcout << " QPN t is : " << t << " norm(t*d): " << norm(t*d) << endl;
+    beta_tilde = beta + t*d;
+    // if (intercept)
+    //   beta_tilde(0) = beta_tilde(0) - t*d(0) + d(0);
+    
+    lin_pred = x*beta_tilde;
 
     mat grad_new = gradient(x, y, lin_pred);
 
-
-    double eta = 1.0/dot(grad_new-grad, t*d);
-    mat dz = t*d;
-    mat dgrad = grad_new - grad;
-    hess = (I-eta*dz*dgrad.t())*hess*(I-eta*dgrad*dz.t()) + eta*dz*dz.t();
-
-    if (lbfgs.updateParams(t*d, grad_new - grad))
+    if (lbfgs.updateParams(beta_tilde - beta, grad_new - grad)){
+      Rcout << "UPDATE ENDED" << endl;
+      // exit(0);
       break;
+    }
 
     if (norm(t*d) < tol)
       break;
     
     grad = grad_new;
+    beta = beta_tilde;
 
     if (passes % 10 == 0)
       checkUserInterrupt();

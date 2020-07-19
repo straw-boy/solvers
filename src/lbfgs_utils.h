@@ -2,6 +2,7 @@
 
 #include <RcppArmadillo.h>
 #include "prox.h"
+#include "infeasibility.h"
 
 using namespace Rcpp;
 using namespace arma;
@@ -9,7 +10,7 @@ using namespace arma;
 
 class LBFGS {
 private:
-  const uword k = 20;
+  const uword m = 30;
   const vec lambda;
   double gamma = 1.0;
   double sigma = 1.0;
@@ -21,10 +22,10 @@ private:
 
   // Scaled Proximal parameters
   const double alpha = 1.5;
-  const double rho = 1.0;
+  const double rho = 0.1;
   const double tol_abs = 1e-6;
   const double tol_rel = 1e-5;
-  uword max_iter = 500;
+  uword max_iter = 5000;
 
 public:
   LBFGS(const vec lambda) : lambda(lambda) {}
@@ -37,15 +38,16 @@ public:
     S.insert_cols(S.n_cols, vectorise(s));
     Y.insert_cols(Y.n_cols, vectorise(y));
 
-    if (S.n_cols > k) {
+    if (S.n_cols > m) {
       S.shed_col(0);
       Y.shed_col(0);
     }
 
     // gamma = dot(s, y)/dot(y, y);
+    // sigma = 1/gamma;
     // sigma = dot(s, y)/dot(s, s);
 
-    Rcout << "--------" << endl;
+    // Rcout << "--------" << endl;
     mat sTy = S.t()*Y;
     // sTy.print();
     R = trimatu(sTy);
@@ -106,7 +108,7 @@ public:
 
   mat computeHv2(const mat& v) {
 
-    int l = k;
+    int l = m;
 
     mat q = v;
 
@@ -205,7 +207,7 @@ public:
     // FISTA parameters
     double t = 1;
 
-    Rcout << "SP begins" << endl;
+    // Rcout << "SP begins" << endl;
 
     uword passes = 0;
     while (passes < max_iter) {
@@ -214,11 +216,18 @@ public:
       double h = dot(sort(abs(vectorise(x.tail_rows(p_rows))),
                           "descending"), lambda);
       double f = g + h;
+      // double G = 
 
-      if (passes % 100 == 0)
-        Rcout << " SP: pass: " << passes << " obj: " << g << " + " << h  << " = " << g+h << endl;
+      // if (passes % 100 == 0)
+      //   Rcout << " SP: pass: " << passes << " obj: " << g << " + " << h  << " = " << g+h << endl;
 
       mat grad = computeBv(x - beta);
+
+
+      // double infeas =
+      //   lambda.n_elem > 0.0 ? infeasibility(grad.tail_rows(p_rows), lambda) : 0.0;
+
+
 
       // grad = x - beta;
 
@@ -264,18 +273,19 @@ public:
       ++passes;
       
     }
-    Rcout << "SP ends" << endl;
+
+    if (p_rows != p) {
+      Rcout << " sp beta diff : " << x_tilde(0) - beta(0) << endl;
+      // x_tilde(0) = beta(0);
+      // x(0) = beta(0);
+    }
+    // Rcout << "SP ends" << endl;
 
 
     return x_tilde;
 
-
-
-
-
-
-
   }
+  
 
 
 };
