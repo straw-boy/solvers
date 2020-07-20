@@ -40,7 +40,7 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
     timer.tic();
   }
 
-  LBFGS lbfgs(lambda);
+  LBFGS lbfgs;
   
   mat lin_pred = x*beta;
   mat grad = gradient(x, y, lin_pred);
@@ -66,19 +66,19 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
               << endl;
     }
     
-    if(!(lbfgs.computeHv(grad)-lbfgs.computeHv_cached(grad)).is_zero(1e-5)){
-        Rcout << "HV" << endl;
-        lbfgs.computeHv(grad).print();
-        Rcout << "-------------" << endl;
-        lbfgs.computeHv_cached(grad).print();
-        Rcout << "-------------" << endl;
-        (lbfgs.computeHv(grad)-lbfgs.computeHv_cached(grad)).print();
-        exit(0);
-      }
+    // if(!(lbfgs.computeHv(grad)-lbfgs.computeHv_cached(grad)).is_zero(1e-5)){
+    //     Rcout << "HV" << endl;
+    //     lbfgs.computeHv(grad).print();
+    //     Rcout << "-------------" << endl;
+    //     lbfgs.computeHv_cached(grad).print();
+    //     Rcout << "-------------" << endl;
+    //     (lbfgs.computeHv(grad)-lbfgs.computeHv_cached(grad)).print();
+    //     exit(0);
+    //   }
 
-    beta_tilde = beta - lbfgs.computeHv(grad);
+    beta_tilde = beta - lbfgs.computeHv_cached(grad);
 
-    beta_tilde = lbfgs.scaled_prox(beta_tilde);
+    beta_tilde = lbfgs.scaled_prox(beta_tilde, lambda);
     
     mat d = beta_tilde - beta;
 
