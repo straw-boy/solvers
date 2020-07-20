@@ -20,11 +20,16 @@ private:
   mat R;
   mat D;
 
+  mat Q_Hv;
+  mat Q_Bv;
+  mat A_Hv;
+  mat A_Bv;
+
   // Scaled Proximal parameters
   const double tol_rel_gap = 1e-5;
   const double tol_infeas = 1e-3;
   const double tol_rel_coef_change = 1e-3;
-  uword max_passes = 5000;
+  uword max_passes = 10000;
 
 public:
   LBFGS(const vec lambda) : lambda(lambda) {}
@@ -53,6 +58,20 @@ public:
     L = sTy - R;
     D = diagmat(sTy);
 
+    Q_Hv = join_rows(S, gamma*Y);
+    Q_Bv = join_rows(sigma*S, Y);
+
+    mat tmp;
+
+    mat Rinv = inv(R);
+    tmp = Rinv.t()*(D + gamma*Y.t()*Y)*Rinv;
+    tmp = join_rows(tmp, -Rinv.t());
+    A_Hv = join_cols(tmp, join_rows(-Rinv, zeros(size(R))));
+
+    tmp = sigma*S.t()*S;
+    tmp = join_rows(tmp, L);
+    A_Bv = join_cols(tmp, join_rows(L.t(), -D));
+
     return false;
 
   }
@@ -80,6 +99,20 @@ public:
     ans = gamma*z + ans;
 
     return reshape(ans, size(v));
+  }
+
+  mat computeHv_cached(const mat& v) {
+
+    if (S.n_cols == 0) {
+      return gamma*v;
+    }
+
+    mat ans = Q_Hv.t()*v;
+    ans = A_Hv*ans;
+    ans = Q_Hv*ans;
+    ans = gamma*v + ans;
+    return ans;
+
   }
 
   // mat computeH(int p) {
@@ -155,6 +188,35 @@ public:
     // return reshape(ans, size(v));
   }
 
+  mat computeBv_cached(const mat& v) {
+
+    if (S.n_cols == 0) {
+      return sigma*v;
+    }
+
+    mat ans = Q_Bv.t()*v;
+    ans = inv(A_Bv)*ans;
+    ans = Q_Bv*ans;
+    ans = sigma*v - ans;
+    return ans;
+
+    // mat Q = join_rows(sigma*S, Y);
+
+    // mat ans = Q.t()*z;
+
+    // mat tmp = sigma*S.t()*S;
+    // tmp = join_rows(tmp, L);
+    // tmp = join_cols(tmp, join_rows(L.t(), -D));
+
+    // // ans = solve(tmp, ans);
+    // ans = inv(tmp)*ans;
+    // ans = Q*ans;
+    // ans = sigma*z - ans;
+    
+    // return ans;
+    // return reshape(ans, size(v));
+  }
+
 
 
   mat scaled_prox(const mat& beta) {
@@ -178,43 +240,24 @@ public:
 
     uword passes = 0;
     while (passes < max_passes) {
+
+      if(!(computeBv(x-beta)-computeBv_cached(x-beta)).is_zero(1e-5)){
+        Rcout << "BV" << endl;
+        computeBv(x-beta).print();
+        Rcout << "-------------" << endl;
+        computeBv_cached(x-beta).print();
+        Rcout << "-------------" << endl;
+        (computeBv(x-beta)-computeBv_cached(x-beta)).print();
+        exit(0);
+      }
       
       double g = 0.5*dot(x - beta, computeBv(x - beta));
       double h = dot(sort(abs(vectorise(x.tail_rows(p_rows))),
                           "descending"), lambda);
       double f = g + h;
-      double G = 0.5*pow(norm(beta, 2), 2) - 0.5*pow(norm(x, 2), 2);
-
-      // if (passes % 100 == 0)
-      //   Rcout << " SP: pass: " << passes << " obj: " << g << " + " << h  << " = " << g+h << endl;
 
       mat grad = computeBv(x - beta);
 
-      double infeas =
-        lambda.n_elem > 0.0 ? infeasibility(grad.tail_rows(p_rows), lambda) : 0.0;
-
-      double small = std::sqrt(datum::eps);
-
-      bool optimal =
-        (std::abs(f - G)/std::max(small, std::abs(f)) < tol_rel_gap);
-
-      bool feasible =
-        lambda.n_elem > 0.0 ? infeas <= std::max(small, tol_infeas*lambda(0))
-                            : true;
-
-      // check change in coefficients
-      double max_change = abs(vectorise(x - x_prev)).max();
-      double max_size = abs(vectorise(beta)).max();
-
-      bool all_zero  =
-        (max_size == 0.0) && (max_change == 0.0);
-      bool small_change =
-        (max_size != 0.0) && (max_change/max_size <= tol_rel_coef_change);
-
-      bool small_coef_change = all_zero || small_change;
-      
-      if (optimal && feasible && passes > 0 && small_coef_change)
-        break;
         
       x_tilde_old = x_tilde;
 
@@ -251,6 +294,9 @@ public:
       // FISTA step
       t = 0.5*(1.0 + std::sqrt(1.0 + 4.0*t_old*t_old));
       x = x_tilde + (t_old - 1.0)/t * (x_tilde - x_tilde_old);
+      
+      if(norm(x-x_prev) < 1e-6)
+        break;
       x_prev = x;
 
       if (passes % 100 == 0)
@@ -261,7 +307,7 @@ public:
     }
 
     if (p_rows != p) {
-      Rcout << " sp beta diff : " << x_tilde(0) - beta(0) << endl;
+      // Rcout << " sp beta diff : " << x_tilde(0) - beta(0) << endl;
       // x_tilde(0) = beta(0);
       // x(0) = beta(0);
     }

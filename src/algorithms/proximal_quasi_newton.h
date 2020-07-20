@@ -66,6 +66,15 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
               << endl;
     }
     
+    if(!(lbfgs.computeHv(grad)-lbfgs.computeHv_cached(grad)).is_zero(1e-5)){
+        Rcout << "HV" << endl;
+        lbfgs.computeHv(grad).print();
+        Rcout << "-------------" << endl;
+        lbfgs.computeHv_cached(grad).print();
+        Rcout << "-------------" << endl;
+        (lbfgs.computeHv(grad)-lbfgs.computeHv_cached(grad)).print();
+        exit(0);
+      }
 
     beta_tilde = beta - lbfgs.computeHv(grad);
 
