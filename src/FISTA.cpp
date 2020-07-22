@@ -38,6 +38,7 @@ List cppFISTA(T& x, mat& y, const List control)
 
   auto tol_abs     = as<double>(control["tol_abs"]);
   auto tol_rel     = as<double>(control["tol_rel"]);
+  auto tol         = as<double>(control["tol"]);
 
   auto family_choice = as<std::string>(control["family"]);
   auto intercept     = as<bool>(control["fit_intercept"]);
@@ -88,6 +89,7 @@ List cppFISTA(T& x, mat& y, const List control)
                             tol_infeas,
                             tol_abs,
                             tol_rel,
+                            tol,
                             verbosity);
 
   cube betas(p, m, path_length, fill::zeros);

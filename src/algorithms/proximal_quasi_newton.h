@@ -27,8 +27,6 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
   const double alpha = 0.5;
   const double eta = 0.5;
 
-  const double tol = 1e-10;
-
   // diagnostics
   wall_clock timer;
   std::vector<double> loss;
@@ -62,19 +60,10 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
     
     if (verbosity >= 3) {
         Rcout << "pass: "         << passes
-              << ", objective: "  << obj 
-              << endl;
+              << ", objective: "  << obj ;
+              // << endl;
     }
     
-    // if(!(lbfgs.computeHv(grad)-lbfgs.computeHv_cached(grad)).is_zero(1e-5)){
-    //     Rcout << "HV" << endl;
-    //     lbfgs.computeHv(grad).print();
-    //     Rcout << "-------------" << endl;
-    //     lbfgs.computeHv_cached(grad).print();
-    //     Rcout << "-------------" << endl;
-    //     (lbfgs.computeHv(grad)-lbfgs.computeHv_cached(grad)).print();
-    //     exit(0);
-    //   }
 
     beta_tilde = beta - lbfgs.computeHv_cached(grad);
 
@@ -103,6 +92,8 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
     }
     
     beta_tilde = beta + t*d;
+
+    Rcout << ", norm(td): " << norm(t*d) << endl;
     
     lin_pred = x*beta_tilde;
 

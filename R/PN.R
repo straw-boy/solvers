@@ -79,7 +79,8 @@ PN <- function(x,
                tol_dev_ratio = 0.995,
                max_variables = NROW(x),
                hessian_calc = c("lbfgs", "exact"),
-               max_passes = 150,
+               max_passes = if (hessian_calc == "exact") 150 else 400,
+               tol = 1e-10,
                diagnostics =  FALSE,
                verbosity = 0
 ) {
@@ -113,7 +114,8 @@ PN <- function(x,
     is.finite(max_passes),
     is.logical(diagnostics),
     is.logical(intercept),
-    is.logical(center)
+    is.logical(center),
+    tol >= 0
   )
 
   fit_intercept <- intercept
@@ -254,7 +256,8 @@ PN <- function(x,
                   tol_rel_gap = 1e-5,
                   tol_infeas = 1e-3,
                   tol_abs = 1e-5,
-                  tol_rel = 1e-4)
+                  tol_rel = 1e-4,
+                  tol = tol)
 
   fitPN <- if (is_sparse) sparsePN else densePN
 
