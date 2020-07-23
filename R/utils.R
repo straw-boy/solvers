@@ -1,14 +1,14 @@
 #' Code borrowed from SLOPE package for generating datasets
 #' @param n Number of data points
 #' @param p Number of features
-#' @param q <TODO>
-#' @param n_groups <TODO>
-#' @param n_targets <TODO>
+#' @param q Parameter controlling lambda sequence
+#' @param n_groups Number of groups of predictors
+#' @param n_targets Dimension of response variable
 #' @param density Determine sparsity of the data generated. Default set to 0.
-#' @param amplitude <TODO>
-#' @param alpha <TODO>
+#' @param amplitude Scale of coefficient in output
+#' @param alpha Standard deviation
 #' @param response Choice of likelohood function
-#' @param rho <TODO>
+#' @param rho Correlation
 #' @export
 randomProblem <-
   function(n = 1000,

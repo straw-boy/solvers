@@ -35,6 +35,9 @@
 #' @param q parameter controlling the shape of the lambda sequence, with
 #'   usage varying depending on the type of path used and has no effect
 #'   is a custom `lambda` sequence is used.
+#' @param hessian_calc Method to use for Hessian caluclation. 
+#'   - `"exact"` No approximations will be made.
+#'   - `"lbfgs"` Updates will be made using L-BFGS.
 #' @param max_passes maximum number of passes (outer iterations) for solver
 #' @param diagnostics whether to save diagnostics from the solver
 #'   (timings and other values depending on type of solver)
@@ -50,6 +53,7 @@
 #'     no violations in the strong set
 #' @param verbosity level of verbosity for displaying output from the
 #'   program. Not completely developed. Use 3 just for now.
+#' @param tol Tolerance to use for change in L2 norm of variable 
 #' @param tol_dev_change the regularization path is stopped if the
 #'   fractional change in deviance falls below this value; note that this is
 #'   automatically set to 0 if a alpha is manually entered

@@ -8,7 +8,7 @@ test_that("Proximal Newton: gaussian, n>p case", {
   d <- solvers::randomProblem(n, p, response="gaussian", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="gaussian", alpha=c(1.0,0.005), opt_algo="nr")
-  pn_solvers <- PN(d$x, d$y, family="gaussian", alpha=c(1.0,0.005))
+  pn_solvers <- PN(d$x, d$y, family="gaussian", alpha=c(1.0,0.005),hessian_calc="exact")
   expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
 
 })
@@ -24,7 +24,7 @@ test_that("Proximal Newton: gaussian, n<p case", {
   d <- solvers::randomProblem(n, p, response="gaussian", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="gaussian",alpha=c(1.0,0.005),opt_algo="nr")
-  pn_solvers <- PN(d$x, d$y, family="gaussian",alpha=c(1.0,0.005))
+  pn_solvers <- PN(d$x, d$y, family="gaussian",alpha=c(1.0,0.005),hessian_calc="exact")
   expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
 
 })
@@ -40,7 +40,7 @@ test_that("Proximal Newton: binomial, n>p case", {
   d <- solvers::randomProblem(n, p, response="binomial", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="binomial",alpha=c(1.0,0.005),opt_algo="nr")
-  pn_solvers <- PN(d$x, d$y, family="binomial",alpha=c(1.0,0.005))
+  pn_solvers <- PN(d$x, d$y, family="binomial",alpha=c(1.0,0.005),hessian_calc="exact")
   expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
 
 })
@@ -73,7 +73,7 @@ test_that("Proximal Newton: poisson, n>p case", {
   d <- solvers::randomProblem(n, p, response="poisson", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="poisson",alpha=c(1.0,0.005),opt_algo="nr")
-  pn_solvers <- PN(d$x, d$y, family="poisson",alpha=c(1.0,0.005))
+  pn_solvers <- PN(d$x, d$y, family="poisson",alpha=c(1.0,0.005),hessian_calc="exact")
   expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
 
 })
@@ -89,7 +89,7 @@ test_that("Proximal Newton: poisson, n<p case", {
   d <- solvers::randomProblem(n, p, response="poisson", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="poisson",alpha=c(1.0,0.005),opt_algo="nr")
-  pn_solvers <- PN(d$x, d$y, family="poisson",alpha=c(1.0,0.005))
+  pn_solvers <- PN(d$x, d$y, family="poisson",alpha=c(1.0,0.005),hessian_calc="exact")
   expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
 
 })

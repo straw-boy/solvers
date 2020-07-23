@@ -60,12 +60,11 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
     
     if (verbosity >= 3) {
         Rcout << "pass: "         << passes
-              << ", objective: "  << obj ;
-              // << endl;
+              << ", objective: "  << obj
+              << endl;
     }
-    
 
-    beta_tilde = beta - lbfgs.computeHv_cached(grad);
+    beta_tilde = beta - lbfgs.computeHv(grad);
 
     beta_tilde = lbfgs.scaled_prox(beta_tilde, lambda);
     
@@ -93,8 +92,6 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
     
     beta_tilde = beta + t*d;
 
-    Rcout << ", norm(td): " << norm(t*d) << endl;
-    
     lin_pred = x*beta_tilde;
 
     mat grad_new = gradient(x, y, lin_pred);

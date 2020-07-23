@@ -22,21 +22,21 @@ randomProblem(
 
 \item{p}{Number of features}
 
-\item{q}{<TODO>}
+\item{q}{Parameter controlling lambda sequence}
 
-\item{n_groups}{<TODO>}
+\item{n_groups}{Number of groups of predictors}
 
-\item{n_targets}{<TODO>}
+\item{n_targets}{Dimension of response variable}
 
 \item{density}{Determine sparsity of the data generated. Default set to 0.}
 
-\item{amplitude}{<TODO>}
+\item{amplitude}{Scale of coefficient in output}
 
-\item{alpha}{<TODO>}
+\item{alpha}{Standard deviation}
 
 \item{response}{Choice of likelohood function}
 
-\item{rho}{<TODO>}
+\item{rho}{Correlation}
 }
 \description{
 Code borrowed from SLOPE package for generating datasets
