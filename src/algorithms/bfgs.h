@@ -14,9 +14,10 @@ mat Family::bfgs(const T& x, const mat& y, const double rho, const mat& u)
 {
   
   uword p = x.n_cols;
+  uword m = y.n_cols;
   mat z(u);
   mat g(u);
-  mat I(p, p, fill::eye);
+  mat I(p*m, p*m, fill::eye);
 
   mat h(I);
 
@@ -30,10 +31,10 @@ mat Family::bfgs(const T& x, const mat& y, const double rho, const mat& u)
     mat lin_pred = x*z;
     g = gradient(x, y, lin_pred) + rho*(z-u);
 
-    if (norm(g) < tolerance)
+    if (sqrt(accu(square(g))) < tolerance)
       break;
 
-    mat step = -h*g;
+    mat step = -reshape(h*vectorise(g.t()),size(z.t())).t();
 
     // Line Search for step length
     double t = wolfeLineSearch(x, y, rho, u, z, step);
@@ -42,13 +43,15 @@ mat Family::bfgs(const T& x, const mat& y, const double rho, const mat& u)
     mat dgrad = gradient(x, y, x*(z+dz)) + rho*(z+dz-u) - g;
 
     // Change is too small so terminate
-    if (dot(dgrad, dz) == 0)
+    if (accu(dgrad % dz) == 0)
       break;
 
-    double eta = 1.0/dot(dgrad, dz);
+    double eta = 1.0/accu(dgrad % dz);
 
     // Inverse Hessian update
-    h = (I-eta*dz*dgrad.t())*h*(I-eta*dgrad*dz.t()) + eta*dz*dz.t();
+    vec dz_vec = vectorise(dz.t());
+    vec dgrad_vec = vectorise(dgrad.t());
+    h = (I-eta*dz_vec*dgrad_vec.t())*h*(I-eta*dgrad_vec*dz_vec.t()) + eta*dz_vec*dz_vec.t();
     
     z = z + t*step;
 
