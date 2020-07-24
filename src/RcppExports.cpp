@@ -58,12 +58,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sparsePN
+Rcpp::List sparsePN(arma::sp_mat x, arma::mat y, const Rcpp::List control);
+RcppExport SEXP _solvers_sparsePN(SEXP xSEXP, SEXP ySEXP, SEXP controlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(sparsePN(x, y, control));
+    return rcpp_result_gen;
+END_RCPP
+}
+// densePN
+Rcpp::List densePN(arma::mat x, arma::mat y, const Rcpp::List control);
+RcppExport SEXP _solvers_densePN(SEXP xSEXP, SEXP ySEXP, SEXP controlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(densePN(x, y, control));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_solvers_sparseADMM", (DL_FUNC) &_solvers_sparseADMM, 3},
     {"_solvers_denseADMM", (DL_FUNC) &_solvers_denseADMM, 3},
     {"_solvers_sparseFISTA", (DL_FUNC) &_solvers_sparseFISTA, 3},
     {"_solvers_denseFISTA", (DL_FUNC) &_solvers_denseFISTA, 3},
+    {"_solvers_sparsePN", (DL_FUNC) &_solvers_sparsePN, 3},
+    {"_solvers_densePN", (DL_FUNC) &_solvers_densePN, 3},
     {NULL, NULL, 0}
 };
 

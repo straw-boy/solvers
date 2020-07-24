@@ -15,7 +15,6 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
 {
   
   uword p = x.n_cols;
-  uword n = x.n_rows;
   uword m = y.n_cols;
   uword pmi = lambda.n_elem;
   uword p_rows = pmi/m;
@@ -65,8 +64,8 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     double r_norm = norm(beta - z);
     double s_norm = norm(rho*(z - z_old));
 
-    double eps_primal = std::sqrt(n)*tol_abs + tol_rel*std::max(norm(beta), norm(z));
-    double eps_dual = std::sqrt(n)*tol_abs + tol_rel*norm(rho*u);
+    double eps_primal = std::sqrt(p)*tol_abs + tol_rel*std::max(norm(beta), norm(z));
+    double eps_dual = std::sqrt(p)*tol_abs + tol_rel*norm(rho*u);
 
     if (diagnostics) {
       eps_primals.push_back(r_norm);
@@ -86,14 +85,7 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     Rcpp::checkUserInterrupt();
 
   }
-
-  if (diagnostics) {
-    loss.resize(passes);
-    eps_primals.resize(passes);
-    eps_duals.resize(passes);
-    time.resize(passes);
-  }
-
+  
   double deviance = 2*primal(y, x*beta);
   
   // res.diagnosticsLoss contains 'objective value', 'residual primals' 

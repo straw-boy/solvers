@@ -72,4 +72,3 @@ Finally, now we can generate the loss vs time plot.
 plt <- xyplot(loss ~ time, group = solver, data = f, auto.key = list(corner = c(0.9, 0.9)), type = "l")
 update(plt, par.settings = list(fontsize = list(text = 18)))
 ```
-

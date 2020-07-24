@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{mergeFits}
 \alias{mergeFits}
-\title{FISTA}
+\title{Merges all the fits and returns a dataframe containing losses and time}
 \usage{
 mergeFits(fits)
 }
@@ -10,5 +10,5 @@ mergeFits(fits)
 \item{fits}{List of outputs of any of the algorithms (FISTA, ADMM etc)}
 }
 \description{
-FISTA
+Merges all the fits and returns a dataframe containing losses and time
 }

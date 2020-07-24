@@ -17,3 +17,11 @@ denseFISTA <- function(x, y, control) {
     .Call(`_solvers_denseFISTA`, x, y, control)
 }
 
+sparsePN <- function(x, y, control) {
+    .Call(`_solvers_sparsePN`, x, y, control)
+}
+
+densePN <- function(x, y, control) {
+    .Call(`_solvers_densePN`, x, y, control)
+}
+

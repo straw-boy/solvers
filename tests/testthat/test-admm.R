@@ -5,7 +5,7 @@ test_that("ADMM: gaussian, n>p case", {
   n = 100
   p = 10
 
-  d <- randomProblem(n,p,response="gaussian")
+  d <- randomProblem(n, p, response = "gaussian", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="gaussian",alpha=c(1.0,0.005),opt_algo="nr")
   fista_solvers <- FISTA(d$x, d$y, family="gaussian",alpha=c(1.0,0.005))
@@ -21,7 +21,7 @@ test_that("ADMM: gaussian, n<p case", {
   n = 10
   p = 20
 
-  d <- randomProblem(n,p,response="gaussian")
+  d <- randomProblem(n, p, response="gaussian", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="gaussian",alpha=c(1.0,0.005),opt_algo="nr")
   fista_solvers <- FISTA(d$x, d$y, family="gaussian",alpha=c(1.0,0.005))
@@ -38,7 +38,7 @@ test_that("ADMM: binomial, n>p case", {
   n = 100
   p = 10
 
-  d <- randomProblem(n,p,response="binomial")
+  d <- randomProblem(n, p, response="binomial", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="binomial",alpha=c(1.0,0.005),opt_algo="nr")
   fista_solvers <- FISTA(d$x, d$y, family="binomial",alpha=c(1.0,0.005))
@@ -55,10 +55,10 @@ test_that("ADMM: binomial, n<p case", {
   n = 10
   p = 20
 
-  d <- randomProblem(n,p,response="binomial")
+  d <- randomProblem(n, p, response="binomial", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="binomial",alpha=c(1.0,0.005),opt_algo="nr")
-  fista_solvers <- FISTA(d$x, d$y, family="binomial",alpha=c(1.0,0.005))
+  fista_solvers <- FISTA(d$x, d$y, family="binomial",alpha=c(1.0,0.005),tol_infeas=0,tol_rel_gap=0,max_passes=400)
   expect_equivalent(coef(admm_solvers), coef(fista_solvers), tol = 1e-2)
 
 })
@@ -87,7 +87,7 @@ test_that("ADMM: poisson, n<p case", {
   n = 10
   p = 20
 
-  d <- randomProblem(n,p,response="poisson")
+  d <- randomProblem(n, p, response="poisson", density = 0.5)
   
   admm_solvers <- ADMM(d$x, d$y, family="poisson",alpha=c(1.0,0.005),opt_algo="nr")
   fista_solvers <- FISTA(d$x, d$y, family="poisson",alpha=c(1.0,0.005))

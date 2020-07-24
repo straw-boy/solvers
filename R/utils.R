@@ -103,5 +103,3 @@ mergeFits <- function(fits) {
   return(f)
 }
 
-
-
