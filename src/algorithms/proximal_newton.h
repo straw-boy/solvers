@@ -12,7 +12,6 @@ using namespace arma;
 template <typename T>
 Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 {
-  
   uword n = y.n_rows;
   uword p = x.n_cols;
   uword m = y.n_cols;
