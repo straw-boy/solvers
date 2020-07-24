@@ -38,7 +38,7 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
   std::vector<double> loss;
   std::vector<double> time;
 
-  if (diagnostics){
+  if (diagnostics) {
     loss.reserve(max_passes);
     time.reserve(max_passes);
     timer.tic();
@@ -70,7 +70,7 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     grad = gradient(x, y, lin_pred);
     hess = hessian(x, y, lin_pred);
 
-    if(rcond(hess) < 1e-16){
+    if (rcond(hess) < 1e-16) {
       hess.diag() += hess_correction;
     }
 
