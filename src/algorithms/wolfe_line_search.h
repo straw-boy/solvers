@@ -23,9 +23,9 @@ double Family::zoom(const T& x,
   
   // Objective, gradient and decrement for step length = 0
   mat lin_pred = x*z;
-  const double f0 = primal(y, lin_pred) + 0.5*rho*pow(norm(z-u), 2);
+  const double f0 = primal(y, lin_pred) + 0.5*rho*accu(square(z-u));
   const mat g0 = gradient(x, y, lin_pred) + rho*(z-u);
-  const double dec0 = dot(g0, d);
+  const double dec0 = accu(g0 % d);
 
   const double c1 = 1e-4;
   const double c2 = 0.9;
@@ -39,7 +39,7 @@ double Family::zoom(const T& x,
 
     // Objective for step length = t_low
     double f_low = primal(y, x*(z+t_low*d)) + 
-                   0.5*rho*pow(norm(z+t_low*d-u), 2);
+                   0.5*rho*accu(square(z+t_low*d-u));
 
     t_mid = 0.5*(t_low+t_high);
 
@@ -48,7 +48,7 @@ double Family::zoom(const T& x,
     // Objective for step length = t_mid
     mat lin_pred = x*z_mid;
     double f_mid = primal(y, lin_pred) + 
-                   0.5*rho*pow(norm(z_mid-u), 2);
+                   0.5*rho*accu(square(z_mid-u));
 
     // t_mid violates the sufficient decrease condition, reduce upper bound.
     if ((f_mid > f0 + c1*t_mid*dec0) || (f_mid >= f_low)) {
@@ -56,7 +56,7 @@ double Family::zoom(const T& x,
     } else {
 
       // Decrement for step length = t_mid
-      double dec_mid = dot(gradient(x, y, lin_pred) + rho*(z_mid-u), d);
+      double dec_mid = accu((gradient(x, y, lin_pred) + rho*(z_mid-u)) % d);
 
       // t_mid satisfies the curvature condition
       if (std::abs(dec_mid) <= -c2*dec0) {
@@ -94,9 +94,9 @@ double Family::wolfeLineSearch(const T& x,
   mat lin_pred = x*z;
 
   // Objective, gradient and decrement for step length = 0
-  const double f0 = primal(y, lin_pred) + 0.5*rho*pow(norm(z-u), 2);
+  const double f0 = primal(y, lin_pred) + 0.5*rho*accu(square(z-u));
   const mat g0 = gradient(x, y, lin_pred) + rho*(z-u);
-  const double dec0 = dot(g0, d);
+  const double dec0 = accu(g0 % d);
 
 
   double t_prev = 0;
@@ -117,7 +117,7 @@ double Family::wolfeLineSearch(const T& x,
     mat z_new = z + t*d;
 
     lin_pred = x*z_new;
-    double f_new = primal(y, lin_pred) + 0.5*rho*pow(norm(z_new-u), 2);
+    double f_new = primal(y, lin_pred) + 0.5*rho*accu(square(z_new-u));
 
     // Current t violates sufficient decrease condtion,
     // answer lies in interval [t_prev,t] 
@@ -126,7 +126,7 @@ double Family::wolfeLineSearch(const T& x,
     }
 
     mat g_new = gradient(x, y, lin_pred) + rho*(z_new-u);
-    double dec_new = dot(g_new, d);
+    double dec_new = accu(g_new % d);
 
     // t satisfies the curvature condition
     if (std::abs(dec_new) <= -c2*dec0) {
