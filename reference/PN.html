@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>FISTA — FISTA • solvers</title>
+<title>Proximal Newton — PN • solvers</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="FISTA — FISTA" />
-<meta property="og:description" content="FISTA" />
+<meta property="og:title" content="Proximal Newton — PN" />
+<meta property="og:description" content="Proximal Newton" />
 
 
 
@@ -118,16 +118,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>FISTA</h1>
+    <h1>Proximal Newton</h1>
     
-    <div class="hidden name"><code>FISTA.Rd</code></div>
+    <div class="hidden name"><code>PN.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>FISTA</p>
+    <p>Proximal Newton</p>
     </div>
 
-    <pre class="usage"><span class='fu'>FISTA</span>(
+    <pre class="usage"><span class='fu'>PN</span>(
   <span class='kw'>x</span>,
   <span class='kw'>y</span>,
   family = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"gaussian"</span>, <span class='st'>"binomial"</span>, <span class='st'>"multinomial"</span>, <span class='st'>"poisson"</span>),
@@ -144,9 +144,7 @@
   tol_dev_change = <span class='fl'>1e-05</span>,
   tol_dev_ratio = <span class='fl'>0.995</span>,
   max_variables = <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>NROW</a></span>(<span class='kw'>x</span>),
-  max_passes = <span class='fl'>1e+06</span>,
-  tol_rel_gap = <span class='fl'>1e-05</span>,
-  tol_infeas = <span class='fl'>0.001</span>,
+  max_passes = <span class='fl'>150</span>,
   diagnostics = <span class='fl'>FALSE</span>,
   verbosity = <span class='fl'>0</span>
 )</pre>
@@ -265,14 +263,6 @@ the number of levels of the response minus one.</p></td>
     <tr>
       <th>max_passes</th>
       <td><p>maximum number of passes (outer iterations) for solver</p></td>
-    </tr>
-    <tr>
-      <th>tol_rel_gap</th>
-      <td><p>stopping criterion for the duality gap</p></td>
-    </tr>
-    <tr>
-      <th>tol_infeas</th>
-      <td><p>stopping criterion for the level of infeasibility</p></td>
     </tr>
     <tr>
       <th>diagnostics</th>
