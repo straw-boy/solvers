@@ -1,5 +1,5 @@
 test_that("Proximal Newton works same as ADMM", {
-  # skip('Takes too much time')
+  skip('Takes too much time')
   library(SLOPE)
 
   pn_solvers <- PN(bodyfat$x, bodyfat$y, family="gaussian",hessian_calc="exact")

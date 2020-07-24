@@ -32,6 +32,8 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
   const double tol = 1e-10;
 
+  vec hess_correction(p, fill::ones); 
+
   // diagnostics
   wall_clock timer;
   std::vector<double> loss;
@@ -69,7 +71,11 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     grad = gradient(x, y, lin_pred);
     hess = hessian(x, y, lin_pred);
 
-    beta_tilde = beta - solve(hess, grad);
+    if(rcond(hess) < 1e-16){
+      hess.diag() += hess_correction;
+    }
+
+    beta_tilde = beta - solve(hess, grad, solve_opts::fast);
 
     beta_tilde = scaled_prox(beta_tilde, hess, lambda);
     
@@ -99,6 +105,8 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
     if (norm(t*d) < tol)
       break;
+    
+    hess_correction = abs(t*d);
     
     if (passes % 10 == 0)
       checkUserInterrupt();
