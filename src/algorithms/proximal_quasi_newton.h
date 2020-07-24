@@ -32,7 +32,7 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
   std::vector<double> loss;
   std::vector<double> time;
 
-  if(diagnostics){
+  if (diagnostics) {
     loss.reserve(max_passes);
     time.reserve(max_passes);
     timer.tic();
