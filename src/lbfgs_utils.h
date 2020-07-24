@@ -180,7 +180,7 @@ public:
       x = x_tilde + (t_old - 1.0)/t * (x_tilde - x_tilde_old);
       
       // Stop if change is x is small
-      if(norm(x - x_prev) < 1e-6)
+      if (norm(x - x_prev) < 1e-6)
         break;
       x_prev = x;
 
