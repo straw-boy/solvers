@@ -55,6 +55,34 @@ public:
   template <typename T>
   mat hessian(const T& x, const mat& y, const mat& lin_pred)
   {
+    if (name() == "multinomial"){
+      mat tmp;
+      tmp = x.t();
+
+      vec lp_max = max(lin_pred, 1);
+      vec lse = trunc_log(exp(-lp_max) 
+                + sum(trunc_exp(lin_pred.each_col() - lp_max), 1)) + lp_max;
+      
+      mat prob_pred = trunc_exp(lin_pred.each_col() - lse);
+
+      uword p = x.n_cols;
+      uword m = y.n_cols;
+      uword n = y.n_rows;
+
+      mat H(p*m, p*m, fill::zeros);
+
+      for (uword i = 0; i < m; i++) {
+        for (uword j = 0; j < m; j++) {
+          for (uword k = 0; k < n; k++) {
+            vec v = tmp.col(k);
+            H(span(i*p, (i+1)*p -1), span(j*p, (j+1)*p -1)) +=
+              prob_pred(k, i)*((i == j) - prob_pred(k, j))*(v*v.t());
+          }
+        }
+      }
+      
+      return H;
+    }
     vec activation = pseudoHessian(y, lin_pred);
     mat xTx;
     xTx = x.t() * diagmat(activation) * x;
