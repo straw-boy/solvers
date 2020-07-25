@@ -34,7 +34,7 @@ mat Family::bfgs(const T& x, const mat& y, const double rho, const mat& u)
     if (sqrt(accu(square(g))) < tolerance)
       break;
 
-    mat step = -reshape(h*vectorise(g.t()),size(z.t())).t();
+    mat step = -reshape(h*vectorise(g),size(z));
 
     // Line Search for step length
     double t = wolfeLineSearch(x, y, rho, u, z, step);
@@ -49,8 +49,8 @@ mat Family::bfgs(const T& x, const mat& y, const double rho, const mat& u)
     double eta = 1.0/accu(dgrad % dz);
 
     // Inverse Hessian update
-    vec dz_vec = vectorise(dz.t());
-    vec dgrad_vec = vectorise(dgrad.t());
+    vec dz_vec = vectorise(dz);
+    vec dgrad_vec = vectorise(dgrad);
     h = (I-eta*dz_vec*dgrad_vec.t())*h*(I-eta*dgrad_vec*dz_vec.t()) + eta*dz_vec*dz_vec.t();
     
     z = z + t*step;
