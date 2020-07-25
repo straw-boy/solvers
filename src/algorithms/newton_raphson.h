@@ -26,7 +26,7 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
   double gamma = 0.5;
 
   uword iter = 0;
-  
+
   while (iter < max_iter){
     
     mat lin_pred = x*z;
@@ -40,7 +40,7 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
 
     double decrement = -accu(g % step);
     
-    if (0.5*decrement < tolerance) {
+    if (0.5*decrement*decrement < tolerance) {
       break; 
     }
 
