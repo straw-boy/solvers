@@ -89,7 +89,7 @@ Results Family::fitFISTA(const T& x, const mat& y, vec lambda)
     if (optimal && feasible){
       // Either intercept term is absent or
       // gradient with respect to intercept is low
-      if(!intercept || std::abs(grad.row(0).max())<1e-2)
+      if(!intercept || abs(grad.row(0)).max() < 1e-2)
         break;
     }
 
