@@ -42,14 +42,8 @@ public:
 
   mat pseudoHessian(const mat& y, const mat& lin_pred)
   {
-    vec lp_max = max(lin_pred, 1);
-    vec lse =
-      trunc_log(exp(-lp_max) + sum(trunc_exp(lin_pred.each_col() - lp_max), 1)) + lp_max;
-
-    vec activation = trunc_exp(lin_pred.each_col() - lse);
-
-    return diagmat(lp_max);
-    // return diagmat(activation)-activation*activation.t();
+    stop("Pseudo Hessian not defined for multinomial family");
+    return zeros<mat>(y.n_rows, y.n_rows);
   }
 
   rowvec fitNullModel(const mat& y, const uword n_classes)

@@ -31,7 +31,7 @@ mat Family::bfgs(const T& x, const mat& y, const double rho, const mat& u)
     mat lin_pred = x*z;
     g = gradient(x, y, lin_pred) + rho*(z-u);
 
-    if (sqrt(accu(square(g))) < tolerance)
+    if (std::sqrt(accu(square(g))) < tolerance)
       break;
 
     mat step = -reshape(h*vectorise(g),size(z));
