@@ -96,3 +96,33 @@ test_that("FISTA: poisson, n<p case", {
   expect_equivalent(coef(fista_solvers), coef(fista_slope), tol = 1e-2)
 
 })
+
+test_that("FISTA: multinomial, n>p case", {
+  library(SLOPE)
+  set.seed(1)
+
+  n = 100
+  p = 10
+
+  d <- randomProblem(n, p, response="multinomial", density = 0.5)
+  
+  fista_solvers <- FISTA(d$x, d$y, family="multinomial",alpha=c(1.0,0.005))
+  fista_slope <- SLOPE(d$x, d$y, family="multinomial",alpha=c(1.0,0.005))
+  expect_equivalent(coef(fista_solvers), coef(fista_slope), tol = 1e-2)
+
+})
+
+test_that("FISTA: multinomial, n<p case", {
+  library(SLOPE)
+  set.seed(1)
+
+  n = 10
+  p = 20
+
+  d <- randomProblem(n, p, response="multinomial", density = 0.5)
+  
+  fista_solvers <- FISTA(d$x, d$y, family="multinomial",alpha=c(1.0,0.005))
+  fista_slope <- SLOPE(d$x, d$y, family="multinomial",alpha=c(1.0,0.005))
+  expect_equivalent(coef(fista_solvers), coef(fista_slope), tol = 1e-2)
+
+})
