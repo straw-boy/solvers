@@ -94,3 +94,36 @@ test_that("Proximal Newton: poisson, n<p case", {
 
 })
 
+test_that("Proximal Newton: multinomial, n>p case", {
+
+  library(SLOPE)
+  set.seed(1)
+
+  n = 100
+  p = 10
+
+  d <- solvers::randomProblem(n, p, response="multinomial", density = 0.5)
+
+  admm_solvers <- ADMM(d$x, d$y, family="multinomial",alpha=c(1.0,0.005),opt_algo="nr")
+  pn_solvers <- PN(d$x, d$y, family="multinomial",alpha=c(1.0,0.005))
+  expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
+
+})
+
+
+test_that("Proximal Newton: multinomial, n<p case", {
+
+  library(SLOPE)
+  set.seed(1)
+
+  n = 10
+  p = 20
+
+  d <- solvers::randomProblem(n, p, response="multinomial", density = 0.5)
+
+  admm_solvers <- ADMM(d$x, d$y, family="multinomial",alpha=c(1.0,0.005),opt_algo="nr")
+  pn_solvers <- PN(d$x, d$y, family="multinomial",alpha=c(1.0,0.005))
+  expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
+
+})
+
