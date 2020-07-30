@@ -62,7 +62,7 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
     u += (beta_hat-z);
 
     double r_norm = norm(beta - z, "fro");
-    double s_norm = norm(z - z_old, "fro");
+    double s_norm = norm(rho*(z - z_old), "fro");
     
     double eps_primal = std::sqrt(p*m)*tol_abs + tol_rel*std::max(norm(beta, "fro"), norm(z, "fro"));
     double eps_dual = std::sqrt(p*m)*tol_abs + tol_rel*norm(rho*u, "fro");
