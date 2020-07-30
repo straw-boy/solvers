@@ -104,8 +104,8 @@ test_that("Proximal Newton: multinomial, n>p case", {
 
   d <- solvers::randomProblem(n, p, response="multinomial", density = 0.5)
 
-  admm_solvers <- ADMM(d$x, d$y, family="multinomial",alpha=c(1.0,0.005),opt_algo="nr")
-  pn_solvers <- PN(d$x, d$y, family="multinomial",alpha=c(1.0,0.005))
+  admm_solvers <- ADMM(d$x, d$y, family="multinomial", alpha=c(1.0,0.005), opt_algo="nr")
+  pn_solvers <- PN(d$x, d$y, family="multinomial", alpha=c(1.0,0.005), hessian_calc="exact")
   expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
 
 })
@@ -121,8 +121,8 @@ test_that("Proximal Newton: multinomial, n<p case", {
 
   d <- solvers::randomProblem(n, p, response="multinomial", density = 0.5)
 
-  admm_solvers <- ADMM(d$x, d$y, family="multinomial",alpha=c(1.0,0.005),opt_algo="nr")
-  pn_solvers <- PN(d$x, d$y, family="multinomial",alpha=c(1.0,0.005))
+  admm_solvers <- ADMM(d$x, d$y, family="multinomial", alpha=c(1.0,0.005), opt_algo="nr")
+  pn_solvers <- PN(d$x, d$y, family="multinomial", alpha=c(1.0,0.005), hessian_calc="exact")
   expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
 
 })

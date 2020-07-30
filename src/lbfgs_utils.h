@@ -48,7 +48,7 @@ public:
   // Returns true to terminate main PQN loop, false otherwise.
   bool updateParams(const mat& s, const mat& y) {
 
-    if (dot(s, y) == 0)
+    if (accu(s % y) == 0)
       return true;
     
     S.insert_cols(S.n_cols, vectorise(s));
@@ -59,7 +59,7 @@ public:
       Y.shed_col(0);
     }
 
-    gamma = dot(s, y)/dot(y, y);
+    gamma = accu(s % y) / accu(y % y);
     sigma = 1/gamma;
     
     mat sTy = S.t()*Y;
@@ -88,15 +88,15 @@ public:
 
   // Computes H*v, where H is inverse hessian approximation
   mat inverseHessianProduct(const mat& v) {
-
+    vec col_v = vectorise(v);
     if (S.n_cols == 0) {
-      return gamma*v;
+      return gamma*col_v;
     }
 
-    mat ans = Q_Hv.t()*v;
+    mat ans = Q_Hv.t()*col_v;
     ans = A_Hv*ans;
     ans = Q_Hv*ans;
-    ans = gamma*v + ans;
+    ans = gamma*col_v + ans;
 
     return ans;
   }
@@ -104,15 +104,15 @@ public:
 
   // Computes B*v, where B is hessian approximation
   mat hessianProduct(const mat& v) {
-
+    vec col_v = vectorise(v);
     if (S.n_cols == 0) {
-      return sigma*v;
+      return sigma*col_v;
     }
 
-    mat ans = Q_Bv.t()*v;
+    mat ans = Q_Bv.t()*col_v;
     ans = inv(A_Bv)*ans;
     ans = Q_Bv*ans;
-    ans = sigma*v - ans;
+    ans = sigma*col_v - ans;
 
     return ans;
   }
@@ -140,12 +140,12 @@ public:
     uword passes = 0;
     while (passes < max_passes) {
       
-      double g = 0.5*dot(x - beta, hessianProduct(x - beta));
+      double g = 0.5*accu((x - beta) % reshape(hessianProduct(x - beta), size(x)));
       double h = dot(sort(abs(vectorise(x.tail_rows(p_rows))),
                           "descending"), lambda);
       double f = g + h;
 
-      mat grad = hessianProduct(x - beta);
+      mat grad = reshape(hessianProduct(x - beta), size(x));
 
       x_tilde_old = x_tilde;
 
@@ -155,14 +155,14 @@ public:
       // Backtracking line search
       while (true) {
         // Update coefficients
-        x_tilde = x - learning_rate*(grad);
+        x_tilde = x - learning_rate*grad;
 
         x_tilde.tail_rows(p_rows) =
           prox(x_tilde.tail_rows(p_rows), lambda*learning_rate);
 
         vec d = vectorise(x_tilde - x);
 
-        g = 0.5*dot(x_tilde - beta, hessianProduct(x_tilde - beta));
+        g = 0.5*accu((x_tilde - beta) % reshape(hessianProduct(x_tilde - beta), size(x)));
 
         double q = g_old
           + dot(d, vectorise(grad))
@@ -180,7 +180,7 @@ public:
       x = x_tilde + (t_old - 1.0)/t * (x_tilde - x_tilde_old);
       
       // Stop if change is x is small
-      if (norm(x - x_prev) < 1e-6)
+      if (norm(x - x_prev, "fro") < 1e-6)
         break;
       x_prev = x;
 
