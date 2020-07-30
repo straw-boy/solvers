@@ -2,17 +2,18 @@
 
 #include <RcppArmadillo.h>
 #include "../results.h"
-#include "../scaled_prox.h"
+#include "../lbfgs_utils.h"
 #include "../families/family.h"
 
 using namespace Rcpp;
 using namespace arma;
 
-// Proximal Newton algorithm
+// Proximal Quasi-Newton algorithm. 
+// Uses L-BFGS for Hessian approximation.
 template <typename T>
-Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
+Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
 {
-  uword n = y.n_rows;
+  
   uword p = x.n_cols;
   uword m = y.n_cols;
   uword pmi = lambda.n_elem;
@@ -21,17 +22,9 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
   mat beta(p, m, fill::zeros);
   mat beta_tilde(beta);
 
-  mat lin_pred(n, m);
-  mat grad(p, m, fill::zeros);
-  mat hess(p, p, fill::zeros);
-
   // line search parameters
   const double alpha = 0.5;
   const double eta = 0.5;
-
-  const double tol = 1e-10;
-
-  vec hess_correction(p*m, fill::ones); 
 
   // diagnostics
   wall_clock timer;
@@ -44,12 +37,15 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     timer.tic();
   }
 
+  LBFGS lbfgs;
+  
+  mat lin_pred = x*beta;
+  mat grad = gradient(x, y, lin_pred);
+
   // main loop
   uword passes = 0;
   while (passes < max_passes) {
     ++passes;
-
-    lin_pred = x*beta;
   
     double f = primal(y, lin_pred);
     double g = dot(sort(abs(vectorise(beta.tail_rows(p_rows))),
@@ -63,26 +59,19 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     
     if (verbosity >= 3) {
         Rcout << "pass: "         << passes
-              << ", objective: "  << obj 
+              << ", objective: "  << obj
               << endl;
     }
 
-    grad = gradient(x, y, lin_pred);
-    hess = hessian(x, y, lin_pred);
+    beta_tilde = beta - lbfgs.inverseHessianProduct(grad);
 
-    if (rcond(hess) < 1e-16) {
-      hess.diag() += hess_correction;
-    }
-
-    beta_tilde = beta - reshape(solve(hess, vectorise(grad), solve_opts::fast), size(beta));
-
-    beta_tilde = scaled_prox(beta_tilde, hess, lambda);
+    beta_tilde = lbfgs.scaled_prox(beta_tilde, lambda);
     
     mat d = beta_tilde - beta;
 
     // Backtracking line search
     double t = 1.0;
-    double dTgrad = accu(d % grad);
+    double dTgrad = dot(d, grad);
     double obj_new;
     while (true) {
       mat beta_new = beta + t*d;
@@ -99,14 +88,23 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
       }
       checkUserInterrupt();
     }
+    
+    beta_tilde = beta + t*d;
 
-    beta += t*d;
+    lin_pred = x*beta_tilde;
 
-    if (norm(t*d, "fro") < tol)
+    mat grad_new = gradient(x, y, lin_pred);
+
+    if (lbfgs.updateParams(beta_tilde - beta, grad_new - grad)){
+      break;
+    }
+
+    if (norm(t*d) < tol_coef)
       break;
     
-    hess_correction = abs(t*vectorise(d));
-    
+    grad = grad_new;
+    beta = beta_tilde;
+
     if (passes % 10 == 0)
       checkUserInterrupt();
     
@@ -124,3 +122,4 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
   return res;
 }
+
