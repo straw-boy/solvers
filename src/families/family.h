@@ -15,7 +15,7 @@ protected:
   const double tol_infeas;
   const double tol_abs;
   const double tol_rel;
-  const double tol;
+  const double tol_coef;
   const uword verbosity;
 
 
@@ -27,7 +27,7 @@ public:
          const double tol_infeas,
          const double tol_abs,
          const double tol_rel,
-         const double tol,
+         const double tol_coef,
          const uword verbosity)
     : intercept(intercept),
       diagnostics(diagnostics),
@@ -36,7 +36,7 @@ public:
       tol_infeas(tol_infeas),
       tol_abs(tol_abs),
       tol_rel(tol_rel),
-      tol(tol),
+      tol_coef(tol_coef),
       verbosity(verbosity) {}
 
   virtual double primal(const mat& y, const mat& lin_pred) = 0;

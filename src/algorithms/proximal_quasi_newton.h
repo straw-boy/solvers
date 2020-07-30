@@ -14,7 +14,6 @@ template <typename T>
 Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
 {
   
-  uword n = y.n_rows;
   uword p = x.n_cols;
   uword m = y.n_cols;
   uword pmi = lambda.n_elem;
@@ -100,7 +99,7 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
       break;
     }
 
-    if (norm(t*d) < tol)
+    if (norm(t*d) < tol_coef)
       break;
     
     grad = grad_new;

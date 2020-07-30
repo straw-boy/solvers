@@ -53,7 +53,7 @@
 #'     no violations in the strong set
 #' @param verbosity level of verbosity for displaying output from the
 #'   program. Not completely developed. Use 3 just for now.
-#' @param tol Tolerance to use for change in L2 norm of variable 
+#' @param tol_coef Tolerance to use for change in L2 norm of variable 
 #' @param tol_dev_change the regularization path is stopped if the
 #'   fractional change in deviance falls below this value; note that this is
 #'   automatically set to 0 if a alpha is manually entered
@@ -84,7 +84,7 @@ PN <- function(x,
                max_variables = NROW(x),
                hessian_calc = c("lbfgs", "exact"),
                max_passes = if (hessian_calc == "exact") 500 else 3000,
-               tol = 1e-10,
+               tol_coef = 1e-10,
                diagnostics =  FALSE,
                verbosity = 0
 ) {
@@ -119,7 +119,7 @@ PN <- function(x,
     is.logical(diagnostics),
     is.logical(intercept),
     is.logical(center),
-    tol >= 0
+    tol_coef >= 0
   )
 
   fit_intercept <- intercept
@@ -261,7 +261,7 @@ PN <- function(x,
                   tol_infeas = 1e-3,
                   tol_abs = 1e-5,
                   tol_rel = 1e-4,
-                  tol = tol)
+                  tol_coef = tol_coef)
 
   fitPN <- if (is_sparse) sparsePN else densePN
 

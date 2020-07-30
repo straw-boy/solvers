@@ -29,8 +29,6 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
   const double alpha = 0.5;
   const double eta = 0.5;
 
-  const double tol = 1e-10;
-
   vec hess_correction(p, fill::ones); 
 
   // diagnostics
@@ -102,7 +100,7 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
     beta += t*d;
 
-    if (norm(t*d) < tol)
+    if (norm(t*d) < tol_coef)
       break;
     
     hess_correction = abs(t*d);

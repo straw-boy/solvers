@@ -22,8 +22,8 @@ PN(
   tol_dev_ratio = 0.995,
   max_variables = NROW(x),
   hessian_calc = c("lbfgs", "exact"),
-  max_passes = if (hessian_calc == "exact") 150 else 400,
-  tol = 1e-10,
+  max_passes = if (hessian_calc == "exact") 500 else 3000,
+  tol_coef = 1e-10,
   diagnostics = FALSE,
   verbosity = 0
 )
@@ -116,7 +116,7 @@ the number of levels of the response minus one.}
 
 \item{max_passes}{maximum number of passes (outer iterations) for solver}
 
-\item{tol}{Tolerance to use for change in L2 norm of variable}
+\item{tol_coef}{Tolerance to use for change in L2 norm of variable}
 
 \item{diagnostics}{whether to save diagnostics from the solver
 (timings and other values depending on type of solver)}
