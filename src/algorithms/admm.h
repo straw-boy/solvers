@@ -61,11 +61,11 @@ Results Family::fitADMM(const T& x, const mat& y, vec lambda, const std::string 
 
     u += (beta_hat-z);
 
-    double r_norm = std::sqrt(accu(square(beta - z)));
-    double s_norm = std::sqrt(accu(square(z - z_old)));
+    double r_norm = norm(beta - z, "fro");
+    double s_norm = norm(z - z_old, "fro");
     
-    double eps_primal = std::sqrt(p*m)*tol_abs + tol_rel*std::max(std::sqrt(accu(square(beta))), std::sqrt(accu(square(z))));
-    double eps_dual = std::sqrt(p*m)*tol_abs + tol_rel*std::sqrt(accu(square(rho*u)));
+    double eps_primal = std::sqrt(p*m)*tol_abs + tol_rel*std::max(norm(beta, "fro"), norm(z, "fro"));
+    double eps_dual = std::sqrt(p*m)*tol_abs + tol_rel*norm(rho*u, "fro");
 
     if (diagnostics) {
       eps_primals.push_back(r_norm);

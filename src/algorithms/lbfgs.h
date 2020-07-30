@@ -36,7 +36,7 @@ mat Family::lbfgs(const T& x, const mat& y, const double rho, const mat& u)
 
   while (iter < max_iter) {
 
-    if (std::sqrt(accu(square(g))) < tolerance)
+    if (norm(g, "fro") < tolerance)
       break;
 
     // Two Loop recursion begins
