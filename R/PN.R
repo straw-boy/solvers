@@ -83,7 +83,7 @@ PN <- function(x,
                tol_dev_ratio = 0.995,
                max_variables = NROW(x),
                hessian_calc = c("lbfgs", "exact"),
-               max_passes = if (hessian_calc == "exact") 150 else 400,
+               max_passes = if (hessian_calc == "exact") 500 else 3000,
                tol = 1e-10,
                diagnostics =  FALSE,
                verbosity = 0
