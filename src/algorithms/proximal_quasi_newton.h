@@ -122,3 +122,4 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
 
   return res;
 }
+
