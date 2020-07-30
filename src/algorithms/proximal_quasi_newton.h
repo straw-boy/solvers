@@ -63,7 +63,7 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
               << endl;
     }
 
-    beta_tilde = beta - lbfgs.computeHv(grad);
+    beta_tilde = beta - lbfgs.inverseHessianProduct(grad);
 
     beta_tilde = lbfgs.scaled_prox(beta_tilde, lambda);
     

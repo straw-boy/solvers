@@ -29,11 +29,11 @@ private:
   // Diagonal of S.t()*Y
   mat D;
 
-  // Utility matrices used in computeBv
+  // Utility matrices used in hessianProduct
   mat Q_Bv;
   mat A_Bv;
 
-  // Utility matrices used in computeHv
+  // Utility matrices used in inverseHessianProduct
   mat Q_Hv;
   mat A_Hv;
 
@@ -87,7 +87,7 @@ public:
   }
 
   // Computes H*v, where H is inverse hessian approximation
-  mat computeHv(const mat& v) {
+  mat inverseHessianProduct(const mat& v) {
 
     if (S.n_cols == 0) {
       return gamma*v;
@@ -103,7 +103,7 @@ public:
 
 
   // Computes B*v, where B is hessian approximation
-  mat computeBv(const mat& v) {
+  mat hessianProduct(const mat& v) {
 
     if (S.n_cols == 0) {
       return sigma*v;
@@ -140,12 +140,12 @@ public:
     uword passes = 0;
     while (passes < max_passes) {
       
-      double g = 0.5*dot(x - beta, computeBv(x - beta));
+      double g = 0.5*dot(x - beta, hessianProduct(x - beta));
       double h = dot(sort(abs(vectorise(x.tail_rows(p_rows))),
                           "descending"), lambda);
       double f = g + h;
 
-      mat grad = computeBv(x - beta);
+      mat grad = hessianProduct(x - beta);
 
       x_tilde_old = x_tilde;
 
@@ -162,7 +162,7 @@ public:
 
         vec d = vectorise(x_tilde - x);
 
-        g = 0.5*dot(x_tilde - beta, computeBv(x_tilde - beta));
+        g = 0.5*dot(x_tilde - beta, hessianProduct(x_tilde - beta));
 
         double q = g_old
           + dot(d, vectorise(grad))
