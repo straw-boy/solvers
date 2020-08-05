@@ -36,20 +36,20 @@ mat Family::lbfgs(const T& x, const mat& y, const double rho, const mat& u)
 
   while (iter < max_iter) {
 
-    if (norm(g) < tolerance)
+    if (norm(g, "fro") < tolerance)
       break;
 
     // Two Loop recursion begins
     mat q = g;
     for (int j = std::min(iter, l)-1; j >= 0; j--) {
-      alpha[j] = eta[j]*dot(dz[j], q);
+      alpha[j] = eta[j]*accu(dz[j] % q);
       q = q - alpha[j]*dgrad[j];
     }
 
     q = gamma*q;
 
     for (int j = 0; j < std::min(iter, l); j++) {
-      q += dz[j]*(alpha[j]-eta[j]*dot(dgrad[j], q));
+      q += dz[j]*(alpha[j]-eta[j]*accu(dgrad[j] % q));
     }
     // Two Loop recursion ends
 
@@ -70,13 +70,13 @@ mat Family::lbfgs(const T& x, const mat& y, const double rho, const mat& u)
     z += dz.back();
     dgrad.push_back(gradient(x, y, x*z) + rho*(z-u) - g);
 
-    double eta_inv = dot(dgrad.back(), dz.back());
+    double eta_inv = accu(dgrad.back() % dz.back());
     if (eta_inv == 0)
       break;
     eta.push_back(1.0/eta_inv);
 
     // Updating scaling parameter for next iteration
-    gamma = eta_inv / dot(dgrad.back(), dgrad.back());
+    gamma = eta_inv / accu(dgrad.back() % dgrad.back());
 
     g += dgrad.back();
 

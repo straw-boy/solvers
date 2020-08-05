@@ -13,6 +13,10 @@ test_that("FISTA works same as current SLOPE package implementation", {
   fista_slope <- SLOPE(abalone$x, abalone$y,family="poisson", solver = "fista")
   fista_solvers <- FISTA(abalone$x, abalone$y,family="poisson")
   expect_equivalent(coef(fista_slope), coef(fista_solvers), tol = 1e-2)
+
+  fista_slope <- SLOPE(wine$x, wine$y,family="multinomial", solver = "fista")
+  fista_solvers <- FISTA(wine$x, wine$y,family="multinomial")
+  expect_equivalent(coef(fista_slope), coef(fista_solvers), tol = 1e-2)
 })
 
 

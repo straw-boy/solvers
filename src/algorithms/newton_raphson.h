@@ -14,10 +14,11 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
 
   Rcout.precision(4);
   uword p = x.n_cols;
+  uword m = y.n_cols;
 
   mat z(u);
   mat g(u);
-  mat h(p, p);
+  mat h(p*m, p*m);
 
   uword max_iter = 50;
   double tolerance = 1e-12;
@@ -33,29 +34,29 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
     g = gradient(x, y, lin_pred) + rho*(z-u);
     h = hessian(x, y, lin_pred);
 
-
     h.diag() += rho;
+    
+    mat step = -reshape(solve(h,vectorise(g)),size(z));
 
-    mat step = -solve(h, g);
-    double decrement = -dot(g, step);
-
-    if (0.5*decrement < tolerance) {
+    double decrement = -accu(g % step);
+    
+    if (0.5*decrement*decrement < tolerance) {
       break; 
     }
 
     //Backtracking
     double t = 1.0;
 
-    double f = primal(y, lin_pred) + (rho)/(2.0)*pow(norm(z-u), 2);
+    double f = primal(y, lin_pred) + 0.5*rho*accu(square(z-u));
 
-    while (primal(y, x*(z+t*step)) + (rho)/(2.0)*pow(norm(z+t*step-u), 2)
+    while (primal(y, x*(z+t*step)) + 0.5*rho*accu(square(z+t*step-u))
             > (f + alpha*t*decrement)) {
         t = gamma*t;
         Rcpp::checkUserInterrupt();
     }
 
     z = z + t*step;
-
+    
     Rcpp::checkUserInterrupt();
     
     iter++;
