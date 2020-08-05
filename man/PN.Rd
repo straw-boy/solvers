@@ -21,7 +21,9 @@ PN(
   tol_dev_change = 1e-05,
   tol_dev_ratio = 0.995,
   max_variables = NROW(x),
-  max_passes = 150,
+  hessian_calc = c("lbfgs", "exact"),
+  max_passes = if (hessian_calc == "exact") 500 else 3000,
+  tol_coef = 1e-10,
   diagnostics = FALSE,
   verbosity = 0
 )
@@ -106,7 +108,15 @@ maximum number of unique, nonzero coefficients in absolute value in model.
 For the multinomial family, this value will be multiplied internally with
 the number of levels of the response minus one.}
 
+\item{hessian_calc}{Method to use for Hessian caluclation.
+\itemize{
+\item \code{"exact"} No approximations will be made.
+\item \code{"lbfgs"} Updates will be made using L-BFGS.
+}}
+
 \item{max_passes}{maximum number of passes (outer iterations) for solver}
+
+\item{tol_coef}{Tolerance to use for change in L2 norm of variable}
 
 \item{diagnostics}{whether to save diagnostics from the solver
 (timings and other values depending on type of solver)}

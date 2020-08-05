@@ -257,7 +257,8 @@ FISTA <- function(x,
                   tol_rel_gap = tol_rel_gap,
                   tol_infeas = tol_infeas,
                   tol_abs = 1e-5,
-                  tol_rel = 1e-4)
+                  tol_rel = 1e-4,
+                  tol_coef = 1e-10)
 
   fitFISTA <- if (is_sparse) sparseFISTA else denseFISTA
 

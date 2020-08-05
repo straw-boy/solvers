@@ -35,6 +35,9 @@
 #' @param q parameter controlling the shape of the lambda sequence, with
 #'   usage varying depending on the type of path used and has no effect
 #'   is a custom `lambda` sequence is used.
+#' @param hessian_calc Method to use for Hessian caluclation. 
+#'   - `"exact"` No approximations will be made.
+#'   - `"lbfgs"` Updates will be made using L-BFGS.
 #' @param max_passes maximum number of passes (outer iterations) for solver
 #' @param diagnostics whether to save diagnostics from the solver
 #'   (timings and other values depending on type of solver)
@@ -50,6 +53,7 @@
 #'     no violations in the strong set
 #' @param verbosity level of verbosity for displaying output from the
 #'   program. Not completely developed. Use 3 just for now.
+#' @param tol_coef Tolerance to use for change in L2 norm of variable 
 #' @param tol_dev_change the regularization path is stopped if the
 #'   fractional change in deviance falls below this value; note that this is
 #'   automatically set to 0 if a alpha is manually entered
@@ -78,7 +82,9 @@ PN <- function(x,
                tol_dev_change = 1e-5,
                tol_dev_ratio = 0.995,
                max_variables = NROW(x),
-               max_passes = 150,
+               hessian_calc = c("lbfgs", "exact"),
+               max_passes = if (hessian_calc == "exact") 500 else 3000,
+               tol_coef = 1e-10,
                diagnostics =  FALSE,
                verbosity = 0
 ) {
@@ -86,6 +92,7 @@ PN <- function(x,
   ocall <- match.call()
 
   family <- match.arg(family)
+  hessian_calc <- match.arg(hessian_calc)
   screen_alg <- match.arg(screen_alg)
 
   if (is.character(scale)) {
@@ -111,7 +118,8 @@ PN <- function(x,
     is.finite(max_passes),
     is.logical(diagnostics),
     is.logical(intercept),
-    is.logical(center)
+    is.logical(center),
+    tol_coef >= 0
   )
 
   fit_intercept <- intercept
@@ -246,12 +254,14 @@ PN <- function(x,
                   diagnostics = diagnostics,
                   verbosity = verbosity,
                   max_variables = max_variables,
+                  hessian_calc = hessian_calc,
                   tol_dev_change = tol_dev_change,
                   tol_dev_ratio = tol_dev_ratio,
                   tol_rel_gap = 1e-5,
                   tol_infeas = 1e-3,
                   tol_abs = 1e-5,
-                  tol_rel = 1e-4)
+                  tol_rel = 1e-4,
+                  tol_coef = tol_coef)
 
   fitPN <- if (is_sparse) sparsePN else densePN
 

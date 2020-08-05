@@ -262,7 +262,8 @@ ADMM <- function( x,
                   tol_rel_gap = 1e-5,
                   tol_infeas = 1e-3,
                   tol_abs = tol_abs,
-                  tol_rel = tol_rel)
+                  tol_rel = tol_rel,
+                  tol_coef = 1e-10)
 
   fitADMM <- if (is_sparse) sparseADMM else denseADMM
 
