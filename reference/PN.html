@@ -144,7 +144,9 @@
   tol_dev_change = <span class='fl'>1e-05</span>,
   tol_dev_ratio = <span class='fl'>0.995</span>,
   max_variables = <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>NROW</a></span>(<span class='kw'>x</span>),
-  max_passes = <span class='fl'>150</span>,
+  hessian_calc = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"lbfgs"</span>, <span class='st'>"exact"</span>),
+  max_passes = <span class='co'>if</span> (<span class='kw'>hessian_calc</span> <span class='op'>==</span> <span class='st'>"exact"</span>) <span class='fl'>500</span> <span class='co'>else</span> <span class='fl'>3000</span>,
+  tol_coef = <span class='fl'>1e-10</span>,
   diagnostics = <span class='fl'>FALSE</span>,
   verbosity = <span class='fl'>0</span>
 )</pre>
@@ -261,8 +263,19 @@ For the multinomial family, this value will be multiplied internally with
 the number of levels of the response minus one.</p></td>
     </tr>
     <tr>
+      <th>hessian_calc</th>
+      <td><p>Method to use for Hessian caluclation.</p><ul>
+<li><p><code>"exact"</code> No approximations will be made.</p></li>
+<li><p><code>"lbfgs"</code> Updates will be made using L-BFGS.</p></li>
+</ul></td>
+    </tr>
+    <tr>
       <th>max_passes</th>
       <td><p>maximum number of passes (outer iterations) for solver</p></td>
+    </tr>
+    <tr>
+      <th>tol_coef</th>
+      <td><p>Tolerance to use for change in L2 norm of variable</p></td>
     </tr>
     <tr>
       <th>diagnostics</th>
