@@ -109,11 +109,11 @@
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># Comparing total execution time</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">fista_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 0.1132709</span>
+<span class="co">#&gt; [1] 0.1144911</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">admm_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 0.41057</span>
+<span class="co">#&gt; [1] 0.4068238</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">pn_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 6.531866</span>
+<span class="co">#&gt; [1] 6.364462</span>
 </pre></div>
 <p>Now, these fits cannot be directly used to plot as they contain a lot of parameter so we’ll call a utility function that merges the relevant parameter and returns a dataframe.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
