@@ -14,6 +14,7 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
 
   Rcout.precision(4);
   uword p = x.n_cols;
+  uword n = x.n_rows;
   uword m = y.n_cols;
 
   mat z(u);
@@ -32,11 +33,32 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
     mat lin_pred = x*z;
     
     g = gradient(x, y, lin_pred) + rho*(z-u);
-    h = hessian(x, y, lin_pred);
 
-    h.diag() += rho;
+    mat step;
+
+    if (n >= p || name() == "multinomial") {
+      h = hessian(x, y, lin_pred);
+      h.diag() += rho;
+      step = -reshape(solve(h,vectorise(g)),size(z));
+    } else {
+      // vec activation = pseudoHessian(y, lin_pred);
     
-    mat step = -reshape(solve(h,vectorise(g)),size(z));
+      // step = x*g;
+      // step /= rho;
+
+      // diagmat(activation).print();
+
+      // mat tmp = diagmat(activation);
+      // tmp = solve(tmp, x);
+      // tmp = x*tmp;
+      // tmp.diag() += 1/activation;
+
+      // step = solve(tmp, step);
+      // step = x.t()*step;
+      // step.diag() -= 1;
+      // step /= rho;
+    }
+    
 
     double decrement = -accu(g % step);
     

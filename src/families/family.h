@@ -88,7 +88,9 @@ public:
     }
     vec activation = pseudoHessian(y, lin_pred);
     mat xTx;
-    xTx = x.t() * diagmat(activation) * x;
+    xTx = x;
+    xTx.each_col() %= activation;
+    xTx = x.t()*xTx;
     return xTx;
   }
 
