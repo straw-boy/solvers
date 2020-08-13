@@ -21,7 +21,7 @@ inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
   mat z(x);
   mat u(x);
 
-  mat I(p, p, fill::eye);
+  mat I(size(H), fill::eye);
 
   const double alpha = 1.5;
   const double rho = 1.0;
@@ -34,7 +34,7 @@ inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
   while (iter < max_iter) {
     iter++;
     
-    x = solve(H + rho*I, H*beta + rho*(z - u));
+    x = reshape(solve(H + rho*I, H*vectorise(beta) + rho*vectorise(z - u)), size(x));
     
     mat z_old = z;
     mat x_hat = alpha*x + (1 - alpha)*z_old;
@@ -45,11 +45,11 @@ inline mat scaled_prox(const mat& beta, const mat& H, const vec& lambda)
 
     u += (x_hat-z);
 
-    double r_norm = norm(x - z);
-    double s_norm = norm(rho*(z - z_old));
+    double r_norm = norm(x - z, "fro");
+    double s_norm = norm(rho*(z - z_old), "fro");
 
-    double eps_primal = std::sqrt(p)*tol_abs + tol_rel*std::max(norm(x), norm(z));
-    double eps_dual = std::sqrt(p)*tol_abs + tol_rel*norm(rho*u);
+    double eps_primal = std::sqrt(p*m)*tol_abs + tol_rel*std::max(norm(x, "fro"), norm(z, "fro"));
+    double eps_dual = std::sqrt(p*m)*tol_abs + tol_rel*norm(rho*u, "fro");
 
     if (r_norm < eps_primal && s_norm < eps_dual)
         break;
