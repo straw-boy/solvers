@@ -145,6 +145,9 @@ public:
   Results fitADMM(const T& x, const mat& y, vec lambda, const std::string opt_algo, const double rho = 1.0);
 
   template <typename T>
+  mat scaled_prox(const T& x, const vec& y, const mat& beta, const mat& H, const vec& lambda);
+
+  template <typename T>
   Results fitProximalNewton(const T& x, const mat& y, vec lambda);
 
   template <typename T>
