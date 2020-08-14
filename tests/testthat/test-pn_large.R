@@ -14,6 +14,10 @@ test_that("Proximal Newton works same as ADMM", {
   admm_solvers <- ADMM(abalone$x, abalone$y, family="poisson", opt_algo = "nr")
   pn_solvers <- PN(abalone$x, abalone$y, family="poisson",hessian_calc="exact")
   expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
+
+  admm_solvers <- ADMM(wine$x, wine$y, family="multinomial", opt_algo = "nr")
+  pn_solvers <- PN(wine$x, wine$y, family="multinomial", hessian_calc="exact")
+  expect_equivalent(coef(admm_solvers), coef(pn_solvers), tol = 1e-2)
 })
 
 

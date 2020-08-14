@@ -30,8 +30,7 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
   const double alpha = 0.5;
   const double eta = 0.5;
 
-  vec hess_correction(p, fill::ones);
-
+  vec hess_correction(p*m, fill::ones); 
   vec activation(p, fill::ones);
 
   // diagnostics
@@ -80,8 +79,7 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     //   hess.diag() += hess_correction;
     // }
 
-    beta_tilde = beta - solve(hess, grad);
-    // beta_tilde = beta - solve(hess, grad, solve_opts::fast);
+    beta_tilde = beta - reshape(solve(hess, vectorise(grad), solve_opts::fast), size(beta));
 
     beta_tilde = scaled_prox(x, activation, beta_tilde, hess, lambda);
     
@@ -89,7 +87,7 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
     // Backtracking line search
     double t = 1.0;
-    double dTgrad = dot(d, grad);
+    double dTgrad = accu(d % grad);
     double obj_new;
     while (true) {
       mat beta_new = beta + t*d;
@@ -109,10 +107,10 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
 
     beta += t*d;
 
-    if (norm(t*d) < tol_coef)
+    if (norm(t*d, "fro") < tol_coef)
       break;
     
-    hess_correction = abs(t*d);
+    hess_correction = abs(t*vectorise(d));
     
     if (passes % 10 == 0)
       checkUserInterrupt();

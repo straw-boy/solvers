@@ -63,7 +63,7 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
               << endl;
     }
 
-    beta_tilde = beta - lbfgs.inverseHessianProduct(grad);
+    beta_tilde = beta - reshape(lbfgs.inverseHessianProduct(grad), size(beta));
 
     beta_tilde = lbfgs.scaled_prox(beta_tilde, lambda);
     
@@ -71,7 +71,7 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
 
     // Backtracking line search
     double t = 1.0;
-    double dTgrad = dot(d, grad);
+    double dTgrad = accu(d % grad);
     double obj_new;
     while (true) {
       mat beta_new = beta + t*d;
@@ -99,7 +99,7 @@ Results Family::fitProximalQuasiNewton(const T& x, const mat& y, vec lambda)
       break;
     }
 
-    if (norm(t*d) < tol_coef)
+    if (norm(t*d, "fro") < tol_coef)
       break;
     
     grad = grad_new;
