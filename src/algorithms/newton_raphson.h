@@ -18,13 +18,26 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
   uword m = y.n_cols;
 
   mat z(u);
-  mat g(u);
+  mat g(size(z));
   mat h(p*m, p*m);
+  mat step(size(z));
 
   uword max_iter = 50;
   double tolerance = 1e-12;
   double alpha = 0.1;
   double gamma = 0.5;
+
+  // bool use_woodbury 
+  //   = (name() != "multinomial" && n < p)? true: false;
+
+  bool use_woodbury = false;
+
+  mat xxT;
+  vec activation;
+
+  if (use_woodbury) {
+    xxT = x*x.t();
+  }
 
   uword iter = 0;
 
@@ -33,32 +46,40 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
     mat lin_pred = x*z;
     
     g = gradient(x, y, lin_pred) + rho*(z-u);
+    h = hessian(x, y, lin_pred);
+    h.diag() += rho;
+    
+    if (use_woodbury) {
+      // activation = pseudoHessian(y, lin_pred);
 
-    mat step;
+      // mat tmp = xxT;
+      // tmp.diag() += rho/activation;
+      // double epsilon = 1e-8;
+      // if (rcond(tmp) < 1e-16) {
+      //   Rcout << "emergency stopping" << endl;
+      //   break;
+      // }
+      // while (rcond(tmp) < 1e-16) {
+      //   if (epsilon == 1e-8) 
+      //     Rcout << "RCOND: " << rcond(tmp) << endl;
+      //   tmp.diag() += epsilon;
+      //   epsilon *= 2;
+      //   if( epsilon > 500)
+      //     break;
+      // }
+      // if (epsilon != 1e-8) {
+      //   Rcout << "EPS :" << epsilon << endl; 
+      // }
+      // step = x.t()*solve(tmp, x*g) - g;
+      // step /= rho;
 
-    if (n >= p || name() == "multinomial") {
+    } else {
+
       h = hessian(x, y, lin_pred);
       h.diag() += rho;
-      step = -reshape(solve(h,vectorise(g)),size(z));
-    } else {
-      // vec activation = pseudoHessian(y, lin_pred);
-    
-      // step = x*g;
-      // step /= rho;
+      step = -reshape(solve(h, vectorise(g)),size(z));
 
-      // diagmat(activation).print();
-
-      // mat tmp = diagmat(activation);
-      // tmp = solve(tmp, x);
-      // tmp = x*tmp;
-      // tmp.diag() += 1/activation;
-
-      // step = solve(tmp, step);
-      // step = x.t()*step;
-      // step.diag() -= 1;
-      // step /= rho;
     }
-    
 
     double decrement = -accu(g % step);
     

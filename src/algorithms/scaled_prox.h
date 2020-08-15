@@ -32,7 +32,7 @@ mat Family::scaled_prox(const T& x, const vec& activation, const mat& beta, cons
 
   mat H_beta = H*beta;
 
-  if (n < p || name() == "multinomial") {
+  if (n != p || name() == "multinomial") {
     xx = H;
     xx.diag() += rho;
   } else {
@@ -50,7 +50,7 @@ mat Family::scaled_prox(const T& x, const vec& activation, const mat& beta, cons
     iter++;
     
     v = H_beta + rho*(z - u);
-    if (n < p || name() == "multinomial") {
+    if (true || name() == "multinomial") {
       v = solve(trimatu(U), solve(trimatl(L), v));
     } else {
       v = v - x.t() * solve(trimatu(U), solve(trimatl(L), x*v));
