@@ -1,6 +1,6 @@
 test_that("L-BFGS: gaussian, n>p case", {
   library(SLOPE)
-  set.seed(1)
+  set.seed(326)
 
   n = 100
   p = 10
@@ -16,7 +16,7 @@ test_that("L-BFGS: gaussian, n>p case", {
 test_that("L-BFGS: gaussian, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(221)
 
   n = 10
   p = 20
@@ -32,7 +32,7 @@ test_that("L-BFGS: gaussian, n<p case", {
 test_that("L-BFGS: binomial, n>p case", {
   
   library(SLOPE)
-  set.seed(1)
+  set.seed(541)
 
   n = 100
   p = 10
@@ -49,7 +49,7 @@ test_that("L-BFGS: binomial, n>p case", {
 test_that("L-BFGS: binomial, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(771)
 
   n = 10
   p = 20
@@ -65,7 +65,7 @@ test_that("L-BFGS: binomial, n<p case", {
 test_that("L-BFGS: poisson, n>p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(751)
 
   n = 100
   p = 10
@@ -80,7 +80,7 @@ test_that("L-BFGS: poisson, n>p case", {
 test_that("L-BFGS: poisson, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(122)
 
   n = 10
   p = 20
@@ -96,7 +96,7 @@ test_that("L-BFGS: poisson, n<p case", {
 test_that("L-BFGS: multinomial, n>p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(46)
 
   n = 100
   p = 10
@@ -112,7 +112,7 @@ test_that("L-BFGS: multinomial, n>p case", {
 test_that("L-BFGS: multinomial, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(67)
 
   n = 10
   p = 20

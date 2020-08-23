@@ -1,6 +1,6 @@
 test_that("FISTA: gaussian, n>p case", {
   library(SLOPE)
-  set.seed(1)
+  set.seed(131)
 
   n = 100
   p = 10
@@ -16,7 +16,7 @@ test_that("FISTA: gaussian, n>p case", {
 test_that("FISTA: gaussian, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(541)
 
   n = 5
   p = 20
@@ -33,7 +33,7 @@ test_that("FISTA: gaussian, n<p case", {
 test_that("FISTA: binomial, n>p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(116)
 
   n = 100
   p = 10
@@ -50,7 +50,7 @@ test_that("FISTA: binomial, n>p case", {
 test_that("FISTA: binomial, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(114)
   n = 10
   p = 20
 
@@ -66,7 +66,7 @@ test_that("FISTA: binomial, n<p case", {
 test_that("FISTA: poisson, n>p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(164)
 
   n = 100
   p = 10
@@ -83,7 +83,7 @@ test_that("FISTA: poisson, n>p case", {
 test_that("FISTA: poisson, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(24)
 
   n = 10
   p = 20
@@ -99,7 +99,7 @@ test_that("FISTA: poisson, n<p case", {
 
 test_that("FISTA: multinomial, n>p case", {
   library(SLOPE)
-  set.seed(1)
+  set.seed(242)
 
   n = 100
   p = 10
@@ -114,7 +114,7 @@ test_that("FISTA: multinomial, n>p case", {
 
 test_that("FISTA: multinomial, n<p case", {
   library(SLOPE)
-  set.seed(1)
+  set.seed(514)
 
   n = 10
   p = 20

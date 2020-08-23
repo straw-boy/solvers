@@ -1,7 +1,7 @@
 
 test_that("ADMM works same as FISTA", {
   
-  # skip("Takes too much time")
+  skip("Takes too much time")
   library(SLOPE)
 
   fista_solvers <- FISTA(bodyfat$x, bodyfat$y)

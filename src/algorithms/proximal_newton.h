@@ -3,7 +3,6 @@
 #include <RcppArmadillo.h>
 #include "../results.h"
 #include "scaled_prox.h"
-#include "../scaled_prox.h"
 #include "../families/family.h"
 
 using namespace Rcpp;
@@ -75,11 +74,9 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     }
 
     if (rcond(hess) < 1e-16) {
-      // Rcout << "corrected hessian" << endl;
       hess.diag() += hess_correction;
     }
 
-    // beta_tilde = beta - reshape(solve(hess, vectorise(grad)), size(beta));
     beta_tilde = beta - reshape(solve(hess, vectorise(grad), solve_opts::fast), size(beta));
 
     beta_tilde = scaled_prox(x, activation, beta_tilde, hess, lambda);
