@@ -23,6 +23,8 @@ mat Family::scaled_prox(const T& x, const vec& activation, const mat& beta, cons
   mat z(v);
   mat u(v);
 
+  vec q(n*p);
+
   mat xx;
 
   const double alpha = 1.5;
@@ -30,9 +32,9 @@ mat Family::scaled_prox(const T& x, const vec& activation, const mat& beta, cons
   const double tol_abs = 1e-6;
   const double tol_rel = 1e-5;
 
-  mat H_beta = H*beta;
+  mat H_beta = H*vectorise(beta);
 
-  if (n != p || name() == "multinomial") {
+  if (true) {
     xx = H;
     xx.diag() += rho;
   } else {
@@ -49,9 +51,9 @@ mat Family::scaled_prox(const T& x, const vec& activation, const mat& beta, cons
   while (iter < max_iter) {
     iter++;
     
-    v = H_beta + rho*(z - u);
-    if (true || name() == "multinomial") {
-      v = solve(trimatu(U), solve(trimatl(L), v));
+    q = H_beta + rho*vectorise(z - u);
+    if (true) {
+      v = reshape(solve(trimatu(U), solve(trimatl(L), q)), size(beta));
     } else {
       v = v - x.t() * solve(trimatu(U), solve(trimatl(L), x*v));
       v /= rho;
@@ -78,6 +80,6 @@ mat Family::scaled_prox(const T& x, const vec& activation, const mat& beta, cons
     if (iter % 1000 == 0)
       Rcpp::checkUserInterrupt();
   }
-  Rcout << "SP: " << iter << endl;
+  
   return v;
 }

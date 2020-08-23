@@ -23,7 +23,7 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
   mat step(size(z));
 
   uword max_iter = 50;
-  double tolerance = 1e-12;
+  double tolerance = 1e-15;
   double alpha = 0.1;
   double gamma = 0.5;
 
@@ -34,6 +34,9 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
 
   mat xxT;
   vec activation;
+
+  // vec hessian_corr(n, fill::ones);
+  // double err = 1.0;
 
   if (use_woodbury) {
     xxT = x*x.t();
@@ -46,8 +49,6 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
     mat lin_pred = x*z;
     
     g = gradient(x, y, lin_pred) + rho*(z-u);
-    h = hessian(x, y, lin_pred);
-    h.diag() += rho;
     
     if (use_woodbury) {
       // activation = pseudoHessian(y, lin_pred);
@@ -56,20 +57,12 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
       // tmp.diag() += rho/activation;
       // double epsilon = 1e-8;
       // if (rcond(tmp) < 1e-16) {
-      //   Rcout << "emergency stopping" << endl;
-      //   break;
+      //   Rcout << "hessian problem " << rcond(tmp) << endl;    
+      //   hessian_corr.print();
+      //   tmp.diag() += hessian_corr;
+      //   Rcout << "-------" << rcond(tmp) << endl;
       // }
-      // while (rcond(tmp) < 1e-16) {
-      //   if (epsilon == 1e-8) 
-      //     Rcout << "RCOND: " << rcond(tmp) << endl;
-      //   tmp.diag() += epsilon;
-      //   epsilon *= 2;
-      //   if( epsilon > 500)
-      //     break;
-      // }
-      // if (epsilon != 1e-8) {
-      //   Rcout << "EPS :" << epsilon << endl; 
-      // }
+
       // step = x.t()*solve(tmp, x*g) - g;
       // step /= rho;
 
@@ -99,6 +92,11 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
     }
 
     z = z + t*step;
+
+    // hessian_corr = 0*hessian_corr;
+    // for(int l=0;l<n;l++)
+    //   hessian_corr(l) = std::abs(t*step(l));
+    // hessian_corr += (dot(t*step, gradient(x, y, lin_pred) + rho*(z-u) - g));
     
     Rcpp::checkUserInterrupt();
     

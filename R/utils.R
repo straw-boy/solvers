@@ -88,18 +88,42 @@ getLoss <- function(fit) {
 #' Merges all the fits and returns a dataframe containing losses and time
 #' @param fits List of outputs of any of the algorithms (FISTA, ADMM etc)
 #' @export 
-mergeFits <- function(fits) {
-  
+mergeFits <- function(fits) 
+{ 
   f <- data.frame(solver = character(),
                   loss = double(),
-                  time = double())
+                  time = double(),
+                  iterations = integer())
 
   for (fit in fits) {
     g  <- data.frame(solver = rep(getLabel(fit), times = length(fit$iteration_timings[[1]])),
-                     loss = getLoss(fit),
-                     time = fit$iteration_timings[[1]])
+                    loss = getLoss(fit),
+                    time = fit$iteration_timings[[1]],
+                    iterations = seq(fit$iteration_timings[[1]]))
     f <- rbind(f,g)
   }
+  return(f)
+}
+
+#' @export 
+getBenchmarkPlots <- function(x,
+                              y,
+                              family = c("gaussian", "binomial", "multinomial", "poisson"),
+                              alpha = 0.01) 
+{ 
+  fista_fit <- FISTA(x, y, family=family, alpha=alpha, diagnostics=TRUE)
+  admm_nr_fit <- ADMM(x, y, family=family, opt_algo="nr", alpha=alpha, diagnostics=TRUE)
+  admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs", alpha=alpha, diagnostics=TRUE)
+  admm_lbfgs_fit <- ADMM(x, y, family=family, opt_algo="lbfgs", alpha=alpha, diagnostics=TRUE)
+  pn_fit <- PN(x, y, family=family, alpha=alpha, hessian_calc="exact", diagnostics=TRUE)
+
+  print(paste("Time taken by FISTA        : ", fista_fit$total_time))
+  print(paste("Time taken by ADMM(NR)     : ", admm_nr_fit$total_time))
+  print(paste("Time taken by ADMM(BFGS)   : ", admm_bfgs_fit$total_time))
+  print(paste("Time taken by ADMM(L-BFGS) : ", admm_lbfgs_fit$total_time))
+  print(paste("Time taken by PN           : ", pn_fit$total_time))
+
+  f <- mergeFits(list(fista_fit, admm_nr_fit, admm_bfgs_fit, admm_lbfgs_fit, pn_fit))
   return(f)
 }
 
