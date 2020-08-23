@@ -3,6 +3,10 @@ on:
     branches: 
       - master
       - optimization
+  pull_request:
+    branches:
+      - master
+      - optimization
 
 name: pkgdown
 
