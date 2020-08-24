@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gaussian Likelihood Benchmarks • solvers</title>
+<title>Binomial Likelihood Benchmarks • solvers</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Gaussian Likelihood Benchmarks">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Binomial Likelihood Benchmarks">
 <meta property="og:description" content="solvers">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -84,22 +84,22 @@
 
       
 
-      </header><script src="gaussian_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="binomial_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Gaussian Likelihood Benchmarks</h1>
+      <h1 data-toc-skip>Binomial Likelihood Benchmarks</h1>
                         <h4 class="author">Akarsh Goyal</h4>
             
             <h4 class="date">2020-08-24</h4>
       
       
-      <div class="hidden name"><code>gaussian.Rmd</code></div>
+      <div class="hidden name"><code>binomial.Rmd</code></div>
 
     </div>
 
     
     
-<p>This tutorial documents the performance of the solvers for Gaussian Likelihood function.</p>
+<p>This tutorial documents the performance of the solvers for Binomial Likelihood function.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">solvers</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://lattice.r-forge.r-project.org">lattice</a></span>)
@@ -111,37 +111,37 @@
 <h2 class="hasAnchor">
 <a href="#n-p" class="anchor"></a>n &gt; p</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">50</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">50</span>, response=<span class="st">"binomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.361911836"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.07086546"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.155748207"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.092174271"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.112709672"</span>
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.606067743"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.877875873"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.807977971"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.897231467"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.041806201"</span>
 <span class="kw">plt_well1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
 <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_well1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 </pre></div>
-<p><img src="gaussian_files/figure-html/unnamed-chunk-2-1.png" width="960"></p>
+<p><img src="binomial_files/figure-html/unnamed-chunk-2-1.png" width="960"></p>
 </div>
 <div id="n-p-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#n-p-1" class="anchor"></a>n &lt; p</h2>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">50</span>, <span class="fl">200</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">50</span>, <span class="fl">200</span>, response=<span class="st">"binomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph...</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.22549552"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  10.581626915"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  861.620047846"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  2.108158155"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  16.457268183"</span>
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.019174635"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  3.526318334"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  48.518633294"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.210077107"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  1.415281381"</span>
 <span class="kw">plt_well2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
 <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_well2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 </pre></div>
-<p><img src="gaussian_files/figure-html/unnamed-chunk-3-1.png" width="960"></p>
+<p><img src="binomial_files/figure-html/unnamed-chunk-3-1.png" width="960"></p>
 </div>
 </div>
 <div id="badly-conditioned-problems" class="section level1">
@@ -151,37 +151,37 @@
 <h2 class="hasAnchor">
 <a href="#n-p-2" class="anchor"></a>n &gt; p</h2>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">50</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">50</span>, response=<span class="st">"binomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  2.285724551"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.772557042"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.931112813"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  1.614685788"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.016196416"</span>
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.274153677"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  5.565651644"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  3.975115569"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  4.324661516"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.256802115"</span>
 <span class="kw">plt_bad1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
 <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_bad1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 </pre></div>
-<p><img src="gaussian_files/figure-html/unnamed-chunk-4-1.png" width="960"></p>
+<p><img src="binomial_files/figure-html/unnamed-chunk-4-1.png" width="960"></p>
 </div>
 <div id="n-p-3" class="section level2">
 <h2 class="hasAnchor">
 <a href="#n-p-3" class="anchor"></a>n &lt; p</h2>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">50</span>, <span class="fl">200</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">50</span>, <span class="fl">200</span>, response=<span class="st">"binomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.482530401"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  14.357655197"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  292.8180509"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  6.574988628"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  29.447885234"</span>
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.036722523"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  4.913428758"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  31.817797554"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.648617535"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  2.517398325"</span>
 <span class="kw">plt_bad2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
 <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_bad2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 </pre></div>
-<p><img src="gaussian_files/figure-html/unnamed-chunk-5-1.png" width="960"></p>
+<p><img src="binomial_files/figure-html/unnamed-chunk-5-1.png" width="960"></p>
 </div>
 </div>
   </div>
