@@ -9,7 +9,8 @@ getBenchmarks(
   x,
   y,
   family = c("gaussian", "binomial", "multinomial", "poisson"),
-  alpha = 0.01
+  alpha = 0.01,
+  path_length = 1
 )
 }
 \arguments{

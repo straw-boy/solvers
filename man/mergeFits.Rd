@@ -4,7 +4,7 @@
 \alias{mergeFits}
 \title{Merges all the fits and returns a dataframe containing losses and time}
 \usage{
-mergeFits(fits)
+mergeFits(fits, cutoff_time = 10000)
 }
 \arguments{
 \item{fits}{List of outputs of any of the algorithms (FISTA, ADMM etc)}
