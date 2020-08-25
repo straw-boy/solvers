@@ -1,8 +1,12 @@
 on:
   push:
     branches: 
-      -master
-      -optimization
+      - master
+      - optimization
+  pull_request:
+    branches:
+      - master
+      - optimization
 
 name: pkgdown
 
