@@ -25,42 +25,32 @@ library(lattice)
 # Well Conditioned Problems
 ## n > p
 ```{r, fig.width=10, fig.height=10}
-d <- randomProblem(1000, 50, response="binomial", density = 1, rho=0)
+set.seed(34)
+d <- randomProblem(100, 10, response="binomial", density = 1, rho=0)
 
 # Obtaining fits for each solver and plotting loss vs time graph
-f <- getBenchmarks(d$x, d$y, family="binomial")
-plt_well1 <- xyplot(loss ~ time, group = solver, data = f, auto.key = list(corner = c(0.9, 0.9)), type = "l")
-update(plt_well1, par.settings = list(fontsize = list(text = 18)))
+f <- getBenchmarks(d$x, d$y, family="binomial", path_length = 10)
+
+# Plot for middle alpha in the path
+if (f$path_length > 1) {
+    data <- getBenchmarks(d$x, d$y, family="binomial", alpha=f$alpha[(f$path_length %/% 2)+1])
+    plt_middle_well <- xyplot(loss ~ time, group = solver, data = data, auto.key = list(corner = c(0.9, 0.9)), type = "l")
+    update(plt_middle_well, par.settings = list(fontsize = list(text = 18)))
+}
+
+
+# Plot for 10th alpha in the path
+if (f$path_length >= 10) {
+    data <- getBenchmarks(d$x, d$y, family="binomial", alpha=f$alpha[10])
+    plt_10_well <- xyplot(loss ~ time, group = solver, data = data, auto.key = list(corner = c(0.9, 0.9)), type = "l")
+    update(plt_10_well, par.settings = list(fontsize = list(text = 18)))
+}
+
+# Plot for last alpha in the path
+data <- getBenchmarks(d$x, d$y, family="binomial", alpha=f$alpha[f$path_length])
+plt_last_well <- xyplot(loss ~ time, group = solver, data = data, auto.key = list(corner = c(0.9, 0.9)), type = "l")
+update(plt_last_well, par.settings = list(fontsize = list(text = 18)))
+
 ```
 
-## n < p
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(50, 200, response="binomial", density = 1, rho=0)
-
-# Obtaining fits for each solver and plotting loss vs time graph...
-f <- getBenchmarks(d$x, d$y, family="binomial")
-plt_well2 <- xyplot(loss ~ time, group = solver, data = f, auto.key = list(corner = c(0.9, 0.9)), type = "l")
-update(plt_well2, par.settings = list(fontsize = list(text = 18)))
-```
-
-# Badly Conditioned Problems
-## n > p
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(1000, 50, response="binomial", density = 1, rho=0.95)
-
-# Obtaining fits for each solver and plotting loss vs time graph
-f <- getBenchmarks(d$x, d$y, family="binomial")
-plt_bad1 <- xyplot(loss ~ time, group = solver, data = f, auto.key = list(corner = c(0.9, 0.9)), type = "l")
-update(plt_bad1, par.settings = list(fontsize = list(text = 18)))
-```
-
-## n < p
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(50, 200, response="binomial", density = 1, rho=0.95)
-
-# Obtaining fits for each solver and plotting loss vs time graph
-f <- getBenchmarks(d$x, d$y, family="binomial")
-plt_bad2 <- xyplot(loss ~ time, group = solver, data = f, auto.key = list(corner = c(0.9, 0.9)), type = "l")
-update(plt_bad2, par.settings = list(fontsize = list(text = 18)))
-```
 

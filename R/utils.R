@@ -88,7 +88,7 @@ getLoss <- function(fit) {
 #' Merges all the fits and returns a dataframe containing losses and time
 #' @param fits List of outputs of any of the algorithms (FISTA, ADMM etc)
 #' @export 
-mergeFits <- function(fits) 
+mergeFits <- function(fits, cutoff_time = 10000) 
 { 
   f <- data.frame(solver = character(),
                   loss = double(),
@@ -96,10 +96,12 @@ mergeFits <- function(fits)
                   iterations = integer())
 
   for (fit in fits) {
-    g  <- data.frame(solver = rep(getLabel(fit), times = length(fit$iteration_timings[[1]])),
-                    loss = getLoss(fit),
-                    time = fit$iteration_timings[[1]],
-                    iterations = seq(fit$iteration_timings[[1]]))
+    cutoff_idx <- findInterval(cutoff_time, fit$iteration_timings[[1]])
+    cutoff_idx <- max(cutoff_idx, 1)
+    g  <- data.frame(solver = rep(getLabel(fit), times = cutoff_idx),
+                    loss = log10(getLoss(fit)[1:cutoff_idx]),
+                    time = ((fit$iteration_timings[[1]])[1:cutoff_idx]),
+                    iterations = seq(1, cutoff_idx))
     f <- rbind(f,g)
   }
   return(f)
@@ -117,15 +119,52 @@ mergeFits <- function(fits)
 #' @param alpha parameter used for SLOPE regularization
 #' @export 
 getBenchmarks <- function(x,
-                              y,
-                              family = c("gaussian", "binomial", "multinomial", "poisson"),
-                              alpha = 0.01) 
+                          y,
+                          family = c("gaussian", "binomial", "multinomial", "poisson"),
+                          alpha = 0.01,
+                          path_length = 1) 
 { 
+  # If path_length is not 1, no need to store diagnostic values 
+  # as they won't be meaningful for plotting
+  if (path_length != 1) {
+    min_path_length <- 100
+    fista_fit <- FISTA(x, y, family=family, path_length=100)
+    print(paste("Time taken by FISTA        : ", fista_fit$total_time))
+    min_path_length <- min(min_path_length, length(fista_fit$alpha))
+
+    admm_nr_fit <- ADMM(x, y, family=family, opt_algo="nr", path_length=100)
+    print(paste("Time taken by ADMM(NR)     : ", admm_nr_fit$total_time))
+    min_path_length <- min(min_path_length, length(admm_nr_fit$alpha))
+    
+    admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs",  path_length=100)
+    print(paste("Time taken by ADMM(BFGS)   : ", admm_bfgs_fit$total_time))
+    min_path_length <- min(min_path_length, length(admm_bfgs_fit$alpha))
+    
+    admm_lbfgs_fit <- ADMM(x, y, family=family, opt_algo="lbfgs", path_length=100)
+    print(paste("Time taken by ADMM(L-BFGS) : ", admm_lbfgs_fit$total_time))
+    min_path_length <- min(min_path_length, length(admm_lbfgs_fit$alpha))
+    
+    pn_fit <- PN(x, y, family=family, hessian_calc="exact", path_length=100)
+    print(paste("Time taken by PN           : ", pn_fit$total_time))
+    min_path_length <- min(min_path_length, length(pn_fit$alpha))
+
+    return(list(alpha = fista_fit$alpha,
+                path_length = min_path_length))
+  }
   fista_fit <- FISTA(x, y, family=family, alpha=alpha, diagnostics=TRUE)
   admm_nr_fit <- ADMM(x, y, family=family, opt_algo="nr", alpha=alpha, diagnostics=TRUE)
   admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs", alpha=alpha, diagnostics=TRUE)
   admm_lbfgs_fit <- ADMM(x, y, family=family, opt_algo="lbfgs", alpha=alpha, diagnostics=TRUE)
   pn_fit <- PN(x, y, family=family, alpha=alpha, hessian_calc="exact", diagnostics=TRUE)
+
+  fits <- list(fista_fit, admm_nr_fit, admm_bfgs_fit, admm_lbfgs_fit, pn_fit)
+
+  # Finding out the median total_time
+  solver_timings <- c()
+  for (fit in fits) {
+    solver_timings = cbind(solver_timings, fit$total_time)
+  }
+  sort(solver_timings)
 
   print(paste("Time taken by FISTA        : ", fista_fit$total_time))
   print(paste("Time taken by ADMM(NR)     : ", admm_nr_fit$total_time))
@@ -133,7 +172,7 @@ getBenchmarks <- function(x,
   print(paste("Time taken by ADMM(L-BFGS) : ", admm_lbfgs_fit$total_time))
   print(paste("Time taken by PN           : ", pn_fit$total_time))
 
-  f <- mergeFits(list(fista_fit, admm_nr_fit, admm_bfgs_fit, admm_lbfgs_fit, pn_fit))
+  f <- mergeFits(fits, cutoff_time = solver_timings[2])
   return(f)
 }
 
