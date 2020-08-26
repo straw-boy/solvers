@@ -69,16 +69,8 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
       break; 
     }
 
-    //Backtracking
-    double t = 1.0;
-
-    double f = primal(y, lin_pred) + 0.5*rho*accu(square(z-u));
-
-    while (primal(y, x*(z+t*step)) + 0.5*rho*accu(square(z+t*step-u))
-            > (f + alpha*t*decrement)) {
-        t = gamma*t;
-        Rcpp::checkUserInterrupt();
-    }
+    // Line Search for step length
+    double t = wolfeLineSearch(x, y, rho, u, z, step);
 
     z = z + t*step;
     

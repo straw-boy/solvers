@@ -128,23 +128,23 @@ getBenchmarks <- function(x,
   # as they won't be meaningful for plotting
   if (path_length != 1) {
     min_path_length <- 100
-    fista_fit <- FISTA(x, y, family=family, path_length=100)
+    fista_fit <- FISTA(x, y, family=family, path_length=path_length)
     print(paste("Time taken by FISTA        : ", fista_fit$total_time))
     min_path_length <- min(min_path_length, length(fista_fit$alpha))
 
-    admm_nr_fit <- ADMM(x, y, family=family, opt_algo="nr", path_length=100)
+    admm_nr_fit <- ADMM(x, y, family=family, opt_algo="nr", path_length=path_length)
     print(paste("Time taken by ADMM(NR)     : ", admm_nr_fit$total_time))
     min_path_length <- min(min_path_length, length(admm_nr_fit$alpha))
     
-    admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs",  path_length=100)
+    admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs",  path_length=path_length)
     print(paste("Time taken by ADMM(BFGS)   : ", admm_bfgs_fit$total_time))
     min_path_length <- min(min_path_length, length(admm_bfgs_fit$alpha))
     
-    admm_lbfgs_fit <- ADMM(x, y, family=family, opt_algo="lbfgs", path_length=100)
+    admm_lbfgs_fit <- ADMM(x, y, family=family, opt_algo="lbfgs", path_length=path_length)
     print(paste("Time taken by ADMM(L-BFGS) : ", admm_lbfgs_fit$total_time))
     min_path_length <- min(min_path_length, length(admm_lbfgs_fit$alpha))
     
-    pn_fit <- PN(x, y, family=family, hessian_calc="exact", path_length=100)
+    pn_fit <- PN(x, y, family=family, hessian_calc="exact", path_length=path_length)
     print(paste("Time taken by PN           : ", pn_fit$total_time))
     min_path_length <- min(min_path_length, length(pn_fit$alpha))
 
