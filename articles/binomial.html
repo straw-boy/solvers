@@ -75,7 +75,7 @@
       <h1 data-toc-skip>Binomial Likelihood Benchmarks</h1>
                         <h4 class="author">Akarsh Goyal</h4>
             
-            <h4 class="date">2020-08-25</h4>
+            <h4 class="date">2020-08-26</h4>
       
       
       <div class="hidden name"><code>binomial.Rmd</code></div>
@@ -97,15 +97,15 @@
 <a href="#n-p" class="anchor"></a>n &gt; p</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">10</span>, response=<span class="st">"binomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">10</span>, response=<span class="st">"binomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  5.221512443"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  22.743015136"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  58.868844389"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  45.011946632"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  19.396900983"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  52.204727819"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  42.888575166"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  149.632158386"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  211.124249861"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  4.705994649"</span>
 </pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="co"># Plot for middle alpha in the path</span>
@@ -114,11 +114,11 @@
     <span class="kw">plt_middle_well1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
     <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_middle_well1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 }
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.048889279"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.167309308"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.501567463"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.332770446"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.152550356"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.405403106"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.426953373"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  1.627231731"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  3.428390121"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.042850411"</span>
 </pre></div>
 <p><img src="binomial_files/figure-html/unnamed-chunk-3-1.png" width="960"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
@@ -128,21 +128,21 @@
     <span class="kw">plt_10_well1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
     <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_10_well1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 }
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.007191469"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.004113603"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.011055837"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.006797968"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.00526979"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.091226497"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.030998888"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.14591947"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.134028372"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.00932313"</span>
 </pre></div>
 <p><img src="binomial_files/figure-html/unnamed-chunk-4-1.png" width="960"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="co"># Plot for last alpha in the path</span>
 <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span>])
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.132549489"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.692415138"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  1.554822218"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  1.282840609"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.584489915"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  1.030016717"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  1.031331882"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  3.207069538"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  5.226221664"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.103415935"</span>
 <span class="kw">plt_last_well1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
 <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_last_well1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 </pre></div>
@@ -157,11 +157,11 @@
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.782156936"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.004392066"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.038453238"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.001443161"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.006272419"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.798609367"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.00446221"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.048093596"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.001460788"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.006288129"</span>
 </pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="co"># Plot for middle alpha in the path</span>
@@ -182,11 +182,11 @@
 <div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="co"># Plot for last alpha in the path</span>
 <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span>])
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.001030663"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.005101595"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.0396083"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.002065479"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.006238839"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.000748049"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.007161329"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.040455138"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.001945795"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.006169754"</span>
 <span class="kw">plt_last_well2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
 <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_last_well2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 </pre></div>
@@ -201,15 +201,15 @@
 <a href="#n-p-2" class="anchor"></a>n &gt; p</h2>
 <div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">10</span>, response=<span class="st">"binomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">10</span>, response=<span class="st">"binomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  7.748558412"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  10.673891916"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  37.42232456"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  27.531948425"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  8.676844786"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  238.120003009"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  134.521708065"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  382.413561637"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  553.35074955"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  15.291334391"</span>
 </pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="co"># Plot for middle alpha in the path</span>
@@ -218,11 +218,11 @@
     <span class="kw">plt_middle_bad1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
     <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_middle_bad1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 }
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.105462128"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.154567346"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.502778974"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.492955288"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.101870752"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  1.509047939"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  1.424865936"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  4.213356449"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  5.043988572"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.150870619"</span>
 </pre></div>
 <p><img src="binomial_files/figure-html/unnamed-chunk-11-1.png" width="960"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
@@ -232,21 +232,21 @@
     <span class="kw">plt_10_bad1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
     <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_10_bad1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 }
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.01398386"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.047958558"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.117308577"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.078715297"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.056980041"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.058810554"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.009880832"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.025041525"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.033210091"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.00279856"</span>
 </pre></div>
 <p><img src="binomial_files/figure-html/unnamed-chunk-12-1.png" width="960"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="co"># Plot for last alpha in the path</span>
 <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span>])
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.215153528"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.284659004"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.925782163"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.621875601"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.211613563"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  7.802743421"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  3.118891134"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  7.633483126"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  9.114373435"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.369172129"</span>
 <span class="kw">plt_last_bad1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
 <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_last_bad1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 </pre></div>
@@ -261,11 +261,11 @@
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  1.035347719"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  1112.247497767"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.158850991"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.013421592"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.023721107"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  1.066706518"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  1095.55238373"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.152385258"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.01177275"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.017146548"</span>
 </pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit">
 <span class="co"># Plot for middle alpha in the path</span>
@@ -286,11 +286,11 @@
 <div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="co"># Plot for last alpha in the path</span>
 <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"binomial"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span>])
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.017161644"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  1097.977462953"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.16423069"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.01468506"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.018853602"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.00069182"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  1098.413160895"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.153671845"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.013408368"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.017288724"</span>
 <span class="kw">plt_last_bad2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
 <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_last_bad2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
 </pre></div>
