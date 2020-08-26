@@ -57,19 +57,7 @@
       <a href="../articles/binomial.html">Binomial Likelihood Benchmarks</a>
     </li>
     <li>
-      <a href="../articles/compare-fista-admm-pn.html">Comparing FISTA, ADMM and Proximal Newton</a>
-    </li>
-    <li>
-      <a href="../articles/compare_opt_algo.html">Comparing Optimization Algorithm Choices in ADMM</a>
-    </li>
-    <li>
       <a href="../articles/gaussian.html">Gaussian Likelihood Benchmarks</a>
-    </li>
-    <li>
-      <a href="../articles/multinomial.html">Multinomial Likelihood Benchmarks</a>
-    </li>
-    <li>
-      <a href="../articles/poisson.html">Poisson Likelihood Benchmarks</a>
     </li>
   </ul>
 </li>
@@ -90,7 +78,7 @@
       <h1 data-toc-skip>Gaussian Likelihood Benchmarks</h1>
                         <h4 class="author">Akarsh Goyal</h4>
             
-            <h4 class="date">2020-08-24</h4>
+            <h4 class="date">2020-08-26</h4>
       
       
       <div class="hidden name"><code>gaussian.Rmd</code></div>
@@ -111,37 +99,113 @@
 <h2 class="hasAnchor">
 <a href="#n-p" class="anchor"></a>n &gt; p</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">50</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">10</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.361911836"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.07086546"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.155748207"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.092174271"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.112709672"</span>
-<span class="kw">plt_well1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
-<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_well1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  13.616099904"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.846032063"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  3.816789954"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  2.37319759"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  1.71011457"</span>
 </pre></div>
-<p><img src="gaussian_files/figure-html/unnamed-chunk-2-1.png" width="960"></p>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># Plot for middle alpha in the path</span>
+<span class="co">if</span> (<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">&gt;</span> <span class="fl">1</span>) {
+    <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[(<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">%/%</span> <span class="fl">2</span>)<span class="op">+</span><span class="fl">1</span>])
+    <span class="kw">plt_middle_well1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+    <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_middle_well1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+}
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.196146457"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.011929434"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.056812083"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.02355924"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.02232939"</span>
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-3-1.png" width="960"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="co"># Plot for 10th alpha in the path</span>
+<span class="co">if</span> (<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">&gt;=</span> <span class="fl">10</span>) {
+    <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="fl">10</span>])
+    <span class="kw">plt_10_well1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+    <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_10_well1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+}
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.014165516"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.00925238"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.044046823"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.02014929"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.01971692"</span>
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-4-1.png" width="960"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="co"># Plot for last alpha in the path</span>
+<span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span>])
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.46785185"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.014267137"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.050430906"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.041315323"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.024075696"</span>
+<span class="kw">plt_last_well1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_last_well1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-5-1.png" width="960"></p>
 </div>
 <div id="n-p-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#n-p-1" class="anchor"></a>n &lt; p</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">50</span>, <span class="fl">200</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">4</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">20</span>, <span class="fl">50</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 
-<span class="co"># Obtaining fits for each solver and plotting loss vs time graph...</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.22549552"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  10.581626915"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  861.620047846"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  2.108158155"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  16.457268183"</span>
-<span class="kw">plt_well2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
-<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_well2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+<span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.357573487"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  2.741155916"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  99.200344639"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  2.429800712"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  6.401546973"</span>
 </pre></div>
-<p><img src="gaussian_files/figure-html/unnamed-chunk-3-1.png" width="960"></p>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="co"># Plot for middle alpha in the path</span>
+<span class="co">if</span> (<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">&gt;</span> <span class="fl">1</span>) {
+    <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[(<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">%/%</span> <span class="fl">2</span>)<span class="op">+</span><span class="fl">1</span>])
+    <span class="kw">plt_middle_well2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+    <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_middle_well2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+}
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.009397626"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.0176239"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.54651282"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.014211047"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.033653844"</span>
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-7-1.png" width="960"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="co"># Plot for 10th alpha in the path</span>
+<span class="co">if</span> (<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">&gt;=</span> <span class="fl">10</span>) {
+    <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="fl">10</span>])
+    <span class="kw">plt_10_well2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+    <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_10_well2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+}
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.0016228"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.028357637"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.793473714"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.01820068"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.03069422"</span>
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-8-1.png" width="960"></p>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="co"># Plot for last alpha in the path</span>
+<span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span>])
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.009331987"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.092419533"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  3.4295784"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.08206691"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.20543222"</span>
+<span class="kw">plt_last_well2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_last_well2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-9-1.png" width="960"></p>
 </div>
 </div>
 <div id="badly-conditioned-problems" class="section level1">
@@ -150,38 +214,114 @@
 <div id="n-p-2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#n-p-2" class="anchor"></a>n &gt; p</h2>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">50</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">10</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  2.285724551"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.772557042"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.931112813"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  1.614685788"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.016196416"</span>
-<span class="kw">plt_bad1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
-<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_bad1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  35.936591345"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  7.566180609"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  20.697794558"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  27.722008984"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  1.301922449"</span>
 </pre></div>
-<p><img src="gaussian_files/figure-html/unnamed-chunk-4-1.png" width="960"></p>
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="co"># Plot for middle alpha in the path</span>
+<span class="co">if</span> (<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">&gt;</span> <span class="fl">1</span>) {
+    <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[(<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">%/%</span> <span class="fl">2</span>)<span class="op">+</span><span class="fl">1</span>])
+    <span class="kw">plt_middle_bad1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+    <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_middle_bad1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+}
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.275236653"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.114285764"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.299172984"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.369326736"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.004908137"</span>
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-11-1.png" width="960"></p>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="co"># Plot for 10th alpha in the path</span>
+<span class="co">if</span> (<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">&gt;=</span> <span class="fl">10</span>) {
+    <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="fl">10</span>])
+    <span class="kw">plt_10_bad1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+    <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_10_bad1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+}
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.009984157"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.015368857"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.040249383"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.057074796"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.027008967"</span>
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-12-1.png" width="960"></p>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="co"># Plot for last alpha in the path</span>
+<span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span>])
+<span class="co">#&gt; [1] "Time taken by FISTA        :  2.792300923"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.174634666"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.445524544"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.605278263"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.00703543"</span>
+<span class="kw">plt_last_bad1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_last_bad1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-13-1.png" width="960"></p>
 </div>
 <div id="n-p-3" class="section level2">
 <h2 class="hasAnchor">
 <a href="#n-p-3" class="anchor"></a>n &lt; p</h2>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">50</span>, <span class="fl">200</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
+<div class="sourceCode" id="cb14"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">4</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">20</span>, <span class="fl">50</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 
 <span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.482530401"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  14.357655197"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  292.8180509"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  6.574988628"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  29.447885234"</span>
-<span class="kw">plt_bad2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
-<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_bad2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.236199927"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  2.655675646"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  31.929407717"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  2.899638966"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  4.068284836"</span>
 </pre></div>
-<p><img src="gaussian_files/figure-html/unnamed-chunk-5-1.png" width="960"></p>
+<div class="sourceCode" id="cb15"><pre class="downlit">
+<span class="co"># Plot for middle alpha in the path</span>
+<span class="co">if</span> (<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">&gt;</span> <span class="fl">1</span>) {
+    <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[(<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">%/%</span> <span class="fl">2</span>)<span class="op">+</span><span class="fl">1</span>])
+    <span class="kw">plt_middle_bad2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+    <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_middle_bad2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+}
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.002249017"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.01106293"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.11153619"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.011856223"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.010837917"</span>
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-15-1.png" width="960"></p>
+<div class="sourceCode" id="cb16"><pre class="downlit">
+<span class="co"># Plot for 10th alpha in the path</span>
+<span class="co">if</span> (<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span> <span class="op">&gt;=</span> <span class="fl">10</span>) {
+    <span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="fl">10</span>])
+    <span class="kw">plt_10_bad2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+    <span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_10_bad2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+}
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.00080399"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.037265604"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.377600007"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.042175386"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.015211253"</span>
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-16-1.png" width="960"></p>
+<div class="sourceCode" id="cb17"><pre class="downlit">
+<span class="co"># Plot for last alpha in the path</span>
+<span class="kw">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, alpha=<span class="kw">f</span><span class="op">$</span><span class="kw">alpha</span>[<span class="kw">f</span><span class="op">$</span><span class="kw">path_length</span>])
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.016550583"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.102077"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  1.158653634"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.105270423"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.321289683"</span>
+<span class="kw">plt_last_bad2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">data</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
+<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_last_bad2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+</pre></div>
+<p><img src="gaussian_files/figure-html/unnamed-chunk-17-1.png" width="960"></p>
 </div>
 </div>
   </div>
