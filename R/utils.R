@@ -128,9 +128,9 @@ getBenchmarks <- function(x,
   # as they won't be meaningful for plotting
   if (path_length != 1) {
     min_path_length <- 100
-    fista_fit <- FISTA(x, y, family=family, path_length=path_length)
-    print(paste("Time taken by FISTA        : ", fista_fit$total_time))
-    min_path_length <- min(min_path_length, length(fista_fit$alpha))
+    #fista_fit <- FISTA(x, y, family=family, path_length=path_length)
+    #print(paste("Time taken by FISTA        : ", fista_fit$total_time))
+    #min_path_length <- min(min_path_length, length(fista_fit$alpha))
 
     admm_nr_fit <- ADMM(x, y, family=family, opt_algo="nr", path_length=path_length)
     print(paste("Time taken by ADMM(NR)     : ", admm_nr_fit$total_time))
@@ -148,7 +148,7 @@ getBenchmarks <- function(x,
     print(paste("Time taken by PN           : ", pn_fit$total_time))
     min_path_length <- min(min_path_length, length(pn_fit$alpha))
 
-    return(list(alpha = fista_fit$alpha,
+    return(list(alpha = pn_fit$alpha,
                 path_length = min_path_length))
   }
   fista_fit <- FISTA(x, y, family=family, alpha=alpha, diagnostics=TRUE)
