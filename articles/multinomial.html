@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Multinomial Likelihood Benchmarks • solvers</title>
+<title>Multinomial: n&gt;p Benchmarks • solvers</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Multinomial Likelihood Benchmarks">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Multinomial: n&gt;p Benchmarks">
 <meta property="og:description" content="solvers">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -54,22 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/binomial.html">Binomial Likelihood Benchmarks</a>
-    </li>
-    <li>
-      <a href="../articles/compare-fista-admm-pn.html">Comparing FISTA, ADMM and Proximal Newton</a>
-    </li>
-    <li>
-      <a href="../articles/compare_opt_algo.html">Comparing Optimization Algorithm Choices in ADMM</a>
-    </li>
-    <li>
-      <a href="../articles/gaussian.html">Gaussian Likelihood Benchmarks</a>
-    </li>
-    <li>
-      <a href="../articles/multinomial.html">Multinomial Likelihood Benchmarks</a>
-    </li>
-    <li>
-      <a href="../articles/poisson.html">Poisson Likelihood Benchmarks</a>
+      <a href="../articles/multinomial.html">Multinomial: n&gt;p Benchmarks</a>
     </li>
   </ul>
 </li>
@@ -87,10 +72,10 @@
       </header><script src="multinomial_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Multinomial Likelihood Benchmarks</h1>
+      <h1 data-toc-skip>Multinomial: n&gt;p Benchmarks</h1>
                         <h4 class="author">Akarsh Goyal</h4>
             
-            <h4 class="date">2020-08-24</h4>
+            <h4 class="date">2020-08-29</h4>
       
       
       <div class="hidden name"><code>multinomial.Rmd</code></div>
@@ -99,10 +84,8 @@
 
     
     
-<p>This tutorial documents the performance of the solvers for Multinomial Likelihood function.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">solvers</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://lattice.r-forge.r-project.org">lattice</a></span>)
 </pre></div>
 <div id="well-conditioned-problems" class="section level1">
 <h1 class="hasAnchor">
@@ -110,78 +93,68 @@
 <div id="n-p" class="section level2">
 <h2 class="hasAnchor">
 <a href="#n-p" class="anchor"></a>n &gt; p</h2>
+<div id="p-5" class="section level3">
+<h3 class="hasAnchor">
+<a href="#p-5" class="anchor"></a>p = 5</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">50</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
-
-<span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  2.129609062"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  4.258498188"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  2.986488334"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  2.150075913"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.132880755"</span>
-<span class="kw">plt_well1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
-<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_well1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">100</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  6.479715495"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  15.908906151"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  24.214284084"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  19.309885091"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  5.987615894"</span>
 </pre></div>
-<p><img src="multinomial_files/figure-html/unnamed-chunk-2-1.png" width="960"></p>
 </div>
-<div id="n-p-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#n-p-1" class="anchor"></a>n &lt; p</h2>
+<div id="p-10" class="section level3">
+<h3 class="hasAnchor">
+<a href="#p-10" class="anchor"></a>p = 10</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">50</span>, <span class="fl">200</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
-
-<span class="co"># Obtaining fits for each solver and plotting loss vs time graph...</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.03919588"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  27.870838465"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  380.077652086"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.462669141"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  9.791942148"</span>
-<span class="kw">plt_well2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
-<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_well2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">10</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">100</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  26.899658312"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  381.947603195"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  468.523301726"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  285.423984322"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  181.369886155"</span>
 </pre></div>
-<p><img src="multinomial_files/figure-html/unnamed-chunk-3-1.png" width="960"></p>
+</div>
 </div>
 </div>
 <div id="badly-conditioned-problems" class="section level1">
 <h1 class="hasAnchor">
 <a href="#badly-conditioned-problems" class="anchor"></a>Badly Conditioned Problems</h1>
-<div id="n-p-2" class="section level2">
+<div id="n-p-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#n-p-2" class="anchor"></a>n &gt; p</h2>
+<a href="#n-p-1" class="anchor"></a>n &gt; p</h2>
+<div id="p-5-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#p-5-1" class="anchor"></a>p = 5</h3>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">50</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
-
-<span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.994213921"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  33.233541365"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  15.775111006"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  8.489515174"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  1.305226876"</span>
-<span class="kw">plt_bad1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
-<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_bad1</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">100</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  21.246397077"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  85.139074147"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  119.07512271"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  92.281915488"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  37.059306431"</span>
 </pre></div>
-<p><img src="multinomial_files/figure-html/unnamed-chunk-4-1.png" width="960"></p>
 </div>
-<div id="n-p-3" class="section level2">
-<h2 class="hasAnchor">
-<a href="#n-p-3" class="anchor"></a>n &lt; p</h2>
+<div id="p-10-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#p-10-1" class="anchor"></a>p = 10</h3>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">50</span>, <span class="fl">200</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
-
-<span class="co"># Obtaining fits for each solver and plotting loss vs time graph</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.112546568"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  98.916781772"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  872.749411182"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  2.29676108"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  30.815038528"</span>
-<span class="kw">plt_bad2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lattice/man/xyplot.html">xyplot</a></span>(<span class="kw">loss</span> <span class="op">~</span> <span class="kw">time</span>, group = <span class="kw">solver</span>, data = <span class="kw">f</span>, auto.key = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(corner = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.9</span>, <span class="fl">0.9</span>)), type = <span class="st">"l"</span>)
-<span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span>(<span class="kw">plt_bad2</span>, par.settings = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(fontsize = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(text = <span class="fl">18</span>)))
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">10</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">100</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  26.309350656"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  71.467755762"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  140.068786633"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  83.710356149"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  32.091876684"</span>
 </pre></div>
-<p><img src="multinomial_files/figure-html/unnamed-chunk-5-1.png" width="960"></p>
+</div>
 </div>
 </div>
   </div>
