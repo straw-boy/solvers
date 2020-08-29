@@ -136,9 +136,11 @@ getBenchmarks <- function(x,
     print(paste("Time taken by ADMM(NR)     : ", admm_nr_fit$total_time))
     min_path_length <- min(min_path_length, length(admm_nr_fit$alpha))
     
-    admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs",  path_length=path_length)
-    print(paste("Time taken by ADMM(BFGS)   : ", admm_bfgs_fit$total_time))
-    min_path_length <- min(min_path_length, length(admm_bfgs_fit$alpha))
+    if (family != "poisson") {
+      admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs",  path_length=path_length)
+      print(paste("Time taken by ADMM(BFGS)   : ", admm_bfgs_fit$total_time))
+      min_path_length <- min(min_path_length, length(admm_bfgs_fit$alpha))
+    }
     
     admm_lbfgs_fit <- ADMM(x, y, family=family, opt_algo="lbfgs", path_length=path_length)
     print(paste("Time taken by ADMM(L-BFGS) : ", admm_lbfgs_fit$total_time))
@@ -153,11 +155,15 @@ getBenchmarks <- function(x,
   }
   fista_fit <- FISTA(x, y, family=family, alpha=alpha, diagnostics=TRUE)
   admm_nr_fit <- ADMM(x, y, family=family, opt_algo="nr", alpha=alpha, diagnostics=TRUE)
-  admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs", alpha=alpha, diagnostics=TRUE)
   admm_lbfgs_fit <- ADMM(x, y, family=family, opt_algo="lbfgs", alpha=alpha, diagnostics=TRUE)
   pn_fit <- PN(x, y, family=family, alpha=alpha, hessian_calc="exact", diagnostics=TRUE)
 
-  fits <- list(fista_fit, admm_nr_fit, admm_bfgs_fit, admm_lbfgs_fit, pn_fit)
+  fits <- list(fista_fit, admm_nr_fit, admm_lbfgs_fit, pn_fit)
+  
+  if (family != "poisson") {
+    admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs", alpha=alpha, diagnostics=TRUE)
+    fits <- c(fits, list(admm_bfgs_fit))
+  }
 
   # Finding out the median total_time
   solver_timings <- c()
@@ -168,7 +174,9 @@ getBenchmarks <- function(x,
 
   print(paste("Time taken by FISTA        : ", fista_fit$total_time))
   print(paste("Time taken by ADMM(NR)     : ", admm_nr_fit$total_time))
-  print(paste("Time taken by ADMM(BFGS)   : ", admm_bfgs_fit$total_time))
+  if (family != "poisson") {
+    print(paste("Time taken by ADMM(BFGS)   : ", admm_bfgs_fit$total_time))
+  }
   print(paste("Time taken by ADMM(L-BFGS) : ", admm_lbfgs_fit$total_time))
   print(paste("Time taken by PN           : ", pn_fit$total_time))
 

@@ -18,56 +18,34 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(solvers)
-library(lattice)
 ```
 
 # Well Conditioned Problems
 ## n > p
-### p = 10
-```{r, fig.width=10, fig.height=10}
+### p = 5
+```{r}
 set.seed(34)
-d <- randomProblem(1000, 10, response="multinomial", density = 1, rho=0)
-
+d <- randomProblem(100, 5, response="multinomial", density = 1, rho=0)
 f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 100)
 ```
 
-### p = 20
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(1000, 20, response="multinomial", density = 1, rho=0)
-
+### p = 10
+```{r}
+d <- randomProblem(100, 10, response="multinomial", density = 1, rho=0)
 f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 100)
 ```
-
-### p = 50
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(1000, 50, response="multinomial", density = 1, rho=0)
-
-f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 100)
-```
-
 
 # Badly Conditioned Problems
 ## n > p
+### p = 5
+```{r}
+set.seed(34)
+d <- randomProblem(100, 5, response="multinomial", density = 1, rho=0.95)
+f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 100)
+```
+
 ### p = 10
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(1000, 10, response="multinomial", density = 1, rho=0.95)
-
+```{r}
+d <- randomProblem(100, 10, response="multinomial", density = 1, rho=0.95)
 f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 100)
 ```
-
-
-
-### p = 20
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(1000, 20, response="multinomial", density = 1, rho=0.95)
-
-f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 100)
-```
-
-### p = 50
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(1000, 50, response="multinomial", density = 1, rho=0.95)
-
-f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 100)
-```
-
