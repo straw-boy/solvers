@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <RcppArmadillo.h>
 #include "../results.h"
 
@@ -17,6 +18,7 @@ protected:
   const double tol_rel;
   const double tol_coef;
   const uword verbosity;
+  std::shared_ptr<mat> gaussian_hessian;
 
 
 public:
@@ -37,7 +39,9 @@ public:
       tol_abs(tol_abs),
       tol_rel(tol_rel),
       tol_coef(tol_coef),
-      verbosity(verbosity) {}
+      verbosity(verbosity) {
+        gaussian_hessian = nullptr;
+      }
 
   virtual double primal(const mat& y, const mat& lin_pred) = 0;
 
@@ -85,6 +89,14 @@ public:
       }
       
       return H;
+    } else if (name() == "gaussian") {
+      if (gaussian_hessian == nullptr) {
+        mat xTx;
+        xTx = x;
+        xTx = x.t()*xTx;
+        gaussian_hessian = std::make_shared<mat>(xTx);
+      }
+      return *gaussian_hessian;
     }
     vec activation = pseudoHessian(y, lin_pred);
     mat xTx;
