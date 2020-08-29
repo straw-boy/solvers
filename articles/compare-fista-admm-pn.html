@@ -54,22 +54,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/binomial.html">Binomial Likelihood Benchmarks</a>
-    </li>
-    <li>
       <a href="../articles/compare-fista-admm-pn.html">Comparing FISTA, ADMM and Proximal Newton</a>
     </li>
     <li>
       <a href="../articles/compare_opt_algo.html">Comparing Optimization Algorithm Choices in ADMM</a>
-    </li>
-    <li>
-      <a href="../articles/gaussian.html">Gaussian Likelihood Benchmarks</a>
-    </li>
-    <li>
-      <a href="../articles/multinomial.html">Multinomial Likelihood Benchmarks</a>
-    </li>
-    <li>
-      <a href="../articles/poisson.html">Poisson Likelihood Benchmarks</a>
     </li>
   </ul>
 </li>
@@ -90,7 +78,7 @@
       <h1 data-toc-skip>Comparing FISTA, ADMM and Proximal Newton</h1>
                         <h4 class="author">Akarsh Goyal</h4>
             
-            <h4 class="date">2020-08-24</h4>
+            <h4 class="date">2020-08-29</h4>
       
       
       <div class="hidden name"><code>compare-fista-admm-pn.Rmd</code></div>
@@ -121,11 +109,11 @@
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># Comparing total execution time</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">fista_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 0.1159849</span>
+<span class="co">#&gt; [1] 0.3436372</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">admm_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 0.4406385</span>
+<span class="co">#&gt; [1] 0.9014282</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">pn_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 6.708948</span>
+<span class="co">#&gt; [1] 12.00022</span>
 </pre></div>
 <p>Now, these fits cannot be directly used to plot as they contain a lot of parameter so we’ll call a utility function that merges the relevant parameter and returns a dataframe.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
