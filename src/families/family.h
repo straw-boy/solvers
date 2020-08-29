@@ -17,6 +17,7 @@ protected:
   const double tol_rel;
   const double tol_coef;
   const uword verbosity;
+  mat gaussian_hessian;
 
 
 public:
@@ -85,6 +86,13 @@ public:
       }
       
       return H;
+
+    } else if (name() == "gaussian") {
+      if (gaussian_hessian.is_empty()) {
+        gaussian_hessian = x.t();
+        gaussian_hessian *= x;
+      }
+      return gaussian_hessian;
     }
     vec activation = pseudoHessian(y, lin_pred);
     mat xTx;
