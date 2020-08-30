@@ -1,6 +1,6 @@
 # Google Summer of Code 2020
 ## solvers
-The R package **solvers** is a collection of implementation of various algorithms to solve Sorted L-One Penalised Estimation(SLOPE) problem. This package was intended to be a benchmarking suite of the algorithms, the best of which could then be merged into the [SLOPE] package. Dp checkout the articles on how to use this package for comparing the performances and benchmarking. Source code is available [here].
+The R package **solvers** is a collection of implementation of various algorithms to solve Sorted L-One Penalised Estimation(SLOPE) problem. This package was intended to be a benchmarking suite of the algorithms, the best of which could then be merged into the [SLOPE] package. Do checkout the articles on how to use this package for comparing the performances and benchmarking. Source code is available [here].
 
 ### Installation
 You can install the package via devtools.
@@ -26,7 +26,8 @@ You can install the package via devtools.
 This still room for future work in SLOPE+solvers package.
 - If one could find a good strategy to tackle singular Hessian, it would solve major problems in both ADMM and PN.
 - Due to time constraint, we couldn't merge the solvers' code into SLOPE package. My recommendation would be to definitely consider Proximal Newton for gaussian and binomial likelohood functions when n is significantly greater than p as PN scales really well with n.
+- Although PN scaled well with n in multinomial case as well, its performance degrades rapidly as p increases. There are two reasons for it: dimension of Hessian is actually p times number of classes so size of Hessian increases rather faster. Secondly, as mentioned above, the Hessian computation itself is also poor due to absense of closed form expression. So FISTA is undoubtedly the recommended choice here.
 - solvers package's default values are not fined tunes for different algorithms right now. One possible line of work could be to find these default values which are in sync with each other.
-
+- If there could be a way to incorporate caching of Gaussian Hessian in the current design, it would be a huge performance boost for gaussian case as Hessian won't change for it.
 [SLOPE]: https://jolars.github.io/SLOPE/
 [here]: https://github.com/straw-boy/solvers
