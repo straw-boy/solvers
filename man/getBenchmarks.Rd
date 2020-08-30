@@ -3,9 +3,7 @@
 \name{getBenchmarks}
 \alias{getBenchmarks}
 \title{Runs all the solvers on (x, y) training data with SLOPE parameter alpha,
-prints the total time in each case, and returns the merged data frame.
-It is important to note that ADMM(BFGS) is not run when choice of family is poisson
-due to exploding gradients in large scale problems.}
+prints the total time in each case, and returns the merged data frame.}
 \usage{
 getBenchmarks(
   x,
@@ -35,6 +33,4 @@ and the length of the list is returned.}
 \description{
 Runs all the solvers on (x, y) training data with SLOPE parameter alpha,
 prints the total time in each case, and returns the merged data frame.
-It is important to note that ADMM(BFGS) is not run when choice of family is poisson
-due to exploding gradients in large scale problems.
 }

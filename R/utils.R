@@ -113,8 +113,6 @@ mergeFits <- function(fits, cutoff_time = 10000)
 
 #' Runs all the solvers on (x, y) training data with SLOPE parameter alpha,
 #' prints the total time in each case, and returns the merged data frame.
-#' It is important to note that ADMM(BFGS) is not run when choice of family is poisson
-#' due to exploding gradients in large scale problems.
 #' @param x the design matrix, which can be either a dense
 #'   matrix of the standard *matrix* class, or a sparse matrix
 #'   inheriting from [Matrix::sparseMatrix]. Data frames will

@@ -22,41 +22,8 @@ library(solvers)
 
 # Well Conditioned Problems
 ## n > p
-### p = 10
-```{r, fig.width=10, fig.height=10}
+```{r}
 set.seed(34)
-d <- randomProblem(100, 10, response="binomial", density = 1, rho=0)
-f <- getBenchmarks(d$x, d$y, family="binomial", path_length = 100)
-```
-
-### p = 20
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(100, 20, response="binomial", density = 1, rho=0)
-f <- getBenchmarks(d$x, d$y, family="binomial", path_length = 100)
-```
-
-### p = 50
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(100, 50, response="binomial", density = 1, rho=0)
-f <- getBenchmarks(d$x, d$y, family="binomial", path_length = 100)
-```
-
-# Badly Conditioned Problems
-## n > p
-### p = 10
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(100, 10, response="binomial", density = 1, rho=0.95)
-f <- getBenchmarks(d$x, d$y, family="binomial", path_length = 100)
-```
-
-### p = 20
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(100, 20, response="binomial", density = 1, rho=0.95)
-f <- getBenchmarks(d$x, d$y, family="binomial", path_length = 100)
-```
-
-### p = 50
-```{r, fig.width=10, fig.height=10}
-d <- randomProblem(100, 50, response="binomial", density = 1, rho=0.95)
+d <- randomProblem(11, 1,  response="binomial", density = 1, rho=0)
 f <- getBenchmarks(d$x, d$y, family="binomial", path_length = 100)
 ```

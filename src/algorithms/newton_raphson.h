@@ -14,7 +14,6 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
 
   Rcout.precision(4);
   uword p = x.n_cols;
-  uword n = x.n_rows;
   uword m = y.n_cols;
 
   mat z(u);
@@ -24,8 +23,6 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
 
   uword max_iter = 50;
   double tolerance = 1e-15;
-  double alpha = 0.1;
-  double gamma = 0.5;
 
   // bool use_woodbury 
   //   = (name() != "multinomial" && n < p)? true: false;
@@ -48,12 +45,13 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
     g = gradient(x, y, lin_pred) + rho*(z-u);
     
     if (use_woodbury) {
-      // activation = pseudoHessian(y, lin_pred);
+      // This section is never executed as use_woodbury is false
+      activation = pseudoHessian(y, lin_pred);
 
-      // mat tmp = xxT;
-      // tmp.diag() += rho/activation;
-      // step = x.t()*solve(tmp, x*g) - g;
-      // step /= rho;
+      mat tmp = xxT;
+      tmp.diag() += rho/activation;
+      step = x.t()*solve(tmp, x*g) - g;
+      step /= rho;
 
     } else {
 
