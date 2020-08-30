@@ -54,7 +54,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/binomial.html">Binomial: n&gt;p Benchmarks</a>
+    </li>
+    <li>
+      <a href="../articles/compare-fista-admm-pn.html">Comparing FISTA, ADMM and Proximal Newton</a>
+    </li>
+    <li>
+      <a href="../articles/compare_opt_algo.html">Comparing Optimization Algorithm Choices in ADMM</a>
+    </li>
+    <li>
       <a href="../articles/gaussian.html">Gaussian: n&gt;p Benchmarks</a>
+    </li>
+    <li>
+      <a href="../articles/multinomial.html">Multinomial: n&gt;p Benchmarks</a>
     </li>
   </ul>
 </li>
@@ -75,7 +87,7 @@
       <h1 data-toc-skip>Gaussian: n&gt;p Benchmarks</h1>
                         <h4 class="author">Akarsh Goyal</h4>
             
-            <h4 class="date">2020-08-29</h4>
+            <h4 class="date">2020-08-30</h4>
       
       
       <div class="hidden name"><code>gaussian.Rmd</code></div>
@@ -86,7 +98,6 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">solvers</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://lattice.r-forge.r-project.org">lattice</a></span>)
 </pre></div>
 <div id="well-conditioned-problems" class="section level1">
 <h1 class="hasAnchor">
@@ -94,93 +105,16 @@
 <div id="n-p" class="section level2">
 <h2 class="hasAnchor">
 <a href="#n-p" class="anchor"></a>n &gt; p</h2>
-<div id="p-10" class="section level3">
-<h3 class="hasAnchor">
-<a href="#p-10" class="anchor"></a>p = 10</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">10</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">11</span>, <span class="fl">1</span>,  response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.173655143"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.056506213"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.297515774"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.120196315"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.1534614"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  0.000314387"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.004412579"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.002152664"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.002251325"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.053067136"</span>
 </pre></div>
-</div>
-<div id="p-20" class="section level3">
-<h3 class="hasAnchor">
-<a href="#p-20" class="anchor"></a>p = 20</h3>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">20</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.646182732"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.223117863"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  1.302096567"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.327528192"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.265044932"</span>
-</pre></div>
-</div>
-<div id="p-50" class="section level3">
-<h3 class="hasAnchor">
-<a href="#p-50" class="anchor"></a>p = 50</h3>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">50</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  2.646319312"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  2.243429372"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  24.875965043"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  2.1602295"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  1.519291805"</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div id="badly-conditioned-problems" class="section level1">
-<h1 class="hasAnchor">
-<a href="#badly-conditioned-problems" class="anchor"></a>Badly Conditioned Problems</h1>
-<div id="n-p-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#n-p-1" class="anchor"></a>n &gt; p</h2>
-<div id="p-10-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#p-10-1" class="anchor"></a>p = 10</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">10</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  2.172579418"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.66796312"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  1.801445176"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  1.777759357"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.361253567"</span>
-</pre></div>
-</div>
-<div id="p-20-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#p-20-1" class="anchor"></a>p = 20</h3>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">20</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  4.848311119"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  1.734158078"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  4.919884877"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  4.007597713"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  1.003946934"</span>
-</pre></div>
-</div>
-<div id="p-50-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#p-50-1" class="anchor"></a>p = 50</h3>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">50</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  3.022628052"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  6.482083796"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  27.36568257"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  10.882912974"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  6.322047122"</span>
-</pre></div>
-</div>
 </div>
 </div>
   </div>

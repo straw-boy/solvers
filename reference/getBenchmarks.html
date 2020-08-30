@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Runs all the solvers on (x, y) training data, prints the total time in
-each case, and returns the merged data frame — getBenchmarks • solvers</title>
+<title>Runs all the solvers on (x, y) training data with SLOPE parameter alpha,
+prints the total time in each case, and returns the merged data frame. — getBenchmarks • solvers</title>
 
 
 <!-- jquery -->
@@ -40,10 +40,10 @@ each case, and returns the merged data frame — getBenchmarks • solvers</titl
 
 
 
-<meta property="og:title" content="Runs all the solvers on (x, y) training data, prints the total time in
-each case, and returns the merged data frame — getBenchmarks" />
-<meta property="og:description" content="Runs all the solvers on (x, y) training data, prints the total time in
-each case, and returns the merged data frame" />
+<meta property="og:title" content="Runs all the solvers on (x, y) training data with SLOPE parameter alpha,
+prints the total time in each case, and returns the merged data frame. — getBenchmarks" />
+<meta property="og:description" content="Runs all the solvers on (x, y) training data with SLOPE parameter alpha,
+prints the total time in each case, and returns the merged data frame." />
 
 
 
@@ -98,6 +98,18 @@ each case, and returns the merged data frame" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/binomial.html">Binomial: n&gt;p Benchmarks</a>
+    </li>
+    <li>
+      <a href="../articles/compare-fista-admm-pn.html">Comparing FISTA, ADMM and Proximal Newton</a>
+    </li>
+    <li>
+      <a href="../articles/compare_opt_algo.html">Comparing Optimization Algorithm Choices in ADMM</a>
+    </li>
+    <li>
+      <a href="../articles/gaussian.html">Gaussian: n&gt;p Benchmarks</a>
+    </li>
+    <li>
       <a href="../articles/multinomial.html">Multinomial: n&gt;p Benchmarks</a>
     </li>
   </ul>
@@ -118,15 +130,15 @@ each case, and returns the merged data frame" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Runs all the solvers on (x, y) training data, prints the total time in
-each case, and returns the merged data frame</h1>
+    <h1>Runs all the solvers on (x, y) training data with SLOPE parameter alpha,
+prints the total time in each case, and returns the merged data frame.</h1>
     
     <div class="hidden name"><code>getBenchmarks.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Runs all the solvers on (x, y) training data, prints the total time in
-each case, and returns the merged data frame</p>
+    <p>Runs all the solvers on (x, y) training data with SLOPE parameter alpha,
+prints the total time in each case, and returns the merged data frame.</p>
     </div>
 
     <pre class="usage"><span class='fu'>getBenchmarks</span>(
@@ -159,6 +171,12 @@ be converted to matrices internally.</p></td>
     <tr>
       <th>alpha</th>
       <td><p>parameter used for SLOPE regularization</p></td>
+    </tr>
+    <tr>
+      <th>path_length</th>
+      <td><p>The regularization path length. By default, it is one.
+'alpha' is ignored if path_length is not 1, in which case, list of alpha
+and the length of the list is returned.</p></td>
     </tr>
     </table>
 

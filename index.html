@@ -54,6 +54,18 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/binomial.html">Binomial: n&gt;p Benchmarks</a>
+    </li>
+    <li>
+      <a href="articles/compare-fista-admm-pn.html">Comparing FISTA, ADMM and Proximal Newton</a>
+    </li>
+    <li>
+      <a href="articles/compare_opt_algo.html">Comparing Optimization Algorithm Choices in ADMM</a>
+    </li>
+    <li>
+      <a href="articles/gaussian.html">Gaussian: n&gt;p Benchmarks</a>
+    </li>
+    <li>
       <a href="articles/multinomial.html">Multinomial: n&gt;p Benchmarks</a>
     </li>
   </ul>
@@ -71,10 +83,47 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="solvers" class="section level1">
+<div id="google-summer-of-code-2020" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#solvers" class="anchor"></a>solvers</h1></div>
-<p>A collection of implementation of various algorithms to solve Sorted L-One Penalised Estimation problem</p>
+<a href="#google-summer-of-code-2020" class="anchor"></a>Google Summer of Code 2020</h1></div>
+<div id="solvers" class="section level2">
+<h2 class="hasAnchor">
+<a href="#solvers" class="anchor"></a>solvers</h2>
+<p>The R package <strong>solvers</strong> is a collection of implementation of various algorithms to solve Sorted L-One Penalised Estimation(SLOPE) problem. This package was intended to be a benchmarking suite of the algorithms, the best of which could then be merged into the <a href="https://jolars.github.io/SLOPE/">SLOPE</a> package. Dp checkout the articles on how to use this package for comparing the performances and benchmarking. Source code is available <a href="https://github.com/straw-boy/solvers">here</a>.</p>
+<div id="installation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h3>
+<p>You can install the package via devtools.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">&gt;</span> <span class="ex">devtools</span>::install_github(<span class="st">"straw-boy/solvers"</span>)</span></code></pre></div>
+</div>
+<div id="targets-achieved" class="section level3">
+<h3 class="hasAnchor">
+<a href="#targets-achieved" class="anchor"></a>Targets Achieved</h3>
+<ul>
+<li>In addition to existing <strong>FISTA</strong> in SLOPE package, we managed to implemented the following algorithms: – <strong>Alternating Direction Method of Multipliers (ADMM)</strong>. Our implementation further provides the choice of optimization algorithm to solve the subproblem : <strong>Newton-Raphson</strong>’s algorithm, Broyden–Fletcher–Goldfarb–Shanno (<strong>BFGS</strong>) algorithm and Limited-memory BFGS (<strong>L-BFGS</strong>) algorithm. – <strong>Proximal Newton</strong> algorithm. This also supports Quasi flavoured variant which uses FISTA to solve the sub problem.</li>
+<li>Benchmarked the algorithms (vignettes available in the article tab) and discovered usecases where FISTA is outperformed.</li>
+<li>We also discovered few bugs in the existing SLOPE package’s code.</li>
+</ul>
+</div>
+<div id="challenges-faced" class="section level3">
+<h3 class="hasAnchor">
+<a href="#challenges-faced" class="anchor"></a>Challenges Faced</h3>
+<ul>
+<li><p>The biggest challenge was dealing with badly conditioned Hessian matrix. This problem first arose in Proximal Newton. We tried out various fixes and have implemented one such fix, but it is not fool-proof. This problem blew up in much severe way when we tried using Matrix Inversion Lemma (in both ADMM and PN) where in one instance, we encountered a temporary matrix whose inverse condition number was exactly 0. This was the major reason ADMM and PN lost out horribly to FISTA when number of features (p) was greater than number of training points (n) and hence benchmarking was done for only n&gt;p cases to save compute time.</p></li>
+<li><p>As there are a lot of moving parts and algorithms are primarily numerical, a lot of time went into debugging the implementations.</p></li>
+<li><p>In the Proximal Quasi-Newton algorithm, solving the subproblem is highly inefficient right now and we are yet to notice a practical case where PN is outperformed by PQN.</p></li>
+<li><p>When large scale problems of poisson regression are solved using second order algorithms, gradients blow up and also more often than not, Hessian turns out to be singular. This renders usage of ADMM(BFGS/L-BFGS) and PN highly unstable. This is the reason we haven’t added benchmarks for poisson regression.</p></li>
+<li>
+<p>For multinomial family, there is no closed form expression for computing Hessian. We had to used a rather inefficient method there.</p>
+<h3 id="future-work">Future Work</h3>
+<p>This still room for future work in SLOPE+solvers package.</p>
+</li>
+<li><p>If one could find a good strategy to tackle singular Hessian, it would solve major problems in both ADMM and PN.</p></li>
+<li><p>Due to time constraint, we couldn’t merge the solvers’ code into SLOPE package. My recommendation would be to definitely consider Proximal Newton for gaussian and binomial likelohood functions when n is significantly greater than p as PN scales really well with n.</p></li>
+<li><p>solvers package’s default values are not fined tunes for different algorithms right now. One possible line of work could be to find these default values which are in sync with each other.</p></li>
+</ul>
+</div>
+</div>
 </div>
   </div>
 

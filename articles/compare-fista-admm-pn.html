@@ -54,10 +54,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/binomial.html">Binomial: n&gt;p Benchmarks</a>
+    </li>
+    <li>
       <a href="../articles/compare-fista-admm-pn.html">Comparing FISTA, ADMM and Proximal Newton</a>
     </li>
     <li>
       <a href="../articles/compare_opt_algo.html">Comparing Optimization Algorithm Choices in ADMM</a>
+    </li>
+    <li>
+      <a href="../articles/gaussian.html">Gaussian: n&gt;p Benchmarks</a>
+    </li>
+    <li>
+      <a href="../articles/multinomial.html">Multinomial: n&gt;p Benchmarks</a>
     </li>
   </ul>
 </li>
@@ -78,7 +87,7 @@
       <h1 data-toc-skip>Comparing FISTA, ADMM and Proximal Newton</h1>
                         <h4 class="author">Akarsh Goyal</h4>
             
-            <h4 class="date">2020-08-29</h4>
+            <h4 class="date">2020-08-30</h4>
       
       
       <div class="hidden name"><code>compare-fista-admm-pn.Rmd</code></div>
@@ -109,16 +118,16 @@
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="co"># Comparing total execution time</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">fista_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 0.3436372</span>
+<span class="co">#&gt; [1] 0.1113769</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">admm_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 0.9014282</span>
+<span class="co">#&gt; [1] 0.4797587</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">pn_fit</span><span class="op">$</span><span class="kw">total_time</span>)
-<span class="co">#&gt; [1] 12.00022</span>
+<span class="co">#&gt; [1] 7.08565</span>
 </pre></div>
 <p>Now, these fits cannot be directly used to plot as they contain a lot of parameter so we’ll call a utility function that merges the relevant parameter and returns a dataframe.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="co"># Merging the metrics into one dataframe</span>
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeFits.html">mergeFits</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">fista_fit</span>, <span class="kw">admm_fit</span>, <span class="kw">pn_fit</span>))
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeFits.html">mergeFits</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">fista_fit</span>, <span class="kw">admm_fit</span>, <span class="kw">pn_fit</span>), cutoff_time=<span class="fl">1.5</span>)
 </pre></div>
 <p>Finally, now we can generate the loss vs time plot.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
