@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/binomial.html">Binomial: n&gt;p Benchmarks</a>
+      <a href="../articles/binomial.html">Binomial: n &gt; p Benchmarks</a>
     </li>
     <li>
       <a href="../articles/compare-fista-admm-pn.html">Comparing FISTA, ADMM and Proximal Newton</a>
@@ -63,7 +63,7 @@
       <a href="../articles/compare_opt_algo.html">Comparing Optimization Algorithm Choices in ADMM</a>
     </li>
     <li>
-      <a href="../articles/gaussian.html">Gaussian: n&gt;p Benchmarks</a>
+      <a href="../articles/gaussian.html">Gaussian: n &gt; p Benchmarks</a>
     </li>
     <li>
       <a href="../articles/multinomial.html">Multinomial: n&gt;p Benchmarks</a>
@@ -109,11 +109,11 @@
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  1.657135998"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  3.293970776"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  5.556114565"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  4.295529374"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  1.397898597"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  1.780963981"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  3.7701909"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  5.968099593"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  4.278638748"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  1.341706467"</span>
 </pre></div>
 </div>
 </div>
@@ -127,11 +127,11 @@
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  5.515208541"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  19.11775477"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  28.194728824"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  21.655607388"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  9.687449487"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  5.508093038"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  21.575537324"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  29.214640769"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  21.697149149"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  9.44709918"</span>
 </pre></div>
 </div>
 </div>
