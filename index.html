@@ -116,18 +116,21 @@
 <h3 class="hasAnchor">
 <a href="#challenges-faced" class="anchor"></a>Challenges Faced</h3>
 <ul>
-<li><p>The biggest challenge was dealing with badly conditioned Hessian matrix. This problem first arose in Proximal Newton. We tried out various fixes and have implemented one such fix, but it is not fool-proof. This problem blew up in much severe way when we tried using Matrix Inversion Lemma (in both ADMM and PN) where in one instance, we encountered a temporary matrix whose inverse condition number was exactly 0. This was the major reason ADMM and PN lost out horribly to FISTA when number of features (p) was greater than number of training points (n) and hence benchmarking was done for only n&gt;p cases to save compute time.</p></li>
-<li><p>As there are a lot of moving parts and algorithms are primarily numerical, a lot of time went into debugging the implementations.</p></li>
-<li><p>In the Proximal Quasi-Newton algorithm, solving the subproblem is highly inefficient right now and we are yet to notice a practical case where PN is outperformed by PQN.</p></li>
-<li><p>When large scale problems of poisson regression are solved using second order algorithms, gradients blow up and also more often than not, Hessian turns out to be singular. This renders usage of ADMM(BFGS/L-BFGS) and PN highly unstable. This is the reason we haven’t added benchmarks for poisson regression.</p></li>
-<li>
-<p>For multinomial family, there is no closed form expression for computing Hessian. We had to used a rather inefficient method there.</p>
-<h3 id="future-work">Future Work</h3>
+<li>The biggest challenge was dealing with badly conditioned Hessian matrix. This problem first arose in Proximal Newton. We tried out various fixes and have implemented one such fix, but it is not fool-proof. This problem blew up in much severe way when we tried using Matrix Inversion Lemma (in both ADMM and PN) where in one instance, we encountered a temporary matrix whose inverse condition number was exactly 0. This was the major reason ADMM and PN lost out horribly to FISTA when number of features (p) was greater than number of training points (n) and hence benchmarking was done for only n&gt;p cases to save compute time.</li>
+<li>As there are a lot of moving parts and algorithms are primarily numerical, a lot of time went into debugging the implementations.</li>
+<li>In the Proximal Quasi-Newton algorithm, solving the subproblem is highly inefficient right now and we are yet to notice a practical case where PN is outperformed by PQN.</li>
+<li>When large scale problems of poisson regression are solved using second order algorithms, gradients blow up and also more often than not, Hessian turns out to be singular. This renders usage of ADMM(BFGS/L-BFGS) and PN highly unstable. This is the reason we haven’t added benchmarks for poisson regression.</li>
+<li>For multinomial family, there is no closed form expression for computing Hessian. We had to used a rather inefficient method there.</li>
+</ul>
+</div>
+<div id="future-work" class="section level3">
+<h3 class="hasAnchor">
+<a href="#future-work" class="anchor"></a>Future Work</h3>
 <p>This still room for future work in SLOPE+solvers package.</p>
-</li>
-<li><p>If one could find a good strategy to tackle singular Hessian, it would solve major problems in both ADMM and PN.</p></li>
-<li><p>Due to time constraint, we couldn’t merge the solvers’ code into SLOPE package. My recommendation would be to definitely consider Proximal Newton for gaussian and binomial likelohood functions when n is significantly greater than p as PN scales really well with n.</p></li>
-<li><p>solvers package’s default values are not fined tunes for different algorithms right now. One possible line of work could be to find these default values which are in sync with each other.</p></li>
+<ul>
+<li>If one could find a good strategy to tackle singular Hessian, it would solve major problems in both ADMM and PN.</li>
+<li>Due to time constraint, we couldn’t merge the solvers’ code into SLOPE package. My recommendation would be to definitely consider Proximal Newton for gaussian and binomial likelohood functions when n is significantly greater than p as PN scales really well with n.</li>
+<li>solvers package’s default values are not fined tunes for different algorithms right now. One possible line of work could be to find these default values which are in sync with each other.</li>
 </ul>
 </div>
 </div>
