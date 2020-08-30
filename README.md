@@ -28,3 +28,4 @@ This still room for future work in SLOPE+solvers package.
 - solvers package's default values are not fined tunes for different algorithms right now. One possible line of work could be to find these default values which are in sync with each other.
 
 [SLOPE]: https://jolars.github.io/SLOPE/
+
