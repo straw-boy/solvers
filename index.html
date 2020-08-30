@@ -89,7 +89,7 @@
 <div id="solvers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#solvers" class="anchor"></a>solvers</h2>
-<p>The R package <strong>solvers</strong> is a collection of implementation of various algorithms to solve Sorted L-One Penalised Estimation(SLOPE) problem. This package was intended to be a benchmarking suite of the algorithms, the best of which could then be merged into the <a href="https://jolars.github.io/SLOPE/">SLOPE</a> package. Dp checkout the articles on how to use this package for comparing the performances and benchmarking. Source code is available <a href="https://github.com/straw-boy/solvers">here</a>.</p>
+<p>The R package <strong>solvers</strong> is a collection of implementation of various algorithms to solve Sorted L-One Penalised Estimation(SLOPE) problem. This package was intended to be a benchmarking suite of the algorithms, the best of which could then be merged into the [SLOPE] package. Do checkout the articles on how to use this package for comparing the performances and benchmarking. Source code is available [here].</p>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
@@ -130,7 +130,10 @@
 <ul>
 <li>If one could find a good strategy to tackle singular Hessian, it would solve major problems in both ADMM and PN.</li>
 <li>Due to time constraint, we couldn’t merge the solvers’ code into SLOPE package. My recommendation would be to definitely consider Proximal Newton for gaussian and binomial likelohood functions when n is significantly greater than p as PN scales really well with n.</li>
+<li>Although PN scaled well with n in multinomial case as well, its performance degrades rapidly as p increases. There are two reasons for it: dimension of Hessian is actually p times number of classes so size of Hessian increases rather faster. Secondly, as mentioned above, the Hessian computation itself is also poor due to absense of closed form expression. So FISTA is undoubtedly the recommended choice here.</li>
 <li>solvers package’s default values are not fined tunes for different algorithms right now. One possible line of work could be to find these default values which are in sync with each other.</li>
+<li>If there could be a way to incorporate caching of Gaussian Hessian in the current design, it would be a huge performance boost for gaussian case as Hessian won’t change for it. [SLOPE]: <a href="https://jolars.github.io/SLOPE/" class="uri">https://jolars.github.io/SLOPE/</a> [here]: <a href="https://github.com/straw-boy/solvers" class="uri">https://github.com/straw-boy/solvers</a>
+</li>
 </ul>
 </div>
 </div>
