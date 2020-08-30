@@ -111,12 +111,12 @@
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">10</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  4.676911779"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.276678281"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  1.358563265"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.863781532"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  0.604222151"</span>
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">20</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  1.344897596"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.068396903"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.329532745"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.20125265"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.131021029"</span>
 </pre></div>
 </div>
 <div id="p-20" class="section level3">
@@ -124,12 +124,12 @@
 <a href="#p-20" class="anchor"></a>p = 20</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">1000</span>, <span class="fl">20</span>, response=<span class="st">"gaussian"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  11.425439539"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.844101805"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  3.016376356"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  2.129827844"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  1.768098736"</span>
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"gaussian"</span>, path_length = <span class="fl">20</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  3.742321933"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.241871986"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.825785148"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.471374305"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  0.385861034"</span>
 </pre></div>
 </div>
 </div>
