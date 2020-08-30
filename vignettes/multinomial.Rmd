@@ -1,0 +1,37 @@
+---
+title: "Multinomial: n>p Benchmarks"
+author: "Akarsh Goyal"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multinomial: n>p Benchmarks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(solvers)
+```
+
+# Well Conditioned Problems
+### p = 5
+```{r}
+set.seed(34)
+d <- randomProblem(100, 5, response="multinomial", density = 1, rho=0)
+f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 20)
+```
+
+# Badly Conditioned Problems
+### p = 5
+```{r}
+set.seed(34)
+d <- randomProblem(100, 5, response="multinomial", density = 1, rho=0.95)
+f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 20)
+```

@@ -1,10 +1,10 @@
 ---
-title: "Binomial: n>p Benchmarks"
+title: "Binomial: n > p Benchmarks"
 author: "Akarsh Goyal"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Binomial: n>p Benchmarks}
+  %\VignetteIndexEntry{Binomial: n > p Benchmarks}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
