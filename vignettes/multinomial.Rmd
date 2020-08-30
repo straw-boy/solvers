@@ -28,10 +28,20 @@ d <- randomProblem(100, 5, response="multinomial", density = 1, rho=0)
 f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 20)
 ```
 
+```{r}
+d <- randomProblem(500, 5, response="multinomial", density = 1, rho=0)
+f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 20)
+```
+
+
 # Badly Conditioned Problems
 ### p = 5
 ```{r}
-set.seed(34)
 d <- randomProblem(100, 5, response="multinomial", density = 1, rho=0.95)
+f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 20)
+```
+
+```{r}
+d <- randomProblem(500, 5, response="multinomial", density = 1, rho=0.95)
 f <- getBenchmarks(d$x, d$y, family="multinomial", path_length = 20)
 ```

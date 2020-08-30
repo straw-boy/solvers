@@ -29,7 +29,6 @@ f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
 ```
 
 ```{r, fig.width=10, fig.height=10}
-set.seed(34)
 d <- randomProblem(1000, 10, response="gaussian", density = 1, rho=0)
 f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
 ```
