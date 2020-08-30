@@ -2,13 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{mergeFits}
 \alias{mergeFits}
-\title{Merges all the fits and returns a dataframe containing losses and time}
+\title{Merges all the fits and returns a single dataframe containing
+the base 10 log of loss, time and iteration of all the solver fits provided.}
 \usage{
 mergeFits(fits, cutoff_time = 10000)
 }
 \arguments{
 \item{fits}{List of outputs of any of the algorithms (FISTA, ADMM etc)}
+
+\item{cutoff_time}{If any of the solvers run for time longer than 'cutoff_time',
+their output is considered only until 'cutoff_time'. This is done to avoid
+skewed plots due to one of the solvers taking huge time. Default value is 10000s}
 }
 \description{
-Merges all the fits and returns a dataframe containing losses and time
+Merges all the fits and returns a single dataframe containing
+the base 10 log of loss, time and iteration of all the solver fits provided.
 }
