@@ -102,18 +102,36 @@
 <div id="well-conditioned-problems" class="section level1">
 <h1 class="hasAnchor">
 <a href="#well-conditioned-problems" class="anchor"></a>Well Conditioned Problems</h1>
-<div id="n-p" class="section level2">
-<h2 class="hasAnchor">
-<a href="#n-p" class="anchor"></a>n &gt; p</h2>
+<div id="p-5" class="section level3">
+<h3 class="hasAnchor">
+<a href="#p-5" class="anchor"></a>p = 5</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
-<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">11</span>, <span class="fl">1</span>,  response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
-<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">100</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  0.060286752"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  0.281359576"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  0.740944384"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  0.528325419"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  1.011801252"</span>
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  1.657135998"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  3.293970776"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  5.556114565"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  4.295529374"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  1.397898597"</span>
+</pre></div>
+</div>
+</div>
+<div id="badly-conditioned-problems" class="section level1">
+<h1 class="hasAnchor">
+<a href="#badly-conditioned-problems" class="anchor"></a>Badly Conditioned Problems</h1>
+<div id="p-5-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#p-5-1" class="anchor"></a>p = 5</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
+<span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
+<span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
+<span class="co">#&gt; [1] "Time taken by FISTA        :  5.515208541"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  19.11775477"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  28.194728824"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  21.655607388"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  9.687449487"</span>
 </pre></div>
 </div>
 </div>
