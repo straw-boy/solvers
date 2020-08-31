@@ -87,7 +87,7 @@
       <h1 data-toc-skip>Multinomial: n&gt;p Benchmarks</h1>
                         <h4 class="author">Akarsh Goyal</h4>
             
-            <h4 class="date">2020-08-30</h4>
+            <h4 class="date">2020-08-31</h4>
       
       
       <div class="hidden name"><code>multinomial.Rmd</code></div>
@@ -109,20 +109,20 @@
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">34</span>)
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  1.842938143"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  3.474907457"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  5.754320948"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  4.412174938"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  1.357169235"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  1.853665006"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  3.745016574"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  5.837229721"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  4.553515084"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  1.57089659"</span>
 </pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">500</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  12.85520615"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  24.872469435"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  43.887690998"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  41.329430227"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  2.12493162"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  13.346932571"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  27.263230018"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  44.336538346"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  41.30133094"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  2.096327075"</span>
 </pre></div>
 </div>
 <div id="p-10" class="section level3">
@@ -131,20 +131,20 @@
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">10</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  101.85650793"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  792.703161841"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  712.070232841"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  322.54813302"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  314.438722727"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  106.103993092"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  802.431320217"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  737.292240096"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  338.086450761"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  325.333275858"</span>
 </pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">500</span>, <span class="fl">10</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  18.570290181"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  35.460083452"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  50.360515865"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  44.421624572"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  3.418715212"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  18.987893191"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  36.866257499"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  52.435430753"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  45.571310023"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  3.609712363"</span>
 </pre></div>
 </div>
 </div>
@@ -157,20 +157,20 @@
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  5.074191797"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  24.025809227"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  33.640615025"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  27.847739188"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  11.92268703"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  5.287242492"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  26.50097234"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  35.139391136"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  28.082348132"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  12.03612657"</span>
 </pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">500</span>, <span class="fl">5</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  21.323067848"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  21.539195421"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  49.775195181"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  50.729817943"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  1.77794433"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  22.216985921"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  20.878476109"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  48.156532954"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  50.155626149"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  1.86129113"</span>
 </pre></div>
 </div>
 <div id="p-10-1" class="section level3">
@@ -179,20 +179,20 @@
 <div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">100</span>, <span class="fl">10</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  9.499659968"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  54.692253614"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  87.577061838"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  48.082657557"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  25.966676124"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  9.460831656"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  55.589471775"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  86.200082589"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  49.227784736"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  26.935635683"</span>
 </pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="kw">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/randomProblem.html">randomProblem</a></span>(<span class="fl">500</span>, <span class="fl">10</span>, response=<span class="st">"multinomial"</span>, density = <span class="fl">1</span>, rho=<span class="fl">0.95</span>)
 <span class="kw">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBenchmarks.html">getBenchmarks</a></span>(<span class="kw">d</span><span class="op">$</span><span class="kw">x</span>, <span class="kw">d</span><span class="op">$</span><span class="kw">y</span>, family=<span class="st">"multinomial"</span>, path_length = <span class="fl">20</span>)
-<span class="co">#&gt; [1] "Time taken by FISTA        :  43.77155681"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  69.139308233"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  119.094894423"</span>
-<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  138.843161004"</span>
-<span class="co">#&gt; [1] "Time taken by PN           :  7.186826837"</span>
+<span class="co">#&gt; [1] "Time taken by FISTA        :  45.56121687"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(NR)     :  73.630136322"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(BFGS)   :  122.729248304"</span>
+<span class="co">#&gt; [1] "Time taken by ADMM(L-BFGS) :  139.571450222"</span>
+<span class="co">#&gt; [1] "Time taken by PN           :  7.102045254"</span>
 </pre></div>
 </div>
 </div>

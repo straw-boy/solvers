@@ -100,7 +100,7 @@
 <h3 class="hasAnchor">
 <a href="#targets-achieved" class="anchor"></a>Targets Achieved</h3>
 <ul>
-<li>In addition to existing <strong>FISTA</strong> in SLOPE package, we managed to implemented the following algorithms
+<li>In addition to existing <strong>FISTA</strong> in SLOPE package, I managed to implement the following algorithms
 <ul>
 <li>
 <strong>Alternating Direction Method of Multipliers (ADMM)</strong>. Our implementation further provides the choice of optimization algorithm to solve the subproblem : <strong>Newton-Raphson</strong>’s algorithm, Broyden–Fletcher–Goldfarb–Shanno (<strong>BFGS</strong>) algorithm and Limited-memory BFGS (<strong>L-BFGS</strong>) algorithm.</li>
@@ -109,18 +109,18 @@
 </ul>
 </li>
 <li>Benchmarked the algorithms (vignettes available in the article tab) and discovered usecases where FISTA is outperformed.</li>
-<li>We also discovered few bugs in the existing SLOPE package’s code.</li>
+<li>I also discovered few bugs in the existing SLOPE package’s code.</li>
 </ul>
 </div>
 <div id="challenges-faced" class="section level3">
 <h3 class="hasAnchor">
 <a href="#challenges-faced" class="anchor"></a>Challenges Faced</h3>
 <ul>
-<li>The biggest challenge was dealing with badly conditioned Hessian matrix. This problem first arose in Proximal Newton. We tried out various fixes and have implemented one such fix, but it is not fool-proof. This problem blew up in much severe way when we tried using Matrix Inversion Lemma (in both ADMM and PN) where in one instance, we encountered a temporary matrix whose inverse condition number was exactly 0. This was the major reason ADMM and PN lost out horribly to FISTA when number of features (p) was greater than number of training points (n) and hence benchmarking was done for only n&gt;p cases to save compute time.</li>
+<li>The biggest challenge was dealing with badly conditioned Hessian matrix. This problem first arose in Proximal Newton. I tried out various fixes and have implemented one such fix, but it is not fool-proof. This problem blew up in much severe way when I tried using Matrix Inversion Lemma (in both ADMM and PN) where in one instance, I encountered a temporary matrix whose inverse condition number was exactly 0. This was the major reason ADMM and PN lost out horribly to FISTA when number of features (p) was greater than number of training points (n) and hence benchmarking was done for only n&gt;p cases to save compute time.</li>
 <li>As there are a lot of moving parts and algorithms are primarily numerical, a lot of time went into debugging the implementations.</li>
-<li>In the Proximal Quasi-Newton algorithm, solving the subproblem is highly inefficient right now and we are yet to notice a practical case where PN is outperformed by PQN.</li>
-<li>When large scale problems of poisson regression are solved using second order algorithms, gradients blow up and also more often than not, Hessian turns out to be singular. This renders usage of ADMM(BFGS/L-BFGS) and PN highly unstable. This is the reason we haven’t added benchmarks for poisson regression.</li>
-<li>For multinomial family, there is no closed form expression for computing Hessian. We had to used a rather inefficient method there.</li>
+<li>In the Proximal Quasi-Newton algorithm, solving the subproblem is highly inefficient right now and I am yet to notice a practical case where PN is outperformed by PQN.</li>
+<li>When large scale problems of poisson regression are solved using second order algorithms, gradients blow up and also more often than not, Hessian turns out to be singular. This renders usage of ADMM(BFGS/L-BFGS) and PN highly unstable. This is the reason I haven’t added benchmarks for poisson regression.</li>
+<li>For multinomial family, there is no closed form expression for computing Hessian. I had to used a rather inefficient method there.</li>
 </ul>
 </div>
 <div id="future-work" class="section level3">
@@ -129,9 +129,9 @@
 <p>This still room for future work in SLOPE+solvers package.</p>
 <ul>
 <li>If one could find a good strategy to tackle singular Hessian, it would solve major problems in both ADMM and PN.</li>
-<li>Due to time constraint, we couldn’t merge the solvers’ code into SLOPE package. My recommendation would be to definitely consider Proximal Newton for gaussian and binomial likelohood functions when n is significantly greater than p as PN scales really well with n.</li>
+<li>Due to time constraint, I couldn’t merge the solvers’ code into SLOPE package. My recommendation would be to definitely consider Proximal Newton for gaussian and binomial likelohood functions when n is significantly greater than p as PN scales really well with n.</li>
 <li>Although PN scaled well with n in multinomial case as well, its performance degrades rapidly as p increases. There are two reasons for it: dimension of Hessian is actually p times number of classes so size of Hessian increases rather faster. Secondly, as mentioned above, the Hessian computation itself is also poor due to absense of closed form expression. So FISTA is undoubtedly the recommended choice here.</li>
-<li>solvers package’s default values are not fined tunes for different algorithms right now. One possible line of work could be to find these default values which are in sync with each other.</li>
+<li>solvers package’s default values are not fined tuned for different algorithms right now. One possible line of work could be to find these default values which are in sync with each other.</li>
 <li>If there could be a way to incorporate caching of Gaussian Hessian in the current design, it would be a huge performance boost for gaussian case as Hessian won’t change for it. [SLOPE]: <a href="https://jolars.github.io/SLOPE/" class="uri">https://jolars.github.io/SLOPE/</a> [here]: <a href="https://github.com/straw-boy/solvers" class="uri">https://github.com/straw-boy/solvers</a>
 </li>
 </ul>
