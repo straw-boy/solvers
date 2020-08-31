@@ -1,0 +1,70 @@
+---
+title: "Gaussian: n > p Benchmarks"
+author: "Akarsh Goyal"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Gaussian: n > p Benchmarks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(solvers)
+```
+
+# Well Conditioned Problems
+### p = 10
+```{r, fig.width=10, fig.height=10}
+set.seed(34)
+d <- randomProblem(100, 10, response="gaussian", density = 1, rho=0)
+f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
+```
+
+```{r, fig.width=10, fig.height=10}
+d <- randomProblem(1000, 10, response="gaussian", density = 1, rho=0)
+f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
+```
+
+### p = 20
+```{r, fig.width=10, fig.height=10}
+d <- randomProblem(1000, 20, response="gaussian", density = 1, rho=0)
+f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
+```
+
+### p = 50
+```{r, fig.width=10, fig.height=10}
+d <- randomProblem(1000, 50, response="gaussian", density = 1, rho=0)
+f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
+```
+
+# Badly Conditioned Problems
+### p = 10
+```{r, fig.width=10, fig.height=10}
+d <- randomProblem(100, 10, response="gaussian", density = 1, rho=0.95)
+f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
+```
+
+```{r, fig.width=10, fig.height=10}
+d <- randomProblem(1000, 10, response="gaussian", density = 1, rho=0.95)
+f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
+```
+
+### p = 20
+```{r, fig.width=10, fig.height=10}
+d <- randomProblem(1000, 20, response="gaussian", density = 1, rho=0.95)
+f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
+```
+
+### p = 50
+```{r, fig.width=10, fig.height=10}
+d <- randomProblem(1000, 50, response="gaussian", density = 1, rho=0.95)
+f <- getBenchmarks(d$x, d$y, family="gaussian", path_length = 20)
+```

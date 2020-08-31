@@ -17,13 +17,24 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
   uword m = y.n_cols;
 
   mat z(u);
-  mat g(u);
+  mat g(size(z));
   mat h(p*m, p*m);
+  mat step(size(z));
 
   uword max_iter = 50;
-  double tolerance = 1e-12;
-  double alpha = 0.1;
-  double gamma = 0.5;
+  double tolerance = 1e-15;
+
+  // bool use_woodbury 
+  //   = (name() != "multinomial" && n < p)? true: false;
+
+  bool use_woodbury = false;
+
+  mat xxT;
+  vec activation;
+  
+  if (use_woodbury) {
+    xxT = x*x.t();
+  }
 
   uword iter = 0;
 
@@ -32,11 +43,23 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
     mat lin_pred = x*z;
     
     g = gradient(x, y, lin_pred) + rho*(z-u);
-    h = hessian(x, y, lin_pred);
-
-    h.diag() += rho;
     
-    mat step = -reshape(solve(h,vectorise(g)),size(z));
+    if (use_woodbury) {
+      // This section is never executed as use_woodbury is false
+      activation = pseudoHessian(y, lin_pred);
+
+      mat tmp = xxT;
+      tmp.diag() += rho/activation;
+      step = x.t()*solve(tmp, x*g) - g;
+      step /= rho;
+
+    } else {
+
+      h = hessian(x, y, lin_pred);
+      h.diag() += rho;
+      step = -reshape(solve(h, vectorise(g)),size(z));
+
+    }
 
     double decrement = -accu(g % step);
     
@@ -44,16 +67,8 @@ mat Family::newtonRaphson(const T& x, const mat& y, const double rho, const mat&
       break; 
     }
 
-    //Backtracking
-    double t = 1.0;
-
-    double f = primal(y, lin_pred) + 0.5*rho*accu(square(z-u));
-
-    while (primal(y, x*(z+t*step)) + 0.5*rho*accu(square(z+t*step-u))
-            > (f + alpha*t*decrement)) {
-        t = gamma*t;
-        Rcpp::checkUserInterrupt();
-    }
+    // Line Search for step length
+    double t = wolfeLineSearch(x, y, rho, u, z, step);
 
     z = z + t*step;
     

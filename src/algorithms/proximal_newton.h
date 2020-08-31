@@ -2,7 +2,7 @@
 
 #include <RcppArmadillo.h>
 #include "../results.h"
-#include "../scaled_prox.h"
+#include "scaled_prox.h"
 #include "../families/family.h"
 
 using namespace Rcpp;
@@ -22,14 +22,15 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
   mat beta_tilde(beta);
 
   mat lin_pred(n, m);
-  mat grad(p, m, fill::zeros);
-  mat hess(p, p, fill::zeros);
+  mat grad;
+  mat hess;
 
   // line search parameters
   const double alpha = 0.5;
   const double eta = 0.5;
 
   vec hess_correction(p*m, fill::ones); 
+  vec activation(p, fill::ones);
 
   // diagnostics
   wall_clock timer;
@@ -68,13 +69,17 @@ Results Family::fitProximalNewton(const T& x, const mat& y, vec lambda)
     grad = gradient(x, y, lin_pred);
     hess = hessian(x, y, lin_pred);
 
+    if (name() != "multinomial") {
+      activation = pseudoHessian(y, lin_pred);
+    }
+
     if (rcond(hess) < 1e-16) {
       hess.diag() += hess_correction;
     }
 
     beta_tilde = beta - reshape(solve(hess, vectorise(grad), solve_opts::fast), size(beta));
 
-    beta_tilde = scaled_prox(beta_tilde, hess, lambda);
+    beta_tilde = scaled_prox(x, activation, beta_tilde, hess, lambda);
     
     mat d = beta_tilde - beta;
 

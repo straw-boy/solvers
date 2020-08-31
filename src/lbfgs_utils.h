@@ -121,7 +121,6 @@ public:
   // where J(x,lambda) is the slope penalty and B is hessian approximation.
   // This subproblem is solved using FISTA.
   mat scaled_prox(const mat& beta, vec lambda) {
-    uword p = beta.n_rows;
     uword m = beta.n_cols;
     uword pmi = lambda.n_elem;
     uword p_rows = pmi/m;
@@ -141,9 +140,6 @@ public:
     while (passes < max_passes) {
       
       double g = 0.5*accu((x - beta) % reshape(hessianProduct(x - beta), size(x)));
-      double h = dot(sort(abs(vectorise(x.tail_rows(p_rows))),
-                          "descending"), lambda);
-      double f = g + h;
 
       mat grad = reshape(hessianProduct(x - beta), size(x));
 

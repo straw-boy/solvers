@@ -85,21 +85,101 @@ getLoss <- function(fit) {
   else fit$loss[[1]]
 } 
 
-#' Merges all the fits and returns a dataframe containing losses and time
+#' Merges all the fits and returns a single dataframe containing 
+#' the base 10 log of loss, time and iteration of all the solver fits provided. 
 #' @param fits List of outputs of any of the algorithms (FISTA, ADMM etc)
+#' @param cutoff_time If any of the solvers run for time longer than 'cutoff_time',
+#'        their output is considered only until 'cutoff_time'. This is done to avoid
+#'        skewed plots due to one of the solvers taking huge time. Default value is 10000s
 #' @export 
-mergeFits <- function(fits) {
-  
+mergeFits <- function(fits, cutoff_time = 10000) 
+{ 
   f <- data.frame(solver = character(),
                   loss = double(),
-                  time = double())
+                  time = double(),
+                  iterations = integer())
 
   for (fit in fits) {
-    g  <- data.frame(solver = rep(getLabel(fit), times = length(fit$iteration_timings[[1]])),
-                     loss = getLoss(fit),
-                     time = fit$iteration_timings[[1]])
+    cutoff_idx <- findInterval(cutoff_time, fit$iteration_timings[[1]])
+    cutoff_idx <- max(cutoff_idx, 1)
+    g  <- data.frame(solver = rep(getLabel(fit), times = cutoff_idx),
+                    loss = log10(getLoss(fit)[1:cutoff_idx]),
+                    time = ((fit$iteration_timings[[1]])[1:cutoff_idx]),
+                    iterations = seq(1, cutoff_idx))
     f <- rbind(f,g)
   }
+  return(f)
+}
+
+#' Runs all the solvers on (x, y) training data with SLOPE parameter alpha,
+#' prints the total time in each case, and returns the merged data frame.
+#' @param x the design matrix, which can be either a dense
+#'   matrix of the standard *matrix* class, or a sparse matrix
+#'   inheriting from [Matrix::sparseMatrix]. Data frames will
+#'   be converted to matrices internally.
+#' @param y the response, which for `family = "gaussian"` must be numeric; for
+#'   `family = "binomial"` or `family = "multinomial"`, it can be a factor.
+#' @param family model family 
+#' @param alpha parameter used for SLOPE regularization
+#' @param path_length The regularization path length. By default, it is one.
+#'        'alpha' is ignored if path_length is not 1, in which case, list of alpha 
+#'        and the length of the list is returned. 
+#' @export 
+getBenchmarks <- function(x,
+                          y,
+                          family = c("gaussian", "binomial", "multinomial", "poisson"),
+                          alpha = 0.01,
+                          path_length = 1) 
+{ 
+  # If path_length is not 1, no need to store diagnostic values 
+  # as they won't be meaningful for plotting
+  if (path_length != 1) {
+    min_path_length <- 100
+    fista_fit <- FISTA(x, y, family=family, path_length=path_length)
+    print(paste("Time taken by FISTA        : ", fista_fit$total_time))
+    min_path_length <- min(min_path_length, length(fista_fit$alpha))
+
+    admm_nr_fit <- ADMM(x, y, family=family, opt_algo="nr", path_length=path_length)
+    print(paste("Time taken by ADMM(NR)     : ", admm_nr_fit$total_time))
+    min_path_length <- min(min_path_length, length(admm_nr_fit$alpha))
+    
+    admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs",  path_length=path_length)
+    print(paste("Time taken by ADMM(BFGS)   : ", admm_bfgs_fit$total_time))
+    min_path_length <- min(min_path_length, length(admm_bfgs_fit$alpha))
+    
+    admm_lbfgs_fit <- ADMM(x, y, family=family, opt_algo="lbfgs", path_length=path_length)
+    print(paste("Time taken by ADMM(L-BFGS) : ", admm_lbfgs_fit$total_time))
+    min_path_length <- min(min_path_length, length(admm_lbfgs_fit$alpha))
+    
+    pn_fit <- PN(x, y, family=family, hessian_calc="exact", path_length=path_length)
+    print(paste("Time taken by PN           : ", pn_fit$total_time))
+    min_path_length <- min(min_path_length, length(pn_fit$alpha))
+
+    return(list(alpha = fista_fit$alpha,
+                path_length = min_path_length))
+  }
+  fista_fit <- FISTA(x, y, family=family, alpha=alpha, diagnostics=TRUE)
+  admm_nr_fit <- ADMM(x, y, family=family, opt_algo="nr", alpha=alpha, diagnostics=TRUE)
+  admm_bfgs_fit <- ADMM(x, y, family=family, opt_algo="bfgs", alpha=alpha, diagnostics=TRUE)
+  admm_lbfgs_fit <- ADMM(x, y, family=family, opt_algo="lbfgs", alpha=alpha, diagnostics=TRUE)
+  pn_fit <- PN(x, y, family=family, alpha=alpha, hessian_calc="exact", diagnostics=TRUE)
+
+  fits <- list(fista_fit, admm_nr_fit, admm_bfgs_fit, admm_lbfgs_fit, pn_fit)
+
+  # Finding out the median total_time
+  solver_timings <- c()
+  for (fit in fits) {
+    solver_timings = cbind(solver_timings, fit$total_time)
+  }
+  sort(solver_timings)
+
+  print(paste("Time taken by FISTA        : ", fista_fit$total_time))
+  print(paste("Time taken by ADMM(NR)     : ", admm_nr_fit$total_time))
+  print(paste("Time taken by ADMM(BFGS)   : ", admm_bfgs_fit$total_time))
+  print(paste("Time taken by ADMM(L-BFGS) : ", admm_lbfgs_fit$total_time))
+  print(paste("Time taken by PN           : ", pn_fit$total_time))
+
+  f <- mergeFits(fits, cutoff_time = solver_timings[2])
   return(f)
 }
 

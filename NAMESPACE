@@ -3,6 +3,7 @@
 export(ADMM)
 export(FISTA)
 export(PN)
+export(getBenchmarks)
 export(mergeFits)
 export(randomProblem)
 import(Matrix)

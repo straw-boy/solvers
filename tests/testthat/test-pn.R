@@ -1,6 +1,6 @@
 test_that("Proximal Newton: gaussian, n>p case", {
   library(SLOPE)
-  set.seed(1)
+  set.seed(121)
 
   n = 100
   p = 10
@@ -16,7 +16,7 @@ test_that("Proximal Newton: gaussian, n>p case", {
 test_that("Proximal Newton: gaussian, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(554)
 
   n = 10
   p = 20
@@ -32,7 +32,7 @@ test_that("Proximal Newton: gaussian, n<p case", {
 test_that("Proximal Newton: binomial, n>p case", {
   
   library(SLOPE)
-  set.seed(1)
+  set.seed(531)
 
   n = 100
   p = 10
@@ -65,7 +65,7 @@ test_that("Proximal Newton: binomial, n<p case", {
 test_that("Proximal Newton: poisson, n>p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(451)
 
   n = 100
   p = 10
@@ -81,7 +81,7 @@ test_that("Proximal Newton: poisson, n>p case", {
 test_that("Proximal Newton: poisson, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(51)
 
   n = 10
   p = 20
@@ -97,7 +97,7 @@ test_that("Proximal Newton: poisson, n<p case", {
 test_that("Proximal Newton: multinomial, n>p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(661)
 
   n = 100
   p = 10
@@ -114,7 +114,7 @@ test_that("Proximal Newton: multinomial, n>p case", {
 test_that("Proximal Newton: multinomial, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(641)
 
   n = 10
   p = 20

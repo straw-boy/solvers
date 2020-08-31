@@ -1,6 +1,6 @@
 test_that("ADMM: gaussian, n>p case", {
   library(SLOPE)
-  set.seed(1)
+  set.seed(235)
 
   n = 100
   p = 10
@@ -16,7 +16,7 @@ test_that("ADMM: gaussian, n>p case", {
 test_that("ADMM: gaussian, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(24)
 
   n = 10
   p = 20
@@ -33,7 +33,7 @@ test_that("ADMM: gaussian, n<p case", {
 test_that("ADMM: binomial, n>p case", {
   
   library(SLOPE)
-  set.seed(1)
+  set.seed(186)
 
   n = 100
   p = 10
@@ -66,7 +66,7 @@ test_that("ADMM: binomial, n<p case", {
 test_that("ADMM: poisson, n>p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(271)
 
   n = 100
   p = 10
@@ -82,7 +82,7 @@ test_that("ADMM: poisson, n>p case", {
 test_that("ADMM: poisson, n<p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(7)
 
   n = 10
   p = 20
@@ -98,7 +98,7 @@ test_that("ADMM: poisson, n<p case", {
 test_that("ADMM: multinomial, n>p case", {
 
   library(SLOPE)
-  set.seed(1)
+  set.seed(12)
 
   n = 100
   p = 10

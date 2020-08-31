@@ -60,7 +60,7 @@ a dataframe.
 
 ```{r}
 # Merging the metrics into one dataframe
-f <- mergeFits(list(fista_fit, admm_fit, pn_fit))
+f <- mergeFits(list(fista_fit, admm_fit, pn_fit), cutoff_time=1.5)
 ```
 Finally, now we can generate the loss vs time plot.
 
